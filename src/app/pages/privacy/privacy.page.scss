@@ -1,0 +1,261 @@
+.home-toolbar {
+    height: 120px;
+
+    .toolbar-content {
+        text-align: center;
+        // margin-left: -20px;
+    }
+
+    img {
+        margin-top: 10px;
+        width: 90%;
+    }
+}
+
+
+.title {
+    text-align: center !important;
+
+    font-size: 23px !important;
+    font-family: 'Lobster' !important;
+}
+
+ion-content {
+    background-color: #08b8da !important;
+}
+
+ion-header .toolbar-background {
+    background-color: #08b8da !important;
+}
+
+ion-card {
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+ion-card,
+ion-card-header,
+ion-card-content {
+    background-color: #08b8da;
+    background: #ffff;
+    text-align: center;
+    border-radius: 0;
+}
+
+.border {
+    //height:100%;
+    //min-height: inherit;
+    // border: 1px solid #ffffff;
+    //margin: 0px 25px;
+    //margin-top: 25px;
+
+    border: 1px solid #08b8da;
+    //height:100%
+    //min-height: inherit;
+    background-color: white;
+    font-size: 20px;
+
+}
+
+.couponPg img {
+    width: 65%;
+
+}
+
+.card-ios {
+    // margin: 20px 20px;
+    border-radius: 2px;
+    width: calc(100% - 24px);
+    // font-size: 1.4rem;
+    background: #fff;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.title {
+    margin-top: 1%;
+    margin-bottom: 4%;
+}
+
+ion-card-subtitle,
+ion-card-title {
+    /* padding-bottom: 15px; */
+    //   color: #e67f38;
+    color: #e17f38;
+    font-family: 'Lobster';
+    font-size: 22px;
+    padding: 0 0 5px 0 !important;
+}
+
+ion-card-header {
+    padding: 0 10px 10px 10px !important;
+    padding-bottom: 15px;
+}
+
+.item-ios {
+    padding-left: 16px;
+    padding-left: 16px;
+    border-radius: 0;
+    position: relative;
+    font-size: 1.7rem;
+    color: #000;
+    background-color: transparent !important;
+    -webkit-transition: background-color 200ms linear;
+    transition: background-color 200ms linear;
+}
+
+.inner-css h3,
+h4 {
+    padding-top: 3% !important;
+    font-size: 20px !important
+}
+
+ion-card {
+    overflow: scroll;
+    box-shadow: 0 0 0;
+    padding: 0 10px;
+
+    ion-item {
+        --padding-start: 0;
+        --inner-padding-end: 0;
+        --inner-border-width: 0;
+    }
+
+    ion-label {
+        font-size: 14px;
+        color: #fff !important;
+    }
+
+    img {
+        text-align: center;
+        margin: 0 auto;
+    }
+}
+
+ion-card-content p {
+    //margin-top: 2% !important;
+    color: black !important;
+    font-size: 16px !important;
+    font-family: 'Lobster' !important;
+
+    // color: #fff!important;
+}
+
+.para {
+    margin-top: 3% !important;
+    margin-bottom: 1% !important;
+}
+
+.company {
+    margin-top: 3% !important;
+}
+
+.redeempg ion-card-content p {
+    border-bottom: 1px solid #fff;
+}
+
+.print-option-cb {
+    background-color: transparent !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+p>span {
+    color: #fff;
+}
+
+h3 {
+    color: #000000;
+    font-size: 16px;
+    font-family: 'Lobster';
+    margin: 0 !important;
+}
+
+h4 {
+    color: #000000;
+    font-size: 24px;
+    font-family: 'Lobster';
+    margin: 0 !important;
+}
+
+h2 {
+    padding: 10px;
+    font-family: 'Lobster';
+    font-size: 22px;
+}
+
+.login-button {
+    padding: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    button {
+        background: #ff7000;
+        font-size: 1.25rem !important;
+    }
+}
+
+.toolbar-title {
+    color: #ff7000 !important;
+}
+
+.item-block {
+    min-height: 3.4rem !important;
+}
+
+
+.privacy-section-container {
+    padding: 16px;
+}
+
+.header-md{
+    background-color: #08b8da;
+    box-shadow: none !important;
+}
+
+ion-toolbar.home-toolbar {
+  --background: #08b8da;
+  color: #fff;
+  display: flex;
+    overflow: hidden;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    flex-direction: row;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    width: 100%;
+    contain: content;
+  height: 120px;
+  text-align: center;
+}
+
+ion-toolbar.home-toolbar img {
+  margin-top: 10px;
+  width: 90%;
+}
+
+ion-content {
+  --background: #08b8da;
+}
+
+.border {
+  border: 1px solid #08b8da;
+  background-color: white;
+  font-size: 20px;
+}
+
+ion-header h1.title {
+  text-align: center;
+  font-size: 23px;
+  font-family: 'Lobster';
+  color: #FFC107 !important;
+  margin: 8px 0 12px;
+}

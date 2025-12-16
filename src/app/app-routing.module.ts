@@ -4,9 +4,18 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'search',
+    redirectTo: 'privacy',
     pathMatch: 'full'
-  }
+  },
+
+  {
+    path: 'privacy',
+    loadChildren: () => import('./pages/privacy/privacy.module').then( m => m.PrivacyPageModule)
+  },
+  
+
+
+
 ];
 
 @NgModule({
