@@ -1,0 +1,91 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="home-toolbar">
+    <ion-buttons slot="start" style="display: none !important">
+      <ion-back-button defaultHref="/" icon="arrow-back" class="back-arrow"></ion-back-button>
+    </ion-buttons>
+    
+    <ion-buttons slot="end">
+      <ion-menu-button autoHide="false" style="font-size: 20px !important">
+        <ion-icon name="menu" slot="icon-only"></ion-icon>
+      </ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="content">
+    <div class="border">
+      <div class="chat-begin">
+        <div class="empty_hei"></div>
+        <h1>
+          Search and discover offers,<br />coupons, promotions, sales<br />and
+          much more!
+        </h1>
+
+        <div class="custom-searchbar">
+          <ion-icon name="search" class="search-icon"></ion-icon>
+          <ion-searchbar
+            [(ngModel)]="search.value"
+            (ionInput)="getItems($event)"
+            placeholder="Combine Keywords, biz, city, Zip, country…"
+            (ionCancel)="onCancel()"
+            (ionClear)="onCancel()"
+          >
+          </ion-searchbar>
+        </div>
+
+        <div class="btn">
+          <ion-button
+            expand="block"
+            class="start-button"
+            (click)="searchresult()"
+          >
+            Start Search
+          </ion-button>
+        </div>
+        <div class="btn">
+          <ion-button
+            expand="block"
+            style="background: #6a1212 !important"
+            class="local-button"
+            (click)="nextlocalPage()"
+          >
+            <ion-label text-wrap>
+              Browse Local Offers<br />
+              Grocery Flyers / Freebies etc
+            </ion-label>
+          </ion-button>
+        </div>
+        <div class="btn">
+          <ion-button
+            expand="block"
+            style="background: rgb(8, 66, 99) !important"
+            class="national-button"
+            (click)="nextnationalPage()"
+          >
+            <ion-label text-wrap>
+              Browse National / Online Offers
+            </ion-label>
+          </ion-button>
+        </div>
+      </div>
+      <div class="clear"></div>
+      <div class="pricing">
+        <div class="empty_hei"></div>
+        <div style="justify-content: center">
+          <h1>
+            Visit us again!<br />New offers are added to the<br />DynamicCoupons
+            database<br />on a regular basis.
+          </h1>
+          <p class="house">
+            <span style="color: black">
+              In-house created offers come<br />
+              with location map and</span
+            ><br />
+            <span class="orange-box" style="color: black">Redeem Options.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
