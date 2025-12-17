@@ -1,0 +1,405 @@
+:host {
+  h1 {
+    font-size: 2.5rem;
+    color: #fff;
+    text-align: center;
+    margin-top: 0;
+    font-family: "Tahoma", sans-serif !important;
+  }
+
+  ion-content {
+    --background: #08b8da !important;
+    font-family: "Tahoma", sans-serif !important;
+  }
+
+  ion-toolbar {
+    --background: #08b8da !important;
+    font-family: "Tahoma", sans-serif !important;
+  }
+
+  .login-button {
+    margin: 20px 0 0 0;
+    transition: 0.3s;
+    border-radius: 3px;
+    font-size: 1.125em;
+    line-height: 53px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-weight: 700;
+
+    ion-button {
+      --background: #ff7000;
+      --color: #ffffff;
+    }
+  }
+
+  .content {
+    padding-top: 7%;
+  }
+
+  ion-searchbar {
+    --background: #ffffff;
+    --border-radius: 8px;
+    --box-shadow: none;
+    --placeholder-color: black;
+    --color: #333;
+    --placeholder-font-weight: normal;
+    height: 4rem;
+
+    .searchbar-input-container {
+      input {
+        height: 4rem !important;
+        font-size: 1.1rem !important;
+        color: #333 !important;
+        padding: 0 16px !important;
+
+        &::placeholder {
+          color: black !important;
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .chat-begin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    ion-searchbar {
+      width: 95%;
+      min-height: 55px;
+    }
+  }
+
+  .chat-begin h3 {
+    text-align: center;
+  }
+
+  .pricing {
+    color: #fff;
+    text-align: center;
+
+    .login-button {
+      padding: 10px 0;
+      margin: 0 0.875em;
+      transition: 0.3s;
+      border-radius: 3px;
+      font-size: 1.125em;
+      line-height: 53px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      font-weight: 700;
+
+      ion-button {
+        --background: #ff7000;
+        --color: #ffffff;
+      }
+    }
+  }
+
+  .search-toolbar {
+    height: 70px;
+  }
+
+  .home-toolbar {
+    height: 120px;
+
+    img {
+      margin-top: 10px;
+      width: 90%;
+      height: auto;
+    }
+  }
+
+  ion-card {
+    --background: #ffffff;
+    background: #ffffff;
+    margin: 8px;
+    border-radius: 0;
+    border: 2px solid #ffffff;
+    text-align: center;
+    width: 100%;
+    position: relative;
+
+    ion-card-header {
+      padding: 10px;
+      background: none;
+    }
+
+    ion-card-content {
+      padding: 0 10px 10px;
+      background: none;
+    }
+
+    img {
+      width: 40%;
+      text-align: center;
+      margin: 0 auto;
+      display: block;
+    }
+  }
+
+  ion-card-title {
+    color: #7b7b7b;
+    font-weight: bold;
+    padding: 4% 0;
+    margin: 0 0 5px 0;
+    font-size: 2.1rem;
+    font-family: "Tahoma", sans-serif !important;
+
+    &.xmlcolor {
+      color: #000;
+    }
+
+    &.xcelstate {
+      color: #6b4545;
+    }
+
+    &.coupont2 {
+      color: #e67e22;
+    }
+
+    &.web_couponsm2 {
+      color: #17a05e;
+    }
+
+    &.finalcoupons {
+      color: #7b7b7b;
+    }
+  }
+
+  .coupon_title {
+    height: auto;
+    min-height: auto !important;
+  }
+
+  .coupontle {
+    margin-top: 5% !important;
+    margin-bottom: 5% !important;
+  }
+
+  .border {
+    border: 1px solid #08b8da;
+    min-height: inherit;
+    background-color: white;
+  }
+
+  .lists {
+    height: 100%;
+  }
+
+  .segment {
+    margin-top: 10px;
+
+    ion-segment-button {
+      --background: rgb(8, 66, 99);
+      --background-checked: #6a1212 !important;
+      --color: #fff;
+      --color-checked: #fff;
+      border-color: transparent !important;
+      text-transform: uppercase;
+
+      &.segment-activated {
+        --background: #6a1212 !important;
+      }
+    }
+
+    .segmentL,
+    .segmentS {
+      border-radius: 0 !important;
+    }
+  }
+
+  .empty_hei {
+    height: 30px;
+    clear: both;
+  }
+
+  .coupon_bname {
+    color: #003f72;
+    margin-top: 3% !important;
+    font-weight: bold;
+    font-family: "Tahoma", sans-serif !important;
+  }
+
+  .coupon_city {
+    color: #003f72;
+    margin-top: 3% !important;
+    font-family: "Tahoma", sans-serif !important;
+  }
+
+  .coupon_valid_upto {
+    color: #003f72;
+    margin-top: 3% !important;
+    padding-bottom: 4% !important;
+    font-family: "Tahoma", sans-serif !important;
+  }
+
+  .coupon_typest {
+    color: #003f72;
+  }
+
+  .coupon_online {
+    margin-top: 3% !important;
+    font-family: "Tahoma", sans-serif !important;
+
+    .local_offers & {
+      color: #17a05e;
+    }
+
+    .national_offers & {
+      color: #003f72;
+    }
+  }
+
+  .local_offers,
+  .national_offers {
+    p {
+      margin-top: 3% !important;
+    }
+  }
+
+  ion-col {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .gobutton {
+    transition: 0.3s;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-weight: 600;
+    width: 10%;
+    display: inline-block;
+    vertical-align: middle;
+    min-height: 30px;
+
+    ion-button {
+      --background: #ff7000;
+      --color: #ffffff;
+      --padding-start: 19px;
+      --padding-end: 19px;
+      height: 4rem;
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin: 0 0.2rem;
+    }
+  }
+
+  .allresult {
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-family: "Tahoma", sans-serif !important;
+  }
+
+  ion-infinite-scroll-content {
+    color: #003f72 !important;
+    font-size: 14px !important;
+    font-weight: bold;
+    font-family: "Tahoma", sans-serif !important;
+  }
+
+  .searchbox {
+    padding: 0 8px;
+    min-height: 44px;
+    border-top: 0.55px solid transparent;
+    border-bottom: 0.55px solid rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.2);
+    width: 100%;
+  }
+
+  .search-footer {
+    ion-searchbar {
+      .searchbar-search-icon {
+        display: none !important;
+      }
+    }
+  }
+
+  .visit-count {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    color: #d3d3d3;
+    font-size: 15px;
+    font-family: "Tahoma", sans-serif !important;
+  }
+
+  .visit {
+    margin-bottom: 20px;
+  }
+
+  .center {
+    text-align: center;
+
+    img.full-width {
+      width: 100%;
+      padding: 10px;
+    }
+  }
+}
+
+/* Global font setting */
+:host,
+:host * {
+  font-family: "Tahoma", sans-serif !important;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  :host {
+    ion-card-title {
+      font-size: 1.6rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    .gobutton {
+      width: 20%;
+
+      ion-button {
+        font-size: 1rem;
+        height: 3.5rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  :host {
+    ion-card-title {
+      font-size: 1.4rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    ion-searchbar {
+      height: 3.5rem;
+
+      .searchbar-input-container input {
+        height: 3.5rem !important;
+        font-size: 1rem !important;
+      }
+    }
+
+    .gobutton {
+      width: 25%;
+
+      ion-button {
+        font-size: 0.9rem;
+        height: 3rem;
+        --padding-start: 12px;
+        --padding-end: 12px;
+      }
+    }
+  }
+}

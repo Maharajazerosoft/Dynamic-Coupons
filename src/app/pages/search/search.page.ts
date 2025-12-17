@@ -3,14 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.page.html',
   styleUrls: ['./search.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule, HeaderComponent],
 })
+
 export class SearchPage {
   submitted: boolean = true;
   resultStatus: any;
@@ -47,7 +49,7 @@ export class SearchPage {
 
   searchResult(searchValue: string) {
     if (searchValue) {
-      this.router.navigate(['/searchresults'], {
+      this.router.navigate(['/search-result'], {
         queryParams: { val: searchValue, search: 1 },
       });
     }
