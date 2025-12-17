@@ -1,13 +1,112 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>contact</ion-title>
+<ion-header>
+  <ion-toolbar class="mytoolbar">
+    <ion-buttons slot="end">
+      <ion-menu-button>
+        <ion-icon name="menu"></ion-icon>
+      </ion-menu-button>
+    </ion-buttons>
+    
+    <img src="./assets/icon/logo.png" />
+    
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back" class="text-color-white"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">contact</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <h1 style="color: #ffc107 !important" class="title">Contact</h1>
+  <p style="color: white !important; text-align: center; font-size: 19px">
+    Please fill the following form to contact us:
+  </p>
+  
+  <div class="form-container" style="background-color: white !important">
+    <ion-item>
+      <ion-label style="font-size: 18px !important" position="stacked">
+        Email<span style="color: #d30c0c">*</span>
+      </ion-label>
+      <ion-input
+        style="padding-left: 12px"
+        name="email"
+        type="email"
+        [(ngModel)]="element.email"
+        required
+      ></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label style="font-size: 18px !important" position="stacked">
+        Name<span style="color: #d30c0c">*</span>
+      </ion-label>
+      <ion-input
+        style="padding-left: 12px"
+        name="name"
+        type="text"
+        [(ngModel)]="element.name"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label style="font-size: 18px !important" position="stacked">
+        Subject<span style="color: #d30c0c">*</span>
+      </ion-label>
+      <ion-input
+        style="padding-left: 12px"
+        name="subject"
+        type="text"
+        [(ngModel)]="element.subject"
+        required
+      ></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label style="font-size: 18px !important" position="stacked">
+        Message<span style="color: #d30c0c">*</span>
+      </ion-label>
+      <ion-textarea
+        style="border: 1px solid black; padding-left: 12px"
+        rows="5"
+        name="message"
+        type="text"
+        [(ngModel)]="element.message"
+        required
+      ></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label style="font-size: 18px !important" position="stacked">
+        Captcha<span style="color: #d30c0c">*</span>
+      </ion-label>
+    </ion-item>
+
+    <div>
+      <div class="captcha-container1">
+        <p class="captcha">{{ formattedCaptcha }}</p>
+        <img
+          src="https://dynamiccoupons.com/images/refresh4.png"
+          (click)="refreshCaptcha()"
+          alt="Refresh CAPTCHA"
+          class="refresh-icon"
+          style="cursor: pointer; width: 24px; height: 24px; margin-left: 20px"
+        />
+      </div>
+
+      <ion-input
+        style="padding-left: 12px"
+        name="captcha"
+        type="text"
+        [(ngModel)]="captchaInput"
+        placeholder="Enter CAPTCHA"
+        required
+      ></ion-input>
+      <p *ngIf="isCaptchaInvalid">Invalid CAPTCHA, please try again.</p>
+    </div>
+    
+    <div class="login-button">
+      <ion-button expand="block" (click)="registerForm(element)">Send</ion-button>
+    </div>
+  </div>
 </ion-content>
