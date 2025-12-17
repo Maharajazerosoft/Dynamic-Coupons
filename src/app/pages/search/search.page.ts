@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
-  selector: 'app-search',
+  selector: 'search-page',
   templateUrl: './search.page.html',
   styleUrls: ['./search.page.scss'],
   standalone: true,
