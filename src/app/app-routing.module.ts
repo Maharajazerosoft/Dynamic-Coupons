@@ -7,15 +7,10 @@ const routes: Routes = [
     redirectTo: 'search',
     pathMatch: 'full'
   },
-
   {
     path: 'privacy',
     loadChildren: () => import('./pages/privacy/privacy.module').then( m => m.PrivacyPageModule)
   },
-  
-
-
-
   {
     path: 'search',
     loadChildren: () => import('./pages/search/search.module').then( m => m.SearchPageModule)
