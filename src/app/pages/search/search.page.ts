@@ -1,48 +1,63 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.page.html',
   styleUrls: ['./search.page.scss'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, FormsModule, IonicModule],
 })
 export class SearchPage {
+  submitted: boolean = true;
+  resultStatus: any;
+  showButton: boolean = true;
+  searchValue: string = '';
+  val: string = '';
 
-  submitted = true;
-  showButton = true;
-  search: any = { value: '' };
-  val: any;
-
-  constructor(private router: Router) {}
+  constructor(private navController: NavController, private router: Router) {}
 
   onCancel() {
     this.submitted = true;
     this.showButton = true;
   }
 
+  inappclick(link: string) {
+    window.open(link, '_blank');
+  }
+
+  nextPage(id: any) {
+    this.router.navigate(['/coupondetails'], { queryParams: { cid: id } });
+  }
+
+  home() {
+    this.router.navigate(['/intro']);
+  }
+
+  learn() {
+    this.router.navigate(['/learnmore']);
+  }
+
   getItems(ev: any) {
     this.val = ev.target.value;
   }
 
-  searchresult() {
-    this.router.navigate(['/search-result'], {
-      queryParams: {
-        val: this.val,
-        search: 1
-      }
-    });
+  searchResult(searchValue: string) {
+    if (searchValue) {
+      this.router.navigate(['/searchresults'], {
+        queryParams: { val: searchValue, search: 1 },
+      });
+    }
   }
 
-  nextlocalPage() {
-    this.router.navigate(['/coupon'], {
-      queryParams: { type: 'local' }
-    });
+  nextLocalPage() {
+    this.router.navigate(['/coupon'], { queryParams: { type: 'local' } });
   }
 
-  nextnationalPage() {
-    this.router.navigate(['/coupon'], {
-      queryParams: { type: 'national' }
-    });
+  nextNationalPage() {
+    this.router.navigate(['/coupon'], { queryParams: { type: 'national' } });
   }
 }

@@ -35,3 +35,22 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+
+/* Add to global.scss */
+* {
+  font-family: "Tahoma", sans-serif !important;
+}
+
+body {
+  font-family: "Tahoma", sans-serif !important;
+}
+
+/* Force font on all Ionic components */
+:root {
+  --ion-font-family: "Tahoma", sans-serif;
+}
+
+ion-app {
+  font-family: "Tahoma", sans-serif !important;
+}
