@@ -5,9 +5,9 @@
         <ion-icon name="menu"></ion-icon>
       </ion-menu-button>
     </ion-buttons>
-    
+
     <img src="./assets/icon/logo.png" />
-    
+
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
         <ion-icon name="arrow-back" class="text-color-white"></ion-icon>
@@ -21,7 +21,7 @@
   <p style="color: white !important; text-align: center; font-size: 19px">
     Please fill the following form to contact us:
   </p>
-  
+
   <div class="form-container" style="background-color: white !important">
     <ion-item>
       <ion-label style="font-size: 18px !important" position="stacked">
@@ -35,7 +35,7 @@
         required
       ></ion-input>
     </ion-item>
-    
+
     <ion-item>
       <ion-label style="font-size: 18px !important" position="stacked">
         Name<span style="color: #d30c0c">*</span>
@@ -61,7 +61,7 @@
         required
       ></ion-input>
     </ion-item>
-    
+
     <ion-item>
       <ion-label style="font-size: 18px !important" position="stacked">
         Message<span style="color: #d30c0c">*</span>
@@ -76,14 +76,16 @@
       ></ion-textarea>
     </ion-item>
 
+    <!-- Correct structure with ion-item wrapper: -->
     <ion-item>
       <ion-label style="font-size: 18px !important" position="stacked">
         Captcha<span style="color: #d30c0c">*</span>
       </ion-label>
-    </ion-item>
 
-    <div>
-      <div class="captcha-container1">
+      <div
+        class="captcha-container1"
+        style="margin-top: 8px; margin-bottom: 8px"
+      >
         <p class="captcha">{{ formattedCaptcha }}</p>
         <img
           src="https://dynamiccoupons.com/images/refresh4.png"
@@ -101,12 +103,21 @@
         [(ngModel)]="captchaInput"
         placeholder="Enter CAPTCHA"
         required
+        (ionInput)="isCaptchaInvalid = false"
       ></ion-input>
-      <p *ngIf="isCaptchaInvalid">Invalid CAPTCHA, please try again.</p>
-    </div>
-    
+
+      <p
+        *ngIf="isCaptchaInvalid"
+        style="color: #d30c0c; font-size: 14px; margin-top: 4px"
+      >
+        Invalid CAPTCHA, please try again.
+      </p>
+    </ion-item>
+
     <div class="login-button">
-      <ion-button expand="block" (click)="registerForm(element)">Send</ion-button>
+      <ion-button expand="block" (click)="registerForm(element)"
+        >Send</ion-button
+      >
     </div>
   </div>
 </ion-content>

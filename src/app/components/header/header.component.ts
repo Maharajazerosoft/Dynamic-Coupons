@@ -1,7 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, NavController, MenuController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { Browser, OpenOptions } from '@capacitor/browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -36,19 +37,18 @@ export class HeaderComponent implements OnInit {
   };
 
   constructor(
-    private navCtrl: NavController,
-    private menuCtrl: MenuController
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.logoPath = this.logoPath || 'assets/icon/logo.png';
   }
 
-  async goBack() {
+  goBack() {
     if (this.backClicked.observers.length > 0) {
       this.backClicked.emit();
     } else {
-      this.navCtrl.back();
+      window.history.back();
     }
   }
 
@@ -73,55 +73,55 @@ export class HeaderComponent implements OnInit {
     this.menuClosed.emit();
   }
 
-  async handleMenuItemClick(type: string) {
+  handleMenuItemClick(type: string) {
     this.toggleMenu(); // Close menu when item is clicked
     
     // Add a small delay to ensure menu closes before navigation
-    setTimeout(async () => {
+    setTimeout(() => {
       if (this.menuItemClicked.observers.length > 0) {
         this.menuItemClicked.emit(type);
       } else {
-        await this.navigateToPage(type);
+        this.navigateToPage(type);
       }
     }, 200);
   }
 
-  private async navigateToPage(type: string) {
+  private navigateToPage(type: string) {
     switch(type) {
       case 'search':
-        await this.navCtrl.navigateForward('/search');
+        this.router.navigate(['/search']);
         break;
       case 'local':
-        await this.navCtrl.navigateForward('/coupons/local');
+        this.router.navigate(['/coupons/local']);
         break;
       case 'national':
-        await this.navCtrl.navigateForward('/coupons/national');
+        this.router.navigate(['/coupons/national']);
         break;
       case 'privacy':
-        await this.navCtrl.navigateForward('/privacy');
+        this.router.navigate(['/privacy']);
         break;
       case 'fundraise':
-        await Browser.open({
+        Browser.open({
           url: 'https://www.dynamiccoupons.com/donation_index.php',
           ...this.browserOptions
         });
         break;
       case 'faq':
-        await Browser.open({
+        Browser.open({
           url: 'https://www.dynamiccoupons.com/faq.php',
           ...this.browserOptions
         });
         break;
       case 'contact':
-        await this.navCtrl.navigateForward('/contact');
+        this.router.navigate(['/contact']);
         break;
       default:
         console.warn('Unknown menu item:', type);
     }
   }
 
-  async openWebsite() {
-    await Browser.open({
+  openWebsite() {
+    Browser.open({
       url: 'https://www.dynamiccoupons.com',
       ...this.browserOptions
     });

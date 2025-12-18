@@ -67,66 +67,76 @@ export class ContactPage {
   }
 
   registerForm(formdata: any) {
-    console.log(this.captchaInput, "captchaInput");
-    console.log(this.captchaNumber, "captchaNumber");
+    console.log('Form data:', formdata);
+    console.log('CAPTCHA Input:', this.captchaInput);
+    console.log('CAPTCHA Number:', this.captchaNumber);
     console.log('Form submitted with reCAPTCHA response:', this.captchaResponse);
-    console.log(formdata);
     
-    var fullname = formdata.name;
-    var email = formdata.email;
-    var subject = formdata.subject;
-    var message = formdata.message;
-    var captcha = formdata.captcha;
-
-    console.log(captcha, "captcha");
+    // Use the element object which is bound to the form
+    const fullname = this.element.name;
+    const email = this.element.email;
+    const subject = this.element.subject;
+    const message = this.element.message;
+    
+    console.log('Captcha from element:', this.element.captcha);
+    console.log('Captcha from separate variable:', this.captchaInput);
     
     var data;
     var web_package = this.price_id;
     
-    if (formdata === undefined || formdata === '') {
-      this._commonService.presentToast(`Field are required.`);
-    } else if (email === undefined || email === '') {
+    if (!email || email.trim() === '') {
       this._commonService.presentToast(`Enter your email.`);
+      return;
     } else if (!this._commonService.validateEmail(email)) {
       this._commonService.presentToast(`Enter valid email.`);
-    } else if (fullname === undefined || fullname === '' || fullname.trim() === '') {
+      return;
+    } else if (!fullname || fullname.trim() === '') {
       this._commonService.presentToast(`Enter your name.`);
-    } else if (subject === undefined || subject === '' || subject.trim() === '') {
+      return;
+    } else if (!subject || subject.trim() === '') {
       this._commonService.presentToast(`Enter Subject.`);
-    } else if (message === undefined || message === '' || message.trim() === '') {
+      return;
+    } else if (!message || message.trim() === '') {
       this._commonService.presentToast(`Enter Message.`);
-    } else if (this.captchaInput == "") {
+      return;
+    } else if (!this.captchaInput || this.captchaInput.trim() === '') {
       this._commonService.presentToast(`Enter the captcha.`);
+      return;
     } else if (parseInt(this.captchaInput) !== this.captchaNumber) {
       this._commonService.presentToast(`Invalid CAPTCHA, please try again.`);
-    } else {
-      console.log(this.value, 'this.value');
-     
-      data = {
-        name: fullname,
-        email: email,
-        subject: subject,
-        message: message.replace(/\n/g, '<br>'),
-        date: new Date(),
-      };
-      
-      this._commonService.presentLoading();
-      this._commonService.contactform(data).then(Response => {
-        if (Response.status === '200') {
-          console.log(this.value, 'this.value');
-          this._commonService.closeLoading();
-          this.router.navigate(['/search']);
-          this._commonService.presentToast(Response.error);
-        } else {
-          this._commonService.closeLoading();
-          this._commonService.presentToast(Response.error);
-        }
-      }, (err) => {
-        this._commonService.closeLoading();
-        this._commonService.presentToast(`Connection error`);
-      });
-      
-      this.element = { email: '', name: '', subject: '', message: '' };
+      this.isCaptchaInvalid = true;
+      return;
     }
+    
+    console.log(this.value, 'this.value');
+   
+    data = {
+      name: fullname,
+      email: email,
+      subject: subject,
+      message: message.replace(/\n/g, '<br>'),
+      date: new Date(),
+    };
+    
+    this._commonService.presentLoading();
+    this._commonService.contactform(data).then(Response => {
+      if (Response.status === '200') {
+        console.log(this.value, 'this.value');
+        this._commonService.closeLoading();
+        this.router.navigate(['/search']);
+        this._commonService.presentToast(Response.error);
+      } else {
+        this._commonService.closeLoading();
+        this._commonService.presentToast(Response.error);
+      }
+    }, (err) => {
+      this._commonService.closeLoading();
+      this._commonService.presentToast(`Connection error`);
+    });
+    
+    // Clear form
+    this.element = { email: '', name: '', subject: '', message: '', captcha: '' };
+    this.captchaInput = '';
+    this.generateCaptcha(); // Generate new CAPTCHA after submission
   }
 }
