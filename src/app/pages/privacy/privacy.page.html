@@ -1,40 +1,78 @@
-<ion-header class="privacy-header">
-  <ion-toolbar class="home-toolbar">
-
-
-       <ion-buttons slot="start">
-      <ion-button (click)="goBack()" >
-        <ion-icon name="arrow-back" class="back-arrow"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-
-    <img style="width:90% !important;" src="assets/icon/logo.png" class="home-img" />
-
-     <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon name="menu"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-
-  </ion-toolbar>
-
-  <h1 style="color: #FFC107 !important;" class="title">
-    App Privacy Policy/Terms of Use
-  </h1>
-</ion-header>
+<app-header [title]="'Home'" [showLogo]="true" [showBackButton]="false">
+</app-header>
 
 <ion-content>
   <div class="border">
-
-   <div class="privacy-section-container"><b>Introduction:</b>DynamicCoupons App is committed to protecting your privacy. We have established this Privacy Policy and are providing it to you so that you can understand the way we collect and use your information and the efforts we use to protect it. Please note that this policy is for DynamicCoupons App only and does not apply to other 3rd party web sites that the App may be using in its content. Please check the privacy policies on those web sites for more information.</div>
-     <div class="privacy-section-container" ><b>Personal Information Collected:</b>DynamicCoupons App recognizes the need for consumers to control the use and management of personal information. By personal information we mean information that can be used to identify or contact an individual. This may include, but is not limited to, a first and last name, a physical address, an email address, an id number, or a phone number. If you are visiting our App to browse or find information about DynamicCoupons products or services, you are not asked to provide any personal information. However, if you decide to redeem and print a coupon, we may collect your email information so that we can provide you with the product or service you requested. Your email may also be shared with the business owner whose coupon you decide to redeem.</div>
-     <div class="privacy-section-container" ><b>Automatic Information Collected:</b>We do not use any technology that helps track or collect any personal information automatically such as tracking cookies or otherwise store device or location information.</div>
-     <div class="privacy-section-container" ><b>Personal Information Use:</b>DynamicCoupons App uses personal information provided by you so that we can service your account. Also note that we may need to transfer that information to our agents or employees of our service providers. We will not sell or trade your information to unrelated third parties. When you submit an order, you will receive an email confirmation from our system. As your order status changes you may also receive notifications via email. We may also periodically send you email notifications concerning products or services. Any such notification will include instructions for opting out of future mailings.</div>
-     <div class="privacy-section-container" ><b>Third Parties:</b> We may partner with other third parties to provide various products and services. When you sign up for these services or products, we may share required personal information that is necessary for the third party to provide the products or services to you.  We take reasonable steps to ensure that these third parties are obligated to protect your information on our behalf. It is also against our policy to sell or trade information collected online without consumer consent. We may, however, release personal information if we are legally required to do so. If we are legally compelled to release information to a third party, DynamicCoupons App, may or may not notify you of this release.</div>
-     <div class="privacy-section-container" ><b>Children:</b> DynamicCoupons App’s target market is general public which mean anyone may be able to participate.  It is not meant to attract children and is not directed to children under the age of 18.   We do NOT knowingly collect personally identifiable information from children under the age of 18 as part of this policy if we become aware that we have inadvertently received personally identifiable information from a user under the age of 18 we will delete such information from our records.  Please contact us at the email provided below so that we may remove the child's information.</div>
-     <div class="privacy-section-container" ><b>Compliance:</b> This privacy policy complies with the ecommerce industry best practice guidelines and with California's Privacy Protection Act of 2004. If you have any questions or concerns about this policy, please contact us using the information provided below.</div>
-     <div class="privacy-section-container" ><b>Contact:</b>Please direct all privacy related questions and concerns via the following email: customer_service@dynamicCoupons.com</div>
-
-
+    <div class="privacy-section-container">
+      <b>Introduction:</b>DynamicCoupons App is committed to protecting your
+      privacy. We have established this Privacy Policy and are providing it to
+      you so that you can understand the way we collect and use your information
+      and the efforts we use to protect it. Please note that this policy is for
+      DynamicCoupons App only and does not apply to other 3rd party web sites
+      that the App may be using in its content. Please check the privacy
+      policies on those web sites for more information.
+    </div>
+    <div class="privacy-section-container">
+      <b>Personal Information Collected:</b>DynamicCoupons App recognizes the
+      need for consumers to control the use and management of personal
+      information. By personal information we mean information that can be used
+      to identify or contact an individual. This may include, but is not limited
+      to, a first and last name, a physical address, an email address, an id
+      number, or a phone number. If you are visiting our App to browse or find
+      information about DynamicCoupons products or services, you are not asked
+      to provide any personal information. However, if you decide to redeem and
+      print a coupon, we may collect your email information so that we can
+      provide you with the product or service you requested. Your email may also
+      be shared with the business owner whose coupon you decide to redeem.
+    </div>
+    <div class="privacy-section-container">
+      <b>Automatic Information Collected:</b>We do not use any technology that
+      helps track or collect any personal information automatically such as
+      tracking cookies or otherwise store device or location information.
+    </div>
+    <div class="privacy-section-container">
+      <b>Personal Information Use:</b>DynamicCoupons App uses personal
+      information provided by you so that we can service your account. Also note
+      that we may need to transfer that information to our agents or employees
+      of our service providers. We will not sell or trade your information to
+      unrelated third parties. When you submit an order, you will receive an
+      email confirmation from our system. As your order status changes you may
+      also receive notifications via email. We may also periodically send you
+      email notifications concerning products or services. Any such notification
+      will include instructions for opting out of future mailings.
+    </div>
+    <div class="privacy-section-container">
+      <b>Third Parties:</b> We may partner with other third parties to provide
+      various products and services. When you sign up for these services or
+      products, we may share required personal information that is necessary for
+      the third party to provide the products or services to you. We take
+      reasonable steps to ensure that these third parties are obligated to
+      protect your information on our behalf. It is also against our policy to
+      sell or trade information collected online without consumer consent. We
+      may, however, release personal information if we are legally required to
+      do so. If we are legally compelled to release information to a third
+      party, DynamicCoupons App, may or may not notify you of this release.
+    </div>
+    <div class="privacy-section-container">
+      <b>Children:</b> DynamicCoupons App’s target market is general public
+      which mean anyone may be able to participate. It is not meant to attract
+      children and is not directed to children under the age of 18. We do NOT
+      knowingly collect personally identifiable information from children under
+      the age of 18 as part of this policy if we become aware that we have
+      inadvertently received personally identifiable information from a user
+      under the age of 18 we will delete such information from our records.
+      Please contact us at the email provided below so that we may remove the
+      child's information.
+    </div>
+    <div class="privacy-section-container">
+      <b>Compliance:</b> This privacy policy complies with the ecommerce
+      industry best practice guidelines and with California's Privacy Protection
+      Act of 2004. If you have any questions or concerns about this policy,
+      please contact us using the information provided below.
+    </div>
+    <div class="privacy-section-container">
+      <b>Contact:</b>Please direct all privacy related questions and concerns
+      via the following email: customer_service@dynamicCoupons.com
+    </div>
   </div>
 </ion-content>

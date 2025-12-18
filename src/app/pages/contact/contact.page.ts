@@ -1,17 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonProvider } from '../../providers/common/common';
-
-// Note: @ionic-native/date-picker and @ionic-native/paypal removed as they are Cordova-specific
-// You'll need to find Capacitor alternatives for these if needed
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.page.html',
   styleUrls: ['./contact.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class ContactPage {
   element: any = { email: '', name: '', subject: '', message: '', captcha: '' };

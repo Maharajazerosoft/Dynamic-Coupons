@@ -1,22 +1,7 @@
-<ion-header>
-  <ion-toolbar class="mytoolbar">
-    <ion-buttons slot="end">
-      <ion-menu-button>
-        <ion-icon name="menu"></ion-icon>
-      </ion-menu-button>
-    </ion-buttons>
+<app-header [title]="'Home'" [showLogo]="true" [showBackButton]="false">
+</app-header>
 
-    <img src="./assets/icon/logo.png" />
-
-    <ion-buttons slot="start">
-      <ion-button (click)="goBack()">
-        <ion-icon name="arrow-back" class="text-color-white"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
+<ion-content id="main-content">
   <h1 style="color: #ffc107 !important" class="title">Contact</h1>
   <p style="color: white !important; text-align: center; font-size: 19px">
     Please fill the following form to contact us:
