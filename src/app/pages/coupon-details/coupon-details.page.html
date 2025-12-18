@@ -1,13 +1,162 @@
+<!-- Header -->
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>coupon-details</ion-title>
+  <ion-toolbar class="home-toolbar" color="primary">
+    <ion-buttons slot="end" menuToggle>
+      <ion-button>
+        <ion-icon slot="icon-only" name="menu"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    
+    <img src="./assets/icon/logo.png" class="home-img"/>
+    
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/search"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
+  
+  <h1 class="title">Coupon Details</h1>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">coupon-details</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="border" [hidden]="viewmodal">
+    <!-- Coupon Details Card -->
+    <ion-card class="couponPg" [hidden]="viewredeem" (click)="nextPage(details.web_id, details.web_coupons_merchant_type, details.web_coupon_circulation, details.web_coupon_url)">
+      <ion-card-header>
+        <ion-card-title class="title">{{details.web_coupon_title}}</ion-card-title>
+        <div class="center">
+          <!-- Image display logic from your original code -->
+          <img src="https://www.dynamiccoupons.com/webupload/thumb/coupons/{{details.web_coupon_image}}" 
+               *ngIf="details.web_coupon_image !== '' && details.image_type == 'img_upload'" 
+               alt="Coupon Image">
+          <img src="{{details.web_coupon_image_url}}" 
+               *ngIf="details.image_type == 'img_link'" 
+               alt="Coupon Image">
+          <img src="https://www.dynamiccoupons.com/webupload/thumb/default/default.png" 
+               *ngIf="details.web_coupon_image === '' && details.image_type == 'img_upload'">
+        </div>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="inner-css" [innerHTML]="sanitizedHtml"></div>
+        
+        <h3 *ngIf="details.web_coupon_id != ''">Coupon ID: {{details.web_coupon_id}}</h3>
+        <h4>Valid Up To: {{details.web_coupon_expiredate}}</h4>
+        
+        <h3 class="company">{{details.web_coupon_bname}}</h3>
+        
+        <div class="para">
+          <p>Address: {{details.web_coupon_address}}</p>
+          <p>{{details.web_coupon_city}}, {{details.web_coupon_state}}, {{details.web_coupon_postalcode}}</p>
+          <p>{{details.web_coupon_country}}</p>
+        </div>
+        
+        <a *ngIf="details.web_coupon_url != '' || details.web_coupon_url != 'Not Available'" 
+           (click)="inappclick(details.web_coupon_url)">
+          Visit website
+          <br>
+          <img src="https://www.dynamiccoupons.com/images/image002.gif">
+        </a>
+      </ion-card-content>
+    </ion-card>
+    
+    <!-- Redeem Options Button -->
+    <div class="login-button">
+      <!-- Show 'View Redeem Options' when circulation not exceeded -->
+      <button *ngIf="details.web_coupon_circulation !== '' && details.count_share < details.web_coupon_circulation && 
+                    (details.web_coupons_merchant_type === '1' || details.web_coupons_merchant_type === '2')" 
+              ion-button 
+              [hidden]="viewredeem" 
+              (click)="presentAlert()">
+        View Redeem Options
+      </button>
+      
+      <!-- Show 'Circulation has Ended' when circulation is exceeded -->
+      <button *ngIf="details.web_coupon_circulation !== '' && details.count_share >= details.web_coupon_circulation && 
+                    (details.web_coupons_merchant_type === '1' || details.web_coupons_merchant_type === '2')" 
+              ion-button 
+              [hidden]="viewredeem" 
+              disabled>
+        Circulation has Ended
+      </button>
+      
+      <button ion-button [hidden]="!viewredeem" (click)="viewredeem = !viewredeem">Back to Offer</button>
+    </div>
+    
+    <!-- Map Display -->
+    <div *ngIf="details.web_coupon_address !== ''">
+      <div [hidden]="viewredeem" #mapElement style="height: 400px; margin: 5% 0% 10% 0%;"></div>
+    </div>
+    
+    <!-- Email History Data List -->
+    <datalist id="emailHistory">
+      <option *ngFor="let option of emailHistory" [value]="option"></option>
+    </datalist>
+    
+    <!-- Email Input for Modal -->
+    <div [hidden]="!viewmodal">
+      <p>Before View Redeem Options Enter your Email Address!</p>
+      <ion-input name="email" type="email" placeholder="Email Address" [(ngModel)]="emailredeem" required></ion-input>
+    </div>
+    
+    <!-- Redeem Page Content -->
+    <div [hidden]="viewmodal">
+      <ion-card class="couponPg redeempg" [hidden]="!viewredeem">
+        <ion-card-header>
+          <ion-card-title>{{details.web_coupon_title}}</ion-card-title>
+          <div class="center">
+            <img src="{{details.web_qrcode}}">
+          </div>
+          <p>{{details.web_coupon_bname}}</p>
+          <p>Valid up to: {{details.web_coupon_expiredate}}</p>
+        </ion-card-header>
+        
+        <ion-card-content>
+          <div [innerHTML]="details.web_redeem_option_info"></div>
+          
+          <ion-item>
+            <ion-label slot="start">Print Coupon with Image</ion-label>
+            <ion-checkbox color="primary" [(ngModel)]="imageAttach"></ion-checkbox>
+          </ion-item>
+          
+          <div class="login-button">
+            <button ion-button block (click)="printAlertPrompt()">Email this/all Selected Coupons to Print</button>
+          </div>
+          
+          <div class="login-button">
+            <button ion-button block (click)="printlistsave()">Add Coupon to the Email/Print List</button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+  
+  <!-- Redeem Instructions -->
+  <div [hidden]="!viewredeem">
+    <p>Use coupon before the expiration date.</p>
+    <p>QR code scan is at merchant's discretion.</p>
+  </div>
+  
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading coupon details...</p>
+  </div>
+  
+  <!-- Error State -->
+  <div class="error-container" *ngIf="error">
+    <ion-icon name="alert-circle-outline" size="large"></ion-icon>
+    <h3>Unable to load coupon</h3>
+    <p>{{ error }}</p>
+    <ion-button (click)="retry()">Retry</ion-button>
+  </div>
 </ion-content>
+
+<!-- Footer -->
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" fill="clear" routerLink="/search">
+      <ion-icon name="search-outline" slot="start"></ion-icon>
+      Search Many Deals? Keywords biz, city, zip
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

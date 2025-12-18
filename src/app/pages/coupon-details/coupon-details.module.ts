@@ -13,8 +13,9 @@ import { CouponDetailsPage } from './coupon-details.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    CouponDetailsPageRoutingModule
+    CouponDetailsPageRoutingModule,
+    CouponDetailsPage
   ],
-  declarations: [CouponDetailsPage]
+  declarations: []
 })
 export class CouponDetailsPageModule {}
