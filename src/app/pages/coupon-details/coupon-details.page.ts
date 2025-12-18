@@ -1,21 +1,26 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { 
-  AlertController, 
-  ModalController, 
-  ToastController, 
+import {
+  AlertController,
+  ModalController,
+  ToastController,
   LoadingController,
-  IonicModule
+  Platform,
+  AlertInput,
 } from '@ionic/angular';
 import { Preferences } from '@capacitor/preferences';
 import { Browser } from '@capacitor/browser';
 import { Share } from '@capacitor/share';
-import { EmailComposer } from 'capacitor-email-composer';
-import { Geolocation } from '@capacitor/geolocation';
-import { Platform } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
 
 // Import your services
 import { CommonService } from '../../../providers/common/common.service';
@@ -24,7 +29,7 @@ import { DetailsService } from '../../../providers/details/details.service';
 declare const google: any;
 
 @Component({
-  selector: 'app-coupondetails',
+  selector: 'app-coupon-details',
   templateUrl: './coupon-details.page.html',
   styleUrls: ['./coupon-details.page.scss'],
   standalone: true,
@@ -36,8 +41,8 @@ declare const google: any;
 })
 export class CouponDetailsPage implements OnInit, AfterViewInit {
   @ViewChild('mapElement', { static: false }) mapElement!: ElementRef;
-  
-  // Variables
+
+  // Variables - matching your original names
   sanitizedHtml: SafeHtml;
   emailHistory: string[] = [];
   cid: any;
@@ -59,10 +64,10 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
   postalcode: any;
   map: any;
   marker: any;
-  
-  // Loading state
-  isLoading = true;
-  mapInitialized = false;
+
+  // New variables for better state management
+  isLoading = false;
+  error: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -79,13 +84,17 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
     this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml('');
   }
 
-  ngOnInit() {
+  public alertInputs: AlertInput[] = [];
+
+  async ngOnInit() {
+    await this.platform.ready();
     this.initLoad();
+    await this.loadEmailHistory();
+    this.initializeAlertInputs();
   }
 
-  async ngAfterViewInit() {
+  ngAfterViewInit() {
     // Initialize map after view is loaded
-    await this.platform.ready();
     if (this.details.web_coupon_address) {
       setTimeout(() => this.initializeMap(), 500);
     }
@@ -93,10 +102,11 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
 
   async initLoad() {
     this.isLoading = true;
-    
+    this.error = null;
+
     // Get coupon ID from route parameters
     this.cid = this.route.snapshot.paramMap.get('cid');
-    
+
     if (!this.cid) {
       this._commonService.presentToast('Invalid coupon ID');
       this.router.navigate(['/search']);
@@ -105,10 +115,10 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
 
     // Get stored email
     await this.loadUserEmail();
-    
+
     // Load coupon details
     await this.initcontent();
-    
+
     this.isLoading = false;
   }
 
@@ -120,9 +130,6 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
     } catch (error) {
       console.error('Error loading user email:', error);
     }
-    
-    // Load email history
-    await this.loadEmailHistory();
   }
 
   async loadEmailHistory() {
@@ -137,135 +144,105 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
   async initcontent() {
     try {
       const loading = await this.loadingController.create({
-        message: 'Loading coupon details...'
+        message: 'Loading coupon details...',
       });
       await loading.present();
 
       const Response = await this._detailsService.getContent(this.cid);
-      
-      if (Response.status === "200") {
+
+      if (Response.status === '200') {
         this.details = Response.data;
-        
+
         // Extract address details
         this.address = this.details.web_coupon_address;
         this.city = this.details.web_coupon_city;
         this.country = this.details.web_coupon_country;
         this.state = this.details.web_coupon_state;
         this.postalcode = this.details.web_coupon_postalcode;
-        
+
         // Sanitize HTML content
         this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(
           this.details.web_coupon_details || ''
         );
-        
+
         // Initialize map if address exists
-        if (this.address && !this.mapInitialized) {
+        if (this.address) {
           await this.initializeMap();
-          this.mapInitialized = true;
         }
-        
       } else {
-        this._commonService.presentToast(Response.error || 'Failed to load coupon');
+        this.error = Response.error || 'Failed to load coupon';
       }
-      
+
       await loading.dismiss();
-      
-    } catch (err) {
+    } catch (err: any) {
       await this.loadingController.dismiss();
-      this._commonService.presentToast('Connection error');
+      this.error = 'Connection error';
+      this._commonService.presentToast(this.error);
       console.error('Error loading coupon:', err);
     }
   }
 
   async initializeMap() {
     if (!this.mapElement?.nativeElement || !this.address) return;
-    
+
     try {
-      // Initialize geocoder
       const geocoder = new google.maps.Geocoder();
       const fullAddress = `${this.address}, ${this.city}, ${this.country}, ${this.state}, ${this.postalcode}`;
-      
-      geocoder.geocode({ 'address': fullAddress }, async (results: any, status: any) => {
-        if (status === google.maps.GeocoderStatus.OK) {
-          const latitude = results[0].geometry.location.lat();
-          const longitude = results[0].geometry.location.lng();
-          const latlng = new google.maps.LatLng(latitude, longitude);
-          
-          // Map options
-          const mapOptions = {
-            center: latlng,
-            zoom: 14,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            gestureHandling: 'greedy',
-            disableDefaultUI: false,
-            zoomControl: true,
-            mapTypeControl: true,
-            scaleControl: true,
-            streetViewControl: true,
-            rotateControl: true,
-            fullscreenControl: true
-          };
-          
-          // Create map
-          this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-          
-          // Create marker
-          this.marker = new google.maps.Marker({
-            position: latlng,
-            map: this.map,
-            title: this.details.web_coupon_bname,
-            animation: google.maps.Animation.DROP
-          });
-          
-          // Info window
-          const infoWindow = new google.maps.InfoWindow({
-            content: `
+
+      geocoder.geocode(
+        { address: fullAddress },
+        (results: any, status: any) => {
+          if (status === google.maps.GeocoderStatus.OK) {
+            const latitude = results[0].geometry.location.lat();
+            const longitude = results[0].geometry.location.lng();
+            const latlng = new google.maps.LatLng(latitude, longitude);
+
+            const mapOptions = {
+              center: latlng,
+              zoom: 14,
+              mapTypeId: google.maps.MapTypeId.ROADMAP,
+            };
+
+            this.map = new google.maps.Map(
+              this.mapElement.nativeElement,
+              mapOptions
+            );
+
+            this.marker = new google.maps.Marker({
+              position: latlng,
+              map: this.map,
+              title: this.details.web_coupon_bname,
+            });
+
+            // Info window
+            const infoWindow = new google.maps.InfoWindow({
+              content: `
               <div style="padding: 10px;">
                 <strong>${this.details.web_coupon_bname}</strong><br>
                 ${this.address}<br>
                 ${this.city}, ${this.state} ${this.postalcode}
               </div>
-            `
-          });
-          
-          // Marker click event
-          this.marker.addListener('click', () => {
+            `,
+            });
+
+            this.marker.addListener('click', () => {
+              infoWindow.open(this.map, this.marker);
+            });
+
+            // Open info window by default
             infoWindow.open(this.map, this.marker);
-            
-            // Open Google Maps
-            this.openGoogleMaps(latitude, longitude);
-          });
-          
-          // Open info window by default
-          infoWindow.open(this.map, this.marker);
-          
-        } else {
-          console.error('Geocode was not successful:', status);
+          }
         }
-      });
-      
+      );
     } catch (error) {
       console.error('Error initializing map:', error);
     }
   }
 
-  async openGoogleMaps(lat: number, lng: number) {
-    const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-    
-    try {
-      await Browser.open({
-        url: url,
-        presentationStyle: 'popover'
-      });
-    } catch (error) {
-      window.open(url, '_blank');
-    }
-  }
-
+  /* view redeem button click alert */
   async presentAlertPrompt() {
     const alert = await this.alertController.create({
-      header: 'Enter Your Email',
-      message: 'Please enter your email address to view redeem options',
+      header: 'Before View Redeem Options Enter your Email Address!',
       inputs: [
         {
           name: 'email',
@@ -273,26 +250,26 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
           placeholder: 'Email Address',
           value: this.emailredeem || '',
           attributes: {
-            autocomplete: 'email'
-          }
-        }
+            autocomplete: 'email',
+          },
+        },
       ],
       buttons: [
         {
           text: 'Cancel',
           role: 'cancel',
-          cssClass: 'secondary'
+          cssClass: 'secondary',
         },
         {
           text: 'OK',
           handler: async (data) => {
             await this.handleEmailSubmission(data.email);
-            return false; // Keep alert open if validation fails
-          }
-        }
-      ]
+            return false;
+          },
+        },
+      ],
     });
-    
+
     await alert.present();
   }
 
@@ -301,41 +278,43 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
       this._commonService.presentToast('Please enter your email');
       return false;
     }
-    
+
     if (!this._commonService.validateEmail(email)) {
       this._commonService.presentToast('Please enter a valid email');
       return false;
     }
-    
+
     try {
       const loading = await this.loadingController.create({
-        message: 'Processing...'
+        message: 'Processing...',
       });
       await loading.present();
-      
+
       // Save email
       await Preferences.set({ key: 'userEmail', value: email });
       this.emailredeem = email;
-      
-      // Update email in database
+      localStorage.setItem('redeemEmail', email);
+
+      // Update email in database - using your original service call
       const data = { email: email, cid: this.cid };
       const Response = await this._detailsService.updateemail(data);
-      
+
       await loading.dismiss();
-      
-      if (Response.status === "200") {
+
+      if (Response.status === '200') {
         this.viewredeem = true;
         // Add to email history
         await this.addToEmailHistory(email);
       } else {
-        this._commonService.presentToast(Response.error || 'Failed to update email');
+        this._commonService.presentToast(
+          Response.error || 'Failed to update email'
+        );
       }
-      
     } catch (error) {
       await this.loadingController.dismiss();
       this._commonService.presentToast('Connection error');
     }
-    
+
     return true;
   }
 
@@ -346,100 +325,106 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
       if (index > -1) {
         this.emailHistory.splice(index, 1);
       }
-      
+
       // Add to beginning
       this.emailHistory.unshift(email);
-      
+
       // Keep only last 10 emails
       if (this.emailHistory.length > 10) {
         this.emailHistory = this.emailHistory.slice(0, 10);
       }
-      
+
       // Save to preferences
-      await Preferences.set({ 
-        key: 'emailHistory', 
-        value: JSON.stringify(this.emailHistory) 
+      await Preferences.set({
+        key: 'emailHistory',
+        value: JSON.stringify(this.emailHistory),
       });
-      
     } catch (error) {
       console.error('Error saving email history:', error);
     }
   }
 
+  /* print coupon button click alert */
   async printAlertPrompt() {
-    const email = this.emailredeem;
-    
+    let email = this.emailredeem || localStorage.getItem('redeemEmail');
+
     if (!email) {
       await this.presentAlertPrompt();
       return;
     }
-    
+
     if (!this._commonService.validateEmail(email)) {
       this._commonService.presentToast('Please enter a valid email');
       return;
     }
-    
+
+    this.useremail = email;
+
     try {
-      const loading = await this.loadingController.create({
-        message: 'Preparing coupon...'
-      });
-      await loading.present();
-      
       // Get stored coupon list
-      const { value: cidList } = await Preferences.get({ key: 'dc_CoupListId' });
+      const { value: cidList } = await Preferences.get({
+        key: 'dc_CoupListId',
+      });
       if (cidList) {
-        this.overAllCidStr = this.cid + "|" + cidList;
+        this.overAllCidStr = this.cid + '|' + cidList;
       } else {
         this.overAllCidStr = this.cid;
       }
-      
+
       // Prepare data
       const data = {
         email: email,
-        cid: this.overAllCidStr
+        cid: this.overAllCidStr,
       };
-      
+
       // Get coupon HTML
       await this.getCoupSaved();
-      
     } catch (error) {
-      await this.loadingController.dismiss();
       this._commonService.presentToast('Error occurred');
     }
   }
 
-  async printlistsave() {
+  printlistsave() {
+    this.saveToPrintList();
+  }
+
+  async saveToPrintList() {
     try {
-      const { value: existingList } = await Preferences.get({ key: 'dc_CoupList' });
-      const { value: existingIds } = await Preferences.get({ key: 'dc_CoupListId' });
-      
+      const { value: existingList } = await Preferences.get({
+        key: 'dc_CoupList',
+      });
+      const { value: existingIds } = await Preferences.get({
+        key: 'dc_CoupListId',
+      });
+
       const htmlStr = this.printhtml();
-      
+
       if (existingIds) {
-        const idList = existingIds.split("|");
-        
+        const idList = existingIds.split('|');
+
         if (!idList.includes(this.cid)) {
           // Add new coupon
-          const newIdList = idList.concat(this.cid).join("|");
-          const newHtmlList = existingList ? `${existingList}||${htmlStr}` : htmlStr;
-          
+          const newIdList = idList.concat(this.cid).join('|');
+          const newHtmlList = existingList
+            ? `${existingList}||${htmlStr}`
+            : htmlStr;
+
           await Preferences.set({ key: 'dc_CoupListId', value: newIdList });
           await Preferences.set({ key: 'dc_CoupList', value: newHtmlList });
-          
-          this._commonService.presentToast("Added to print list");
+
+          this._commonService.presentToast('Added to print list');
         } else {
-          this._commonService.presentToast("Coupon already in print list");
+          this._commonService.presentToast('Coupon already in print list');
         }
       } else {
         // First time saving
         await Preferences.set({ key: 'dc_CoupListId', value: this.cid });
         await Preferences.set({ key: 'dc_CoupList', value: htmlStr });
-        
-        this._commonService.presentToast("Added to print list");
+
+        this._commonService.presentToast('Added to print list');
       }
-      
     } catch (error) {
-      this._commonService.presentToast("Error occurred");
+      this._commonService.presentToast('Error occurred');
       console.error('Error saving to print list:', error);
     }
   }
@@ -447,13 +432,16 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
   printhtml(): string {
     let url = '';
     let image = '';
-    
+
     // Handle image
     if (this.imageAttach) {
-      if (this.details.web_coupon_image && this.details.web_coupon_image !== "Not Available") {
+      if (
+        this.details.web_coupon_image &&
+        this.details.web_coupon_image !== 'Not Available'
+      ) {
         const encodedImage = encodeURIComponent(this.details.web_coupon_image);
         image = `<img src="https://www.dynamiccoupons.com/webupload/thumb/coupons/${encodedImage}" style="height: 100px; width: 100px;" alt="Coupon Image">`;
-      } else if (this.details.image_type === 'img_link' && this.details.web_coupon_image_url) {
+      } else if (this.details.image_type === 'img_link') {
         if (this.details.web_coupon_data_url) {
           image = `<img src="https://www.dynamiccoupons.com/webupload/couponimage/${this.details.web_coupon_data_url}" style="height: 100px; width: 100px;" alt="Coupon Image">`;
         } else {
@@ -463,17 +451,20 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
         image = `<img src="https://www.dynamiccoupons.com/webupload/thumb/default/default9.png" height="150px" alt="Default Coupon Image">`;
       }
     }
-    
+
     // Handle URL
-    if (this.details.web_coupon_url && this.details.web_coupon_url !== "Not Available") {
-      url = `<a title="Open in browser" style="cursor:pointer;" target="_blank" href="${this.details.web_coupon_url}">${this.details.web_coupon_url}</a>`;
+    if (
+      this.details.web_coupon_url &&
+      this.details.web_coupon_url !== 'Not Available'
+    ) {
+      url = `<a title="To open, please copy/paste the web address in a new browser window." style="cursor:pointer;" target="_blank" href="${this.details.web_coupon_url}">${this.details.web_coupon_url}</a>`;
     }
-    
+
     // Extract text content from HTML
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = this.details.web_coupon_details || '';
     const textContent = tempDiv.textContent || '';
-    
+
     // Create HTML for coupon
     return `
       <div class="couponbox" style="padding:10px;text-align:center;border:3px dashed #ccc;font-size:14px;width:300px;font-family:Arial;float:left;margin:32px">
@@ -500,13 +491,14 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
 
   async getCoupSaved() {
     try {
-      const { value: existingList } = await Preferences.get({ key: 'dc_CoupList' });
+      const { value: existingList } = await Preferences.get({
+        key: 'dc_CoupList',
+      });
       const htmlStr = this.printhtml();
-      
+
       this.overAllHtmlStr = existingList ? existingList + htmlStr : htmlStr;
-      
+
       await this.printpdf();
-      
     } catch (error) {
       console.error('Error getting saved coupons:', error);
     }
@@ -515,10 +507,10 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
   async printpdf() {
     try {
       const loading = await this.loadingController.create({
-        message: 'Sending email...'
+        message: 'Sending email...',
       });
       await loading.present();
-      
+
       // Prepare HTML
       const fullHtml = `
         <!DOCTYPE html>
@@ -540,108 +532,78 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
         <body>${this.overAllHtmlStr}</body>
         </html>
       `;
-      
+
       // Get coupon IDs
       const { value: cids } = await Preferences.get({ key: 'dc_CoupListId' });
-      
+
       // Prepare data for email
       const data = {
         email: this.useremail,
         econtent: fullHtml,
         cid: this.cid,
-        cids: cids || ''
+        cids: cids || '',
       };
-      
-      // Send email
+
+      // Send email - using your original service call
       const Response = await this._detailsService.sendcoupontoemail(data);
-      
+
       await loading.dismiss();
-      
-      if (Response.status === "200") {
-        this._commonService.presentToast(Response.error || 'Email sent successfully');
-        
+
+      if (Response.status === '200') {
+        this._commonService.presentToast(
+          Response.error || 'Email sent successfully'
+        );
+
         // Clear stored coupons
         await Preferences.remove({ key: 'dc_CoupList' });
         await Preferences.remove({ key: 'dc_CoupListId' });
-        
+
         // Reset view
         this.viewredeem = false;
         await this.initcontent();
-        
       } else {
-        this._commonService.presentToast(Response.error || 'Failed to send email');
+        this._commonService.presentToast(
+          Response.error || 'Failed to send email'
+        );
       }
-      
     } catch (error) {
       await this.loadingController.dismiss();
       this._commonService.presentToast('Connection error');
     }
   }
 
+  // Browser methods using Capacitor
   async inappclick(link: any) {
     if (!link) return;
-    
+
     try {
       await Browser.open({
         url: link,
-        presentationStyle: 'popover'
+        presentationStyle: 'popover',
       });
     } catch (error) {
       window.open(link, '_blank');
     }
   }
 
-  nextPage(id: any, type: any, circulation: any, link: any) {
-    this.inappclick(link);
+  async nextPage(id: any, type: any, circulation: any, link: any) {
+    await this.inappclick(link);
   }
 
+  // Share functionality
   async shareCoupon() {
     try {
       const shareUrl = `https://www.dynamiccoupons.com/coupon/${this.cid}`;
-      
+
       await Share.share({
         title: this.details.web_coupon_title,
         text: `Check out this coupon: ${this.details.web_coupon_title}`,
         url: shareUrl,
-        dialogTitle: 'Share Coupon'
+        dialogTitle: 'Share Coupon',
       });
     } catch (error) {
       console.error('Error sharing:', error);
     }
-  }
-
-  async sendEmail() {
-    try {
-      const isAvailable = await EmailComposer.hasAccount();
-      
-      if (isAvailable) {
-        await EmailComposer.open({
-          to: [this.emailredeem],
-          subject: `Coupon: ${this.details.web_coupon_title}`,
-          body: `Here's your coupon: ${this.details.web_coupon_title}`,
-          isHtml: true
-        });
-      } else {
-        this._commonService.presentToast('No email account configured');
-      }
-    } catch (error) {
-      console.error('Error sending email:', error);
-      this._commonService.presentToast('Failed to open email client');
-    }
-  }
-
-
-  // Helper method to check if circulation has ended
-  isCirculationEnded(): boolean {
-    if (!this.details.web_coupon_circulation) return false;
-    
-    const { web_coupon_circulation, count_share, web_coupons_merchant_type } = this.details;
-    
-    if (web_coupons_merchant_type === '1' || web_coupons_merchant_type === '2') {
-      return count_share >= web_coupon_circulation;
-    }
-    
-    return false;
   }
 
   // Navigation
@@ -649,8 +611,59 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
     this.router.navigate(['/search']);
   }
 
-  // Error handling
+  // Alert methods - keeping your original structure
+  public alertButtons = [
+    {
+      text: 'Cancel',
+      role: 'cancel',
+      cssClass: 'secondary',
+    },
+    {
+      text: 'Ok',
+      handler: async (e: any) => {
+        await this.handleEmailSubmission(e.email);
+        return false;
+      },
+    },
+  ];
+
+  private initializeAlertInputs() {
+    this.alertInputs = [
+      {
+        type: 'email' as const,
+        name: 'email',
+        placeholder: 'Email Address',
+        value: this.emailredeem || '',
+        attributes: {
+          autocorrect: 'on',
+          required: true,
+        },
+        // Remove 'autocomplete' and 'list' - they don't exist in AlertInput type
+      },
+    ];
+  }
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Before View Redeem Options Enter your Email Address!',
+      inputs: this.alertInputs,
+      buttons: this.alertButtons,
+    });
+    await alert.present();
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom',
+      cssClass: 'my-toast-class',
+    });
+    await toast.present();
+  }
+
+  // Retry method for error state
   async retry() {
-    await this.initcontent();
+    await this.initLoad();
   }
 }
