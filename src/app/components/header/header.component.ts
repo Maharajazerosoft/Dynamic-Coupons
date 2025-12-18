@@ -83,7 +83,7 @@ export class HeaderComponent implements OnInit {
       } else {
         this.navigateToPage(type);
       }
-    }, 200);
+    });
   }
 
   private navigateToPage(type: string) {
@@ -98,7 +98,7 @@ export class HeaderComponent implements OnInit {
         this.router.navigate(['/coupons/national']);
         break;
       case 'privacy':
-        this.router.navigate(['/privacy']);
+        this.router.navigateByUrl('/privacy');
         break;
       case 'fundraise':
         Browser.open({
@@ -113,7 +113,7 @@ export class HeaderComponent implements OnInit {
         });
         break;
       case 'contact':
-        this.router.navigate(['/contact']);
+        this.router.navigateByUrl('/contact');
         break;
       default:
         console.warn('Unknown menu item:', type);

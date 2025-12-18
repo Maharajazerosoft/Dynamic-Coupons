@@ -630,6 +630,7 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
     }
   }
 
+
   // Helper method to check if circulation has ended
   isCirculationEnded(): boolean {
     if (!this.details.web_coupon_circulation) return false;
