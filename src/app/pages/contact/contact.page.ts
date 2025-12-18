@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonProvider } from '../../providers/common/common';
+import { CommonService } from '../../../providers/common/common.service';
 
 @Component({
   selector: 'app-contact',
@@ -27,7 +27,7 @@ export class ContactPage {
 
   constructor(
     private router: Router,
-    public _commonService: CommonProvider
+    public _commonService: CommonService
   ) {
     this.generateCaptcha();
   }
