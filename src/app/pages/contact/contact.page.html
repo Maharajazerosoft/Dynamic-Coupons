@@ -2,54 +2,67 @@
 </app-header>
 
 <ion-content>
-  <div class="title-container">
-    <h1 style="color: #ffc107 !important" class="title">Contact</h1>
-    <p style="color: white !important; text-align: center; font-size: 19px">
+  <div class="title-container" style="background-color: #08b8da">
+    <h1
+      style="color: #ffc107 !important; text-align: center; margin: unset"
+      class="title"
+    >
+      Contact
+    </h1>
+    <p
+      style="
+        color: white !important;
+        text-align: center;
+        font-size: 19px;
+        margin: unset;
+        padding: 10px 0px;
+      "
+    >
       Please fill the following form to contact us:
     </p>
   </div>
 
-  <div class="form-container" style="background-color: white !important">
-    <ion-item>
+  <div class="form-container" style="background-color: white !important; padding: 40px 20px;">
+    <div style="margin-bottom: 12px;">
       <ion-label style="font-size: 18px !important" position="stacked">
         Email<span style="color: #d30c0c">*</span>
       </ion-label>
       <ion-input
-        style="padding-left: 12px"
+        style="border: 1px solid black; padding-left: 12px"
         name="email"
         type="email"
         [(ngModel)]="element.email"
         required
       ></ion-input>
-    </ion-item>
+    </div>
 
-    <ion-item>
+    <div style="margin-bottom: 12px;">
       <ion-label style="font-size: 18px !important" position="stacked">
         Name<span style="color: #d30c0c">*</span>
       </ion-label>
       <ion-input
-        style="padding-left: 12px"
+        style="border: 1px solid black; padding-left: 12px"
         name="name"
         type="text"
         [(ngModel)]="element.name"
         required
       ></ion-input>
-    </ion-item>
+    </div>
 
-    <ion-item>
+    <div style="margin-bottom: 12px;">
       <ion-label style="font-size: 18px !important" position="stacked">
         Subject<span style="color: #d30c0c">*</span>
       </ion-label>
       <ion-input
-        style="padding-left: 12px"
+        style="border: 1px solid black; padding-left: 12px"
         name="subject"
         type="text"
         [(ngModel)]="element.subject"
         required
       ></ion-input>
-    </ion-item>
+    </div>
 
-    <ion-item>
+    <div style="margin-bottom: 12px;">
       <ion-label style="font-size: 18px !important" position="stacked">
         Message<span style="color: #d30c0c">*</span>
       </ion-label>
@@ -61,19 +74,18 @@
         [(ngModel)]="element.message"
         required
       ></ion-textarea>
-    </ion-item>
+    </div>
 
-    <!-- Correct structure with ion-item wrapper: -->
-    <ion-item>
+    <div>
       <ion-label style="font-size: 18px !important" position="stacked">
         Captcha<span style="color: #d30c0c">*</span>
       </ion-label>
 
       <div
         class="captcha-container1"
-        style="margin-top: 8px; margin-bottom: 8px"
+        style="margin-top: 10px; padding-top: 25px; padding-bottom: 25px; border-top: solid grey 0.1px;"
       >
-        <p class="captcha">{{ formattedCaptcha }}</p>
+        <p class="captcha" style="margin: unset;">{{ formattedCaptcha }}</p>
         <img
           src="https://dynamiccoupons.com/images/refresh4.png"
           (click)="refreshCaptcha()"
@@ -84,7 +96,7 @@
       </div>
 
       <ion-input
-        style="padding-left: 12px"
+        style="border: 1px solid black; padding-left: 12px; width: 75%; margin: auto;"
         name="captcha"
         type="text"
         [(ngModel)]="captchaInput"
@@ -99,9 +111,9 @@
       >
         Invalid CAPTCHA, please try again.
       </p>
-    </ion-item>
+    </div>
 
-    <div class="login-button">
+    <div class="login-button" style="margin-top: 15px !important; width: 40%; margin: auto; padding: 10px 0;">
       <ion-button expand="block" (click)="registerForm(element)"
         >Send</ion-button
       >

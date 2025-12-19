@@ -133,10 +133,23 @@ app-contact {
 .captcha-container1 {
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .captcha-container img {
     cursor: pointer;
     width: 24px;
     height: 24px;
+}
+
+.sc-ion-input-md-h {
+  min-height: 30px;
+}
+
+:host(.button-block) .button-native {
+    --background: #ff7000 !important;
+    --background-activated: #ff7000 !important;
+    --background-focused: #ff7000 !important;
+    --background-hover: #ff7000 !important;
+    --color: white !important;
 }
