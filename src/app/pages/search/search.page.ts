@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, NavController, ModalController } from '@ionic/angular'; // Add ModalController
+import { IonicModule, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
-import { SearchResultPage } from '../search-result/search-result.page'; // Import the SearchResultPage
 
 @Component({
-  selector: 'search-page',
-  templateUrl: './search.page.html',
-  styleUrls: ['./search.page.scss'],
+  selector: "search-page",
+  templateUrl: "./search.page.html",
+  styleUrls: ["./search.page.scss"],
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule, HeaderComponent],
 })
@@ -17,14 +16,10 @@ export class SearchPage {
   submitted: boolean = true;
   resultStatus: any;
   showButton: boolean = true;
-  searchValue: string = '';
-  val: string = '';
+  searchValue: string = "";
+  val: string = "";
 
-  constructor(
-    private navController: NavController, 
-    private router: Router,
-    private modalController: ModalController // Add ModalController
-  ) {}
+  constructor(private navController: NavController, private router: Router) {}
 
   onCancel() {
     this.submitted = true;
@@ -32,19 +27,19 @@ export class SearchPage {
   }
 
   inappclick(link: string) {
-    window.open(link, '_blank');
+    window.open(link, "_blank");
   }
 
   nextPage(id: any) {
-    this.router.navigate(['/coupon-details'], { queryParams: { cid: id } });
+    this.router.navigate(['/coupondetails'], { queryParams: { cid: id } });
   }
 
   home() {
-    this.router.navigate(['/intro']);
+    this.router.navigate(["/intro"]);
   }
 
   learn() {
-    this.router.navigate(['/learnmore']);
+    this.router.navigate(["/learnmore"]);
   }
 
   getItems(ev: any) {
@@ -53,29 +48,17 @@ export class SearchPage {
 
   searchResult(searchValue: string) {
     if (searchValue) {
-      this.openSearchResultModal(searchValue);
+      this.router.navigate(['/search-result'], {
+        queryParams: { val: searchValue, search: 1 },
+      });
     }
   }
 
-  async openSearchResultModal(searchValue: string) {
-    const modal = await this.modalController.create({
-      component: SearchResultPage,
-      componentProps: {
-        searchValue: searchValue,
-        search: 1
-      },
-
-    });
-
-    await modal.present();
-
-  }
-
   nextLocalPage() {
-    this.router.navigate(['/coupon'], { queryParams: { type: 'local' } });
+    this.router.navigate(["/coupon"], { queryParams: { type: "local" } });
   }
 
   nextNationalPage() {
-    this.router.navigate(['/coupon'], { queryParams: { type: 'national' } });
+    this.router.navigate(["/coupon"], { queryParams: { type: "national" } });
   }
 }
