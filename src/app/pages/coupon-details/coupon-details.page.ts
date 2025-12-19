@@ -4,6 +4,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  Input,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -33,19 +34,15 @@ declare const google: any;
   templateUrl: './coupon-details.page.html',
   styleUrls: ['./coupon-details.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule
-  ]
+  imports: [CommonModule, FormsModule, IonicModule],
 })
 export class CouponDetailsPage implements OnInit, AfterViewInit {
   @ViewChild('mapElement', { static: false }) mapElement!: ElementRef;
+  @Input() cid: any;
 
   // Variables - matching your original names
   sanitizedHtml: SafeHtml;
   emailHistory: string[] = [];
-  cid: any;
   DCloginEmail: any;
   overAllHtmlStr: any;
   overAllCidStr: any;
@@ -65,9 +62,14 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
   map: any;
   marker: any;
 
+  menu: any;
+  isMenuOpen = false;
+  logoPath: string = 'assets/icon/logo.png';
+
   // New variables for better state management
   isLoading = false;
   error: string | null = null;
+  name: "" | undefined
 
   constructor(
     private route: ActivatedRoute,
@@ -88,7 +90,23 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     await this.platform.ready();
-    this.initLoad();
+
+    // Check if cid comes from @Input() (modal) or route params (page)
+    if (this.cid) {
+      console.log('✅ Loading from modal @Input() - CID:', this.cid);
+      this.initLoad();
+    } else {
+      console.log('📋 Loading from route params');
+      this.route.queryParams.subscribe((params) => {
+        const cidFromRoute = params['cid'];
+        if (cidFromRoute) {
+          this.cid = cidFromRoute;
+          console.log('✅ CID from route:', this.cid);
+          this.initLoad();
+        }
+      });
+    }
+
     await this.loadEmailHistory();
     this.initializeAlertInputs();
   }
@@ -101,27 +119,46 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
   }
 
   async initLoad() {
+    console.log('🔍 INITLOAD STARTED');
+
     this.isLoading = true;
     this.error = null;
 
-    // Get coupon ID from route parameters
-    this.cid = this.route.snapshot.paramMap.get('cid');
+    // If cid already set from @Input(), use it
+    if (this.cid) {
+      console.log('✅ Using existing CID from @Input():', this.cid);
+    } else {
+      // Otherwise get from query params
+      this.cid =
+        this.route.snapshot.queryParams['cid'] ||
+        this.route.snapshot.queryParamMap.get('cid');
+      console.log('✅ CID from query params:', this.cid);
+    }
 
     if (!this.cid) {
+      console.error('❌ No CID found!');
+      this.error = 'No coupon ID provided';
+      this.isLoading = false;
       this._commonService.presentToast('Invalid coupon ID');
-      this.router.navigate(['/search']);
+
+      // Navigate based on mode
+      if (this.modalController) {
+        setTimeout(() => this.modalController.dismiss(), 2000);
+      } else {
+        setTimeout(() => this.router.navigate(['/search']), 2000);
+      }
       return;
     }
 
-    // Get stored email
+    console.log('🔍 Loading user email...');
     await this.loadUserEmail();
 
-    // Load coupon details
+    console.log('🔍 Loading coupon content...');
     await this.initcontent();
 
     this.isLoading = false;
+    console.log('✅ INITLOAD COMPLETED');
   }
-
   async loadUserEmail() {
     try {
       const { value } = await Preferences.get({ key: 'userEmail' });
@@ -141,46 +178,50 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
     }
   }
 
-  async initcontent() {
-    try {
-      const loading = await this.loadingController.create({
-        message: 'Loading coupon details...',
-      });
-      await loading.present();
+async initcontent() {
+  console.log('🔍 INITCONTENT called for CID:', this.cid);
+  
+  try {
+    const loading = await this.loadingController.create({
+      message: 'Loading coupon details...',
+    });
+    await loading.present();
 
-      const Response = await this._detailsService.getContent(this.cid);
+    console.log('🔍 Calling API...');
+    const Response = await this._detailsService.getContent(this.cid);
+    console.log('🔍 API Response status:', Response.status);
+    console.log('🔍 API Response data:', Response.data);
 
-      if (Response.status === '200') {
-        this.details = Response.data;
-
-        // Extract address details
-        this.address = this.details.web_coupon_address;
-        this.city = this.details.web_coupon_city;
-        this.country = this.details.web_coupon_country;
-        this.state = this.details.web_coupon_state;
-        this.postalcode = this.details.web_coupon_postalcode;
-
-        // Sanitize HTML content
-        this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(
-          this.details.web_coupon_details || ''
-        );
-
-        // Initialize map if address exists
-        if (this.address) {
-          await this.initializeMap();
-        }
-      } else {
-        this.error = Response.error || 'Failed to load coupon';
-      }
-
-      await loading.dismiss();
-    } catch (err: any) {
-      await this.loadingController.dismiss();
-      this.error = 'Connection error';
-      this._commonService.presentToast(this.error);
-      console.error('Error loading coupon:', err);
+    if (Response.status === '200') {
+      this.details = Response.data;
+      console.log('✅ Details loaded:', this.details);
+      
+      // DEBUG: Check specific values
+      console.log('DEBUG: web_coupons_merchant_type:', this.details.web_coupons_merchant_type);
+      console.log('DEBUG: viewmodal value:', this.viewmodal);
+      console.log('DEBUG: viewredeem value:', this.viewredeem);
+      
+      // Sanitize HTML content
+      this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(
+        this.details.web_coupon_details || ''
+      );
+      
+      console.log('✅ Sanitized HTML created');
+      
+      this.isLoading = false;
+    } else {
+      this.error = Response.error || 'Failed to load coupon';
+      console.error('❌ API Error:', this.error);
     }
+
+    await loading.dismiss();
+  } catch (err: any) {
+    await this.loadingController.dismiss();
+    this.error = 'Connection error';
+    console.error('❌ Error in initcontent:', err);
+    this.isLoading = false;
   }
+}
 
   async initializeMap() {
     if (!this.mapElement?.nativeElement || !this.address) return;
@@ -608,7 +649,13 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
 
   // Navigation
   goBack() {
-    this.router.navigate(['/search']);
+    if (this.modalController) {
+      console.log('🔙 Closing modal');
+      this.modalController.dismiss();
+    } else {
+      console.log('🔙 Navigating back to search');
+      this.router.navigate(['/search']);
+    }
   }
 
   // Alert methods - keeping your original structure
@@ -665,5 +712,16 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
   // Retry method for error state
   async retry() {
     await this.initLoad();
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+    if (this.menu) {
+      if (this.isMenuOpen) {
+        this.menu.open();
+      } else {
+        this.menu.close();
+      }
+    }
   }
 }

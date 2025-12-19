@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, NavController } from '@ionic/angular';
+import { IonicModule, NavController, ModalController } from '@ionic/angular'; // Add ModalController
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
+import { SearchResultPage } from '../search-result/search-result.page'; // Import the SearchResultPage
 
 @Component({
   selector: 'search-page',
@@ -12,7 +13,6 @@ import { HeaderComponent } from '../../components/header/header.component';
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule, HeaderComponent],
 })
-
 export class SearchPage {
   submitted: boolean = true;
   resultStatus: any;
@@ -20,7 +20,11 @@ export class SearchPage {
   searchValue: string = '';
   val: string = '';
 
-  constructor(private navController: NavController, private router: Router) {}
+  constructor(
+    private navController: NavController, 
+    private router: Router,
+    private modalController: ModalController // Add ModalController
+  ) {}
 
   onCancel() {
     this.submitted = true;
@@ -32,7 +36,7 @@ export class SearchPage {
   }
 
   nextPage(id: any) {
-    this.router.navigate(['/coupondetails'], { queryParams: { cid: id } });
+    this.router.navigate(['/coupon-details'], { queryParams: { cid: id } });
   }
 
   home() {
@@ -49,10 +53,22 @@ export class SearchPage {
 
   searchResult(searchValue: string) {
     if (searchValue) {
-      this.router.navigate(['/search-result'], {
-        queryParams: { val: searchValue, search: 1 },
-      });
+      this.openSearchResultModal(searchValue);
     }
+  }
+
+  async openSearchResultModal(searchValue: string) {
+    const modal = await this.modalController.create({
+      component: SearchResultPage,
+      componentProps: {
+        searchValue: searchValue,
+        search: 1
+      },
+
+    });
+
+    await modal.present();
+
   }
 
   nextLocalPage() {
