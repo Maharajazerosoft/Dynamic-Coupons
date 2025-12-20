@@ -1,10 +1,11 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { IonicModule, NavController } from "@ionic/angular";
+import { IonicModule, NavController, Platform } from "@ionic/angular";
 import { AdMobService } from "../../../providers/admob/admob";
 import { HeaderComponent } from "../../components/header/header.component";
+import { environment } from "../../../environments/environment";
 
 @Component({
   selector: "search-page",
@@ -13,32 +14,56 @@ import { HeaderComponent } from "../../components/header/header.component";
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule, HeaderComponent],
 })
-export class SearchPage {
+export class SearchPage implements OnInit {
   submitted: boolean = true;
   resultStatus: any;
   showButton: boolean = true;
   searchValue: string = "";
   val: string = "";
+  adStatus: string = "Loading...";
+  environment = environment;
 
   constructor(
     private navController: NavController,
     private router: Router,
     private adMobService: AdMobService,
+    private platform: Platform
   ) {}
 
   async ngOnInit() {
-    await this.initializeAds();
+    await this.loadAd();
   }
 
   async ngOnDestroy() {
     await this.adMobService.removeBannerAd();
   }
 
-  private async initializeAds() {
+  async loadAd() {
+    try {
+      this.adStatus = 'Loading banner ad...';
+      console.log(this.adStatus);
+      
+      await this.adMobService.showBannerAd();
+      
+      this.adStatus = 'Ad loaded';
+      console.log('Ad loaded successfully');
+      
+    } catch (error: any) {
+      this.adStatus = 'Ad error: ' + (error.message || 'Unknown error');
+      console.error("Ad error:", error);
+    }
+  }
+
+  async testAd() {
+    console.log('Testing ad...');
+    this.adStatus = 'Testing...';
+    
     try {
       await this.adMobService.showBannerAd();
+      this.adStatus = 'Test passed';
     } catch (error) {
-      console.error("Failed to initialize ads:", error);
+      this.adStatus = 'Test failed';
+      console.error('Ad test failed:', error);
     }
   }
 

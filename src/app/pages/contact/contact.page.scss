@@ -146,10 +146,14 @@ app-contact {
   min-height: 30px;
 }
 
-:host(.button-block) .button-native {
+:host(.button-block) .button-block {
     --background: #ff7000 !important;
     --background-activated: #ff7000 !important;
     --background-focused: #ff7000 !important;
     --background-hover: #ff7000 !important;
     --color: white !important;
+}
+
+:host(.button-solid) {
+    --background: #ff7000;
 }
