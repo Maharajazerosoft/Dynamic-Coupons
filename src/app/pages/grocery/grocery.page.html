@@ -1,13 +1,216 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>grocery</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()" fill="clear">
+        <ion-icon slot="icon-only" name="arrow-back" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <!-- Title or Logo -->
+    <div class="header-content">
+      <img [src]="logoPath" alt="Logo" class="header-logo" />
+    </div>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleMenu()" fill="clear">
+        <ion-icon slot="icon-only" [name]="menu" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Dynamic title based on category -->
+  <ion-toolbar>
+    <span *ngIf="cat == 'grocery'">Grocery Weekly Flyers</span>
+    <span *ngIf="cat == 'babies'">Babies, Children, Toys</span>
+    <span *ngIf="cat == 'home'">Household & Parenting</span>
+    <span *ngIf="cat == 'birthday'">Birthday Offers</span>
+    <span *ngIf="cat == 'beauty'">Beauty, Health, Fitness</span>
+    <span *ngIf="cat == 'shipping'">Free Shipping / Returns</span>
+    <span *ngIf="cat == 'books'">Books & Prints</span>
+    <span *ngIf="cat == 'supplies'">Pet Supplies</span>
+    <span *ngIf="cat == 'business'">Minority, Women, Ethnic</span>
+    <span *ngIf="cat == 'finance'">Money, Finance, Cars</span>
+    <span *ngIf="cat == 'student'">Student Discounts</span>
+    <span *ngIf="cat == 'productivity'">Business, Tech & Careers</span>
+    <span *ngIf="cat == 'discounts'">Senior Discounts</span>
+    <span *ngIf="cat == 'military'">Veterans & Military</span>
+    <span *ngIf="cat == 'holidays'">Fun, Games, Sweepstakes</span>
+    <span *ngIf="cat == 'travel'">Travel / Holidays</span>
+    <span *ngIf="cat == 'parenting'">All Countries</span>
+    <span *ngIf="cat == 'podcasts'">Blogs & Podcasts</span>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">grocery</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading offers...</p>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div *ngIf="!isLoading" class="border">
+    <ion-grid>
+      <ion-row *ngFor="let grocery of content">
+        <!-- For img_link type coupons -->
+        <ion-col
+          size="12"
+          *ngIf="grocery.image_type === 'img_link' || grocery.image_type === ''"
+        >
+          <ion-card
+            (click)="inappclick(grocery.web_coupon_url, grocery.web_id)"
+          >
+            <ion-card-header>
+              <ion-card-title
+                *ngIf="grocery.image_size!='large';"
+                class="finalcoupons"
+              >
+                {{grocery.web_coupon_title}}
+              </ion-card-title>
+              <div class="center">
+                <!-- Image with error handling -->
+                <img
+                  [src]="grocery.web_coupon_image_url"
+                  *ngIf="grocery.web_coupon_image_url !== ''"
+                  (error)="handleImageError($event, grocery)"
+                  alt="Coupon"
+                />
+                <img
+                  [src]="'https://dynamiccoupons.com/webupload/thumb/coupons/' + grocery.web_coupon_image"
+                  *ngIf="grocery.web_coupon_image !== '' && grocery.image_size != 'large'"
+                  (error)="handleImageError($event, grocery)"
+                  alt="Coupon"
+                />
+                <img
+                  style="width: 100%; padding: 10px"
+                  [src]="'https://dynamiccoupons.com/webupload/thumb/coupons/' + grocery.web_coupon_image"
+                  *ngIf="grocery.web_coupon_image !== '' && grocery.image_size != 'small'"
+                  (error)="handleImageError($event, grocery)"
+                  alt="Coupon"
+                />
+                <img
+                  [src]="getCouponImage(grocery)"
+                  *ngIf="grocery.web_coupon_image_url === '' && grocery.web_coupon_image ===''"
+                  alt="Default"
+                />
+              </div>
+            </ion-card-header>
+            <ion-card-content class="visit">
+              <p class="coupon_online" *ngIf="grocery.image_size!='large';">
+                Online
+              </p>
+              <p class="coupon_bname">{{grocery.web_coupon_bname}}</p>
+              <p *ngIf="grocery.image_size!='large';" class="coupon_city">
+                {{grocery.web_coupon_city}} {{grocery.web_coupon_state}}
+                {{grocery.web_coupon_postalcode}}<br />
+                {{grocery.web_coupon_country}}
+              </p>
+              <p class="coupon_valid_upto" *ngIf="grocery.image_size!='large';">
+                Valid up to: {{grocery.web_coupon_expiredate |
+                date:'mediumDate'}}
+              </p>
+            </ion-card-content>
+            <!-- Visit count -->
+            <div class="visit-count">Visits: {{grocery.click_count || 0}}</div>
+          </ion-card>
+        </ion-col>
+
+        <!-- For img_upload type coupons -->
+        <ion-col size="12" *ngIf="grocery.image_type === 'img_upload'">
+          <ion-card (click)="handleCouponClick(grocery)">
+            <ion-card-header>
+              <ion-card-title
+                *ngIf="grocery.image_size!='large';"
+                class="finalcoupons"
+              >
+                {{grocery.web_coupon_title}}
+              </ion-card-title>
+              <div class="center">
+                <img
+                  [src]="'https://www.dynamiccoupons.com/webupload/thumb/coupons/' + grocery.web_coupon_image"
+                  *ngIf="grocery.web_coupon_image !== '' && grocery.image_size != 'large'"
+                  (error)="handleImageError($event, grocery)"
+                  alt="Grocery Offer"
+                />
+                <img
+                  style="width: 100%; padding: 10px"
+                  [src]="'https://dynamiccoupons.com/webupload/thumb/coupons/' + grocery.web_coupon_image"
+                  *ngIf="grocery.web_coupon_image !== '' && grocery.image_size != 'small'"
+                  (error)="handleImageError($event, grocery)"
+                  alt="Grocery Offer"
+                />
+                <img
+                  [src]="getCouponImage(grocery)"
+                  *ngIf="grocery.web_coupon_image === ''"
+                  alt="Default"
+                />
+              </div>
+            </ion-card-header>
+            <ion-card-content class="visit">
+              <p class="coupon_online" *ngIf="grocery.image_size!='large';">
+                Online
+              </p>
+              <p class="coupon_bname">{{grocery.web_coupon_bname}}</p>
+              <p *ngIf="grocery.image_size!='large';" class="coupon_city">
+                {{grocery.web_coupon_city}} {{grocery.web_coupon_state}}
+                {{grocery.web_coupon_postalcode}}<br />
+                {{grocery.web_coupon_country}}
+              </p>
+              <p class="coupon_valid_upto" *ngIf="grocery.image_size!='large';">
+                Valid up to: {{grocery.web_coupon_expiredate |
+                date:'mediumDate'}}
+              </p>
+            </ion-card-content>
+            <!-- Visit count -->
+            <div class="visit-count">Visits: {{grocery.click_count || 0}}</div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- No Results Message -->
+  <div class="chat-begin" *ngIf="!isLoading && content.length === 0">
+    <h1><span style="color: red">No Offers Found</span></h1>
+  </div>
+
+  <!-- Infinite Scroll -->
+  <ion-infinite-scroll
+    (ionInfinite)="loadMoreData($event)"
+    *ngIf="hasMoreData && !isLoading"
+  >
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more offers..."
+    >
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
+
+<ion-footer class="search-footer ion-no-border">
+  <ion-toolbar>
+    <ion-searchbar
+      [(ngModel)]="val"
+      (ionInput)="onSearchInput($event)"
+      (keyup.enter)="performSearch()"
+      placeholder="Search {{cat}} offers..."
+      animated="true"
+      showClearButton="focus"
+    >
+    </ion-searchbar>
+
+    <div class="footer-buttons">
+      <ion-button expand="block" color="primary" (click)="performSearch()">
+        Search
+      </ion-button>
+      <ion-button
+        expand="block"
+        color="medium"
+        fill="outline"
+        (click)="closeModal()"
+      >
+        Close
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

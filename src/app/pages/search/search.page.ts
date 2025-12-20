@@ -1,12 +1,18 @@
-import { CommonModule } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
-import { IonicModule, NavController, Platform, ModalController } from "@ionic/angular";
-import { AdMobService } from "../../../providers/admob/admob";
-import { HeaderComponent } from "../../components/header/header.component";
-import { environment } from "../../../environments/environment";
-import { SearchResultPage } from "../search-result/search-result.page";
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import {
+  IonicModule,
+  NavController,
+  Platform,
+  ModalController,
+} from '@ionic/angular';
+import { AdMobService } from '../../../providers/admob/admob';
+import { HeaderComponent } from '../../components/header/header.component';
+import { environment } from '../../../environments/environment';
+import { SearchResultPage } from '../search-result/search-result.page';
+import { CouponPage } from '../coupon/coupon.page';
 
 @Component({
   selector: 'search-page',
@@ -19,13 +25,13 @@ export class SearchPage implements OnInit {
   submitted: boolean = true;
   resultStatus: any;
   showButton: boolean = true;
-  searchValue: string = "";
-  val: string = "";
-  adStatus: string = "Loading...";
+  searchValue: string = '';
+  val: string = '';
+  adStatus: string = 'Loading...';
   environment = environment;
 
   constructor(
-    private navController: NavController, 
+    private navController: NavController,
     private modalController: ModalController,
     private router: Router,
     private adMobService: AdMobService,
@@ -44,22 +50,21 @@ export class SearchPage implements OnInit {
     try {
       this.adStatus = 'Loading banner ad...';
       console.log(this.adStatus);
-      
+
       await this.adMobService.showBannerAd();
-      
+
       this.adStatus = 'Ad loaded';
       console.log('Ad loaded successfully');
-      
     } catch (error: any) {
       this.adStatus = 'Ad error: ' + (error.message || 'Unknown error');
-      console.error("Ad error:", error);
+      console.error('Ad error:', error);
     }
   }
 
   async testAd() {
     console.log('Testing ad...');
     this.adStatus = 'Testing...';
-    
+
     try {
       await this.adMobService.showBannerAd();
       this.adStatus = 'Test passed';
@@ -78,18 +83,6 @@ export class SearchPage implements OnInit {
     window.open(link, '_blank');
   }
 
-  nextPage(id: any) {
-    this.router.navigate(['/coupon-details'], { queryParams: { cid: id } });
-  }
-
-  home() {
-    this.router.navigate(['/intro']);
-  }
-
-  learn() {
-    this.router.navigate(['/learnmore']);
-  }
-
   getItems(ev: any) {
     this.val = ev.target.value;
   }
@@ -105,20 +98,38 @@ export class SearchPage implements OnInit {
       component: SearchResultPage,
       componentProps: {
         searchValue: searchValue,
-        search: 1
+        search: 1,
       },
+    });
 
+    await modal.present();
+  }
+
+  async openCouponModal(type: 'local' | 'national') {
+    const modal = await this.modalController.create({
+      component: CouponPage, // Use your modal component
+      componentProps: {
+        type: type,
+      },
+      // Optional modal options
+      cssClass: 'coupon-modal',
     });
 
     await modal.present();
 
+    // Optional: Handle modal dismissal
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      console.log('Modal dismissed with data:', data);
+    }
   }
 
-  nextLocalPage() {
-    this.router.navigate(['/coupon'], { queryParams: { type: 'local' } });
+  // Update these methods to use modals
+  async nextLocalPage() {
+    await this.openCouponModal('local');
   }
 
-  nextNationalPage() {
-    this.router.navigate(['/coupon'], { queryParams: { type: 'national' } });
+  async nextNationalPage() {
+    await this.openCouponModal('national');
   }
 }

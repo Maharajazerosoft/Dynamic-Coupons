@@ -13,8 +13,9 @@ import { GroceryPage } from './grocery.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    GroceryPageRoutingModule
+    GroceryPageRoutingModule,
+    GroceryPage
   ],
-  declarations: [GroceryPage]
+  declarations: []
 })
 export class GroceryPageModule {}

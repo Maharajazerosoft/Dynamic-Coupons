@@ -1,20 +1,21 @@
 <app-header
   [showLogo]="true"
   [showBackButton]="true"
+  (backButtonClick)="closeModal()"
 >
 </app-header>
 
 <ion-header class="page-sub-header">
   <ion-toolbar color="primary">
     <ion-title
-      *ngIf="routeType === 'local'"
+      *ngIf="type === 'local'"
       size="large"
       class="page-title">
       Local Offers
     </ion-title>
 
     <ion-title
-      *ngIf="routeType === 'national'"
+      *ngIf="type === 'national'"
       size="large"
       class="page-title">
       National Offers
@@ -23,8 +24,8 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  <!-- 类别导航表格 -->
-  <ion-card *ngIf="routeType === 'local'">
+  <!-- 类别导航表格 - Only show for local offers in modal -->
+  <ion-card *ngIf="type === 'local'">
     <ion-card-content>
       <table class="category-table">
         <tr>
@@ -208,6 +209,7 @@
 <ion-footer>
   <ion-toolbar>
     <ion-searchbar
+      [(ngModel)]="val"
       (ionInput)="onSearchInput($event)"
       (keyup.enter)="performSearch()"
       placeholder="Combine Keywords, business, city, Zip, country…"
@@ -216,6 +218,17 @@
     ></ion-searchbar>
     <ion-button expand="block" (click)="performSearch()" style="margin: 10px">
       Search
+    </ion-button>
+    
+    <!-- Add a close modal button for better UX -->
+    <ion-button 
+      expand="block" 
+      fill="outline" 
+      color="medium"
+      (click)="closeModal()"
+      style="margin: 10px"
+    >
+      Close
     </ion-button>
   </ion-toolbar>
 </ion-footer>

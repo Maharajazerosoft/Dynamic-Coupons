@@ -17,7 +17,8 @@ table {
 }
 
 .page-sub-header {
-  --background: #08b8da;
+  background-color: #08b8da;
+  padding: 10px 0px;
 }
 
 .page-title {
@@ -106,162 +107,41 @@ ion-card table * {
 
 ion-content {
   --background: #08b8da;
-  --padding-top: 120px;
-  --padding-bottom: 60px;
-
-  &.local_offers {
-    ion-card {
-      background: #ffffff;
-      border: 2px solid #ffffff;
-      border-radius: 0;
-      margin: 10px 8px;
-
-      ion-card-title {
-        color: #003f72;
-        font-weight: bold;
-        margin: 0 0 10px 0;
-        font-size: 1.4rem;
-
-        &.xcelstate {
-          color: #6b4545;
-        }
-
-        &.coupont2 {
-          color: #e67e22;
-        }
-
-        &.finalcoupons {
-          color: #003f72;
-          padding: 10px 0;
-          font-size: 1.6rem;
-        }
-
-        &.web_couponsm2 {
-          color: #17a05e;
-          padding: 10px 0;
-          font-size: 1.6rem;
-        }
-
-        &.xmlcolor {
-          color: #000;
-        }
-      }
-
-      .coupon_online {
-        color: #17a05e;
-        font-weight: bold;
-        margin: 5px 0;
-      }
-
-      .coupon_bname {
-        color: #003f72;
-        font-weight: bold;
-        margin: 5px 0;
-        font-size: 1.1em;
-      }
-
-      .coupon_city {
-        color: #003f72;
-        margin: 5px 0;
-        font-size: 0.9em;
-      }
-
-      .coupon_valid_upto {
-        color: #003f72;
-        margin: 10px 0 5px 0;
-        font-style: italic;
-        font-size: 0.9em;
-      }
-    }
-  }
-
-  &.national_offers {
-    ion-card {
-      background: #ffffff;
-      border: 2px solid #ffffff;
-      border-radius: 0;
-      margin: 10px 8px;
-
-      ion-card-title {
-        color: #7b7b7b;
-        font-weight: bold;
-        margin: 0 0 10px 0;
-        font-size: 1.4rem;
-
-        &.xmlcolor {
-          color: #000;
-        }
-
-        &.xcelstate {
-          color: #6b4545;
-        }
-
-        &.coupont2 {
-          color: #e67e22;
-        }
-
-        &.web_couponsm2 {
-          color: #17a05e;
-        }
-
-        &.finalcoupons {
-          color: #003f72;
-        }
-      }
-
-      .coupon_online {
-        color: #003f72;
-        font-weight: bold;
-        margin: 5px 0;
-      }
-
-      .coupon_bname {
-        color: #003f72;
-        font-weight: bold;
-        margin: 5px 0;
-        font-size: 1.1em;
-      }
-
-      .coupon_city {
-        color: #003f72;
-        margin: 5px 0;
-        font-size: 0.9em;
-      }
-
-      .coupon_valid_upto {
-        color: #003f72;
-        margin: 10px 0 5px 0;
-        font-style: italic;
-        font-size: 0.9em;
-      }
-    }
-  }
+  // --padding-top: 20px;
+  // --padding-bottom: 40px;
 }
 
-// Card styles
 ion-card {
-  background: #fff;
+  background: #ffffff;
+  border: 2px solid #ffffff;
   border-radius: 4px;
-  margin: 8px 0;
+  margin: 10px 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-  ion-card-header {
-    padding: 16px 16px 8px;
-    text-align: center;
-  }
+ion-card-title {
+  color: #003f72;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  font-size: 1.4rem;
+}
 
-  ion-card-content {
-    padding: 8px 16px 16px;
-    text-align: center;
-  }
+ion-card-header {
+  padding: 16px 16px 8px;
+  text-align: center;
+}
 
-  img {
-    width: 40%;
-    max-width: 200px;
-    height: auto;
-    margin: 0 auto;
-    display: block;
-  }
+ion-card-content {
+  padding: 8px 16px 16px;
+  text-align: center;
+}
+
+img {
+  width: 40%;
+  max-width: 200px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
 }
 
 // Search bar styles
@@ -370,86 +250,4 @@ ion-footer {
 ion-spinner {
   display: block;
   margin: 20px auto;
-}
-
-// Responsive adjustments
-@media (max-width: 768px) {
-  .border {
-    margin-top: 100px;
-  }
-
-  ion-toolbar.home-toolbar {
-    height: 100px;
-
-    img {
-      width: 80%;
-    }
-  }
-
-  .title {
-    font-size: 22px !important;
-  }
-
-  ion-card {
-    margin: 5px 4px;
-
-    ion-card-title {
-      font-size: 1.2rem !important;
-    }
-  }
-
-  .category-table {
-    td {
-      font-size: 10pt;
-      height: 35px;
-      padding: 3px 5px;
-
-      &.text {
-        font-size: 8pt !important;
-      }
-    }
-
-    .category-header {
-      font-size: 12px;
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .border {
-    margin-top: 90px;
-  }
-
-  ion-toolbar.home-toolbar {
-    height: 90px;
-
-    img {
-      width: 70%;
-    }
-  }
-
-  .title {
-    font-size: 18px !important;
-  }
-
-  ion-footer {
-    ion-toolbar {
-      ion-searchbar {
-        height: 36px;
-
-        .searchbar-input-container {
-          .searchbar-input {
-            height: 36px !important;
-            font-size: 12px;
-          }
-        }
-      }
-
-      ion-button.gobutton {
-        height: 36px;
-        font-size: 12px;
-        min-width: 50px;
-      }
-    }
-  }
 }
