@@ -1,0 +1,455 @@
+ion-toolbar.home-toolbar {
+  --background: #08b8da;
+  --color: white;
+  height: 120px;
+
+  img {
+    margin-top: 10px;
+    width: 90%;
+    max-height: 50px;
+    object-fit: contain;
+  }
+}
+
+table {
+  width: 100%;
+  font-family: "Tahoma", sans-serif !important;
+}
+
+.page-sub-header {
+  --background: #08b8da;
+}
+
+.page-title {
+  display: flex;
+  justify-content: center;
+  font-size: 27px !important;
+  font-family: "Lobster" !important;
+  color: white !important;
+}
+
+// Ensure font-family applies to all table elements
+ion-card table,
+ion-card table * {
+  font-family: "Tahoma", sans-serif !important;
+}
+
+.header {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.highlight-yellow {
+  background-color: yellow;
+  font-weight: bold;
+}
+
+.category-table {
+  border-collapse: collapse;
+  width: 100%;
+
+  td {
+    border: 1px solid #999;
+    vertical-align: middle;
+    font-size: 11pt;
+    height: 40px;
+    padding: 5px 8px;
+
+    &.arrow {
+      text-align: center;
+      width: 20px;
+      color: black;
+      font-weight: bold;
+    }
+
+    &.text {
+      color: #0645ad !important;
+      font-weight: 400 !important;
+      font-size: 9pt !important;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+        color: #ff7000 !important;
+      }
+    }
+  }
+
+  .category-header {
+    color: #ff7000;
+    font-weight: 600;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .highlight-cell {
+    background-color: yellow;
+    font-weight: bold;
+  }
+
+  .footer {
+    text-align: center;
+    color: #0645ad;
+    font-size: 14px;
+    padding-top: 10px;
+  }
+}
+
+// Main content styles
+.border {
+  margin-top: 110px;
+  min-height: calc(100vh - 200px);
+  background: white;
+  border: 1px solid #ffffff;
+}
+
+ion-content {
+  --background: #08b8da;
+  --padding-top: 120px;
+  --padding-bottom: 60px;
+
+  &.local_offers {
+    ion-card {
+      background: #ffffff;
+      border: 2px solid #ffffff;
+      border-radius: 0;
+      margin: 10px 8px;
+
+      ion-card-title {
+        color: #003f72;
+        font-weight: bold;
+        margin: 0 0 10px 0;
+        font-size: 1.4rem;
+
+        &.xcelstate {
+          color: #6b4545;
+        }
+
+        &.coupont2 {
+          color: #e67e22;
+        }
+
+        &.finalcoupons {
+          color: #003f72;
+          padding: 10px 0;
+          font-size: 1.6rem;
+        }
+
+        &.web_couponsm2 {
+          color: #17a05e;
+          padding: 10px 0;
+          font-size: 1.6rem;
+        }
+
+        &.xmlcolor {
+          color: #000;
+        }
+      }
+
+      .coupon_online {
+        color: #17a05e;
+        font-weight: bold;
+        margin: 5px 0;
+      }
+
+      .coupon_bname {
+        color: #003f72;
+        font-weight: bold;
+        margin: 5px 0;
+        font-size: 1.1em;
+      }
+
+      .coupon_city {
+        color: #003f72;
+        margin: 5px 0;
+        font-size: 0.9em;
+      }
+
+      .coupon_valid_upto {
+        color: #003f72;
+        margin: 10px 0 5px 0;
+        font-style: italic;
+        font-size: 0.9em;
+      }
+    }
+  }
+
+  &.national_offers {
+    ion-card {
+      background: #ffffff;
+      border: 2px solid #ffffff;
+      border-radius: 0;
+      margin: 10px 8px;
+
+      ion-card-title {
+        color: #7b7b7b;
+        font-weight: bold;
+        margin: 0 0 10px 0;
+        font-size: 1.4rem;
+
+        &.xmlcolor {
+          color: #000;
+        }
+
+        &.xcelstate {
+          color: #6b4545;
+        }
+
+        &.coupont2 {
+          color: #e67e22;
+        }
+
+        &.web_couponsm2 {
+          color: #17a05e;
+        }
+
+        &.finalcoupons {
+          color: #003f72;
+        }
+      }
+
+      .coupon_online {
+        color: #003f72;
+        font-weight: bold;
+        margin: 5px 0;
+      }
+
+      .coupon_bname {
+        color: #003f72;
+        font-weight: bold;
+        margin: 5px 0;
+        font-size: 1.1em;
+      }
+
+      .coupon_city {
+        color: #003f72;
+        margin: 5px 0;
+        font-size: 0.9em;
+      }
+
+      .coupon_valid_upto {
+        color: #003f72;
+        margin: 10px 0 5px 0;
+        font-style: italic;
+        font-size: 0.9em;
+      }
+    }
+  }
+}
+
+// Card styles
+ion-card {
+  background: #fff;
+  border-radius: 4px;
+  margin: 8px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  ion-card-header {
+    padding: 16px 16px 8px;
+    text-align: center;
+  }
+
+  ion-card-content {
+    padding: 8px 16px 16px;
+    text-align: center;
+  }
+
+  img {
+    width: 40%;
+    max-width: 200px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+  }
+}
+
+// Search bar styles
+ion-footer {
+  background: rgba(0, 0, 0, 0.2);
+
+  ion-toolbar {
+    --background: rgba(0, 0, 0, 0.2);
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --padding-top: 4px;
+    --padding-bottom: 4px;
+
+    .searchbox {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    ion-searchbar {
+      flex: 1;
+      --background: white;
+      --color: #ff7000;
+      --placeholder-color: #ff7000;
+      --border-radius: 3px;
+      --box-shadow: none;
+      height: 44px;
+
+      .searchbar-input-container {
+        .searchbar-input {
+          padding: 10px 10px !important;
+          height: 40px !important;
+          font-size: 14px;
+
+          &::placeholder {
+            color: #ff7000 !important;
+          }
+        }
+      }
+    }
+
+    ion-button.gobutton {
+      --background: #ff7000;
+      --color: white;
+      --border-radius: 3px;
+      height: 40px;
+      margin: 0;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      font-size: 14px;
+      min-width: 60px;
+    }
+  }
+}
+
+.search-footer {
+  .searchbar-search-icon {
+    display: none !important;
+  }
+}
+
+// Visit count styles
+.visit-count {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  color: #d3d3d3;
+  font-size: 12px;
+  z-index: 1;
+}
+
+.visit {
+  margin-bottom: 30px;
+  position: relative;
+}
+
+// Image container for responsive images
+.image-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+
+  .coupon-image {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+}
+
+// No results message
+.no-results {
+  text-align: center;
+  padding: 40px 20px;
+
+  h2 {
+    color: #ff0000;
+    font-size: 1.5rem;
+    margin: 0;
+  }
+}
+
+// Loading spinner
+ion-spinner {
+  display: block;
+  margin: 20px auto;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .border {
+    margin-top: 100px;
+  }
+
+  ion-toolbar.home-toolbar {
+    height: 100px;
+
+    img {
+      width: 80%;
+    }
+  }
+
+  .title {
+    font-size: 22px !important;
+  }
+
+  ion-card {
+    margin: 5px 4px;
+
+    ion-card-title {
+      font-size: 1.2rem !important;
+    }
+  }
+
+  .category-table {
+    td {
+      font-size: 10pt;
+      height: 35px;
+      padding: 3px 5px;
+
+      &.text {
+        font-size: 8pt !important;
+      }
+    }
+
+    .category-header {
+      font-size: 12px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .border {
+    margin-top: 90px;
+  }
+
+  ion-toolbar.home-toolbar {
+    height: 90px;
+
+    img {
+      width: 70%;
+    }
+  }
+
+  .title {
+    font-size: 18px !important;
+  }
+
+  ion-footer {
+    ion-toolbar {
+      ion-searchbar {
+        height: 36px;
+
+        .searchbar-input-container {
+          .searchbar-input {
+            height: 36px !important;
+            font-size: 12px;
+          }
+        }
+      }
+
+      ion-button.gobutton {
+        height: 36px;
+        font-size: 12px;
+        min-width: 50px;
+      }
+    }
+  }
+}
