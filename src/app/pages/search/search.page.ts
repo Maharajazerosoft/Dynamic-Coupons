@@ -2,10 +2,11 @@ import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { IonicModule, NavController, Platform } from "@ionic/angular";
+import { IonicModule, NavController, Platform, ModalController } from "@ionic/angular";
 import { AdMobService } from "../../../providers/admob/admob";
 import { HeaderComponent } from "../../components/header/header.component";
 import { environment } from "../../../environments/environment";
+import { SearchResultPage } from "../search-result/search-result.page";
 
 @Component({
   selector: 'search-page',
@@ -25,6 +26,7 @@ export class SearchPage implements OnInit {
 
   constructor(
     private navController: NavController, 
+    private modalController: ModalController,
     private router: Router,
     private adMobService: AdMobService,
     private platform: Platform
