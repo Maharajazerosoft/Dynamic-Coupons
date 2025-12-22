@@ -1,5 +1,25 @@
-<app-header [title]="'Home'" [showLogo]="true" [showBackButton]="false">
-</app-header>
+<ion-header>
+  <ion-toolbar color="primary" class="mytoolbar">
+    <!-- LEFT: Back Button (Optional) -->
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" *ngIf="false"></ion-back-button>
+      <!-- Or use custom back button -->
+      <ion-button (click)="goBack()" *ngIf="false">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <!-- CENTER: Title -->
+    <ion-title>Contact</ion-title>
+
+    <!-- RIGHT: Menu Toggle Button -->
+    <ion-buttons slot="end">
+      <ion-button (click)="openMenu()">
+        <ion-icon slot="icon-only" name="menu"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="content">

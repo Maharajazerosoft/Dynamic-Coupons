@@ -1,23 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { Component, OnInit } from "@angular/core";
+import { MenuController } from "@ionic/angular";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-privacy',
-  templateUrl: './privacy.page.html',
-  styleUrls: ['./privacy.page.scss'],
-  standalone: false
+  selector: "app-privacy",
+  templateUrl: "./privacy.page.html",
+  styleUrls: ["./privacy.page.scss"],
+  standalone: false,
 })
 export class PrivacyPage implements OnInit {
-
   constructor(
-    private navCtrl: NavController
-  ) { }
+    private router: Router,
+    private menuCtrl: MenuController,
+  ) {}
+
+  openMenu() {
+    this.menuCtrl.open("main-menu");
+  }
 
   ngOnInit() {
   }
 
   goBack() {
-    this.navCtrl.back(); // ✅ goes to previous page
+    this.router.navigate(["/"]);
   }
-  
 }

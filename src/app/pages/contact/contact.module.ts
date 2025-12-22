@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ContactPageRoutingModule } from './contact-routing.module';
 import { ContactPage } from './contact.page';
-import { HeaderComponent } from '../../components/header/header.component';
 
 @NgModule({
   imports: [
@@ -12,7 +11,6 @@ import { HeaderComponent } from '../../components/header/header.component';
     FormsModule,
     IonicModule,
     ContactPageRoutingModule,
-    HeaderComponent
   ],
   declarations: [ContactPage]
 })
