@@ -1,24 +1,45 @@
 <ion-header>
-  <ion-toolbar color="primary" class="mytoolbar">
-    <!-- LEFT: Back Button (Optional) -->
+  <ion-toolbar class="mytoolbar" style="--background: #333">
+    <!-- LEFT: Back Button -->
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/" *ngIf="false"></ion-back-button>
-      <!-- Or use custom back button -->
-      <ion-button (click)="goBack()" *ngIf="false">
-        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-      </ion-button>
+      <ion-back-button
+        defaultHref="/"
+        text=""
+        icon="arrow-back"
+        color="light"
+      ></ion-back-button>
     </ion-buttons>
 
-    <!-- CENTER: Title -->
-    <ion-title>Contact</ion-title>
+    <!-- CENTER: Logo -->
+    <div class="logo-container" slot="center">
+      <img
+        src="assets/icon/logo.png"
+        alt="Logo"
+        class="home-img"
+        style="height: 30px; max-width: 90%"
+      />
+    </div>
 
     <!-- RIGHT: Menu Toggle Button -->
     <ion-buttons slot="end">
-      <ion-button (click)="openMenu()">
-        <ion-icon slot="icon-only" name="menu"></ion-icon>
-      </ion-button>
+      <ion-menu-button menu="main-menu" autoHide="false">
+        <ion-icon slot="icon-only" name="menu" color="light"></ion-icon>
+      </ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
+
+  <!-- Title below the toolbar -->
+  <h1
+    style="
+      color: #ffc107 !important;
+      text-align: center;
+      margin: 0;
+      padding: 16px 16px 8px 16px;
+    "
+    class="title"
+  >
+    App Privacy Policy/Terms of Use
+  </h1>
 </ion-header>
 
 <ion-content>

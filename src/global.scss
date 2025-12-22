@@ -26,7 +26,11 @@ ion-header {
     }
 
     ion-back-button {
-      --color: #fff;
+      --color: #fff !important;
+    }
+
+    ion-menu-button {
+      --color: #fff !important;
     }
   }
 }
@@ -276,4 +280,8 @@ ion-menu ion-header img {
   text-align: center;
   font-size: 19px;
   font-weight: 500;
+}
+
+:host .ionicon {
+    stroke: #fff !important;
 }
