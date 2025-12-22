@@ -14,8 +14,8 @@ ion-header {
     }
 
     .title-default {
-      color: #FFC107;
-      font-family: 'Lobster';
+      color: #ffc107;
+      font-family: "Lobster";
       font-size: 22px;
       width: 100%;
       padding: 0;
@@ -110,7 +110,7 @@ ion-menu {
     transform: rotate(0);
   }
 
-  ion-icon[name='arrow-forward'] {
+  ion-icon[name="arrow-forward"] {
     margin-right: 23px;
     font-size: 25px;
     transition: all 0.3s ease;
@@ -127,12 +127,12 @@ ion-menu {
     max-height: 0;
     transform: scaleY(0);
     transform-origin: 50% 0;
-    transition: transform .15s linear, max-height 0s .15s linear;
+    transition: transform 0.15s linear, max-height 0s 0.15s linear;
 
     &.sub-menu-visible {
       max-height: 9999px;
       transform: scaleY(1);
-      transition: transform .15s linear, max-height 0s linear;
+      transition: transform 0.15s linear, max-height 0s linear;
     }
   }
 }
@@ -155,7 +155,7 @@ ion-footer {
   h2 {
     margin-top: 0.8rem;
     color: #fff;
-    font-family: 'Lobster';
+    font-family: "Lobster";
   }
 
   h1,
@@ -165,7 +165,7 @@ ion-footer {
   h5,
   h6,
   strong {
-    color: #FFC107;
+    color: #ffc107;
   }
 
   p,
@@ -209,7 +209,7 @@ ion-footer {
 }
 
 .price-content {
-  ul>li {
+  ul > li {
     text-align: left;
   }
 }
@@ -253,4 +253,27 @@ ion-searchbar {
       font-size: 1.5rem;
     }
   }
+}
+
+// HEADER STYLES //
+
+ion-toolbar.menu-toolbar.md.in-toolbar.hydrated {
+  height: 100% !important;
+  display: flex;
+}
+
+ion-menu ion-header img {
+  display: block;
+  margin: auto;
+}
+
+.list-md-lines-none .item-lines-default {
+  border-bottom: #8080806b solid 1px;
+}
+
+.menu-notice p {
+  color: #ff7000 !important;
+  text-align: center;
+  font-size: 19px;
+  font-weight: 500;
 }
