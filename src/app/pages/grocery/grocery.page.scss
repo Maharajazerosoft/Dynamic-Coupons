@@ -9,6 +9,7 @@
       --border-width: 0;
       --min-height: 80px;
       --color: white;
+      text-align: center;
 
       .header-content {
         display: flex;
@@ -54,6 +55,7 @@
       min-height: inherit;
       border: 1px solid #ffffff;
       padding: 8px;
+      margin: 0px 6px;
     }
   }
 
@@ -80,33 +82,10 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     padding-bottom: 8px;
-    color: #003f72;
     font-weight: bold;
     margin: 0px 0 5px 0;
-
-    &.finalcoupons {
-      color: #003f72;
-      padding: 5% 0;
-      font-size: 1.3rem;
-    }
-
-    &.xmlcolor {
-      color: #000;
-    }
-
-    &.xcelstate {
-      color: #6b4545;
-    }
-
-    &.coupont2 {
-      color: #e67e22;
-    }
-
-    &.web_couponsm2 {
-      color: #17a05e;
-      padding: 5% 0 !important;
-      font-size: 1.3rem !important;
-    }
+    padding: 5% 0;
+    font-size: 1.3rem;
   }
 
   // Image styling
@@ -157,63 +136,6 @@
     right: 20px;
     color: #d3d3d3;
     font-size: 15px;
-  }
-
-  // Search footer styling
-  .search-footer {
-    background: rgba(0, 0, 0, 0.2);
-
-    ion-toolbar {
-      --background: transparent;
-
-      .footer-buttons {
-        display: flex;
-        gap: 8px;
-        padding: 8px;
-
-        ion-button {
-          margin: 0;
-          --border-radius: 3px;
-          height: 44px;
-
-          &[color="primary"] {
-            --background: #ff7000;
-            --background-activated: #e65c00;
-          }
-
-          &[color="medium"] {
-            --background: transparent;
-            --border-color: #666;
-            --color: #666;
-          }
-        }
-      }
-    }
-  }
-
-  // Search bar styling
-  ion-searchbar {
-    --background: white;
-    --border-radius: 3px;
-    --cancel-button-color: #ff7000;
-    --clear-button-color: #ff7000;
-    --color: #ff7000;
-    --icon-color: #ff7000;
-    --placeholder-color: #ff7000;
-    --placeholder-opacity: 1;
-
-    .searchbar-input-container {
-      .searchbar-input {
-        height: 44px !important;
-        color: #ff7000 !important;
-        padding: 10px !important;
-
-        &::placeholder {
-          color: #ff7000 !important;
-          opacity: 1 !important;
-        }
-      }
-    }
   }
 
   // Loading container
@@ -269,5 +191,55 @@
   // Infinite scroll
   ion-infinite-scroll {
     margin-bottom: 20px;
+  }
+  ion-footer {
+    position: fixed;
+    bottom: calc(60px + var(--ion-safe-area-bottom, 0px));
+    width: 100%;
+    z-index: 1000;
+    background: #08b8da;
+    padding: 8px 0;
+  }
+
+  .search-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    border-top: 0.55px solid transparent;
+    border-bottom: 0.55px solid rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.2);
+    height: 70px;
+    padding-bottom: var(--ion-safe-area-bottom, 0px);
+  }
+
+  .search-input {
+    --background: #ffffff;
+    --border-radius: 8px;
+    --placeholder-color: #666;
+    --color: #333;
+    padding: 7px 0px !important;
+    width: 78%;
+  }
+
+  .search-button {
+    --background: #ff7000;
+    --background-hover: #ff8000;
+    --color: white;
+    font-size: 14px;
+    text-transform: uppercase;
+    height: 40px !important;
+    min-height: 40px !important;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #555;
+    pointer-events: none;
+    z-index: 10;
   }
 }

@@ -69,6 +69,7 @@ export class SearchResultPage implements OnInit {
   menu: any;
   isMenuOpen = false;
   logoPath: string = 'assets/icon/logo.png';
+  searchValue1: string = '';
 
   defaultImages = [
     'https://dynamiccoupons.com/webupload/thumb/default/default.png',
@@ -86,7 +87,7 @@ export class SearchResultPage implements OnInit {
     private loadingController: LoadingController,
     private toastController: ToastController,
     private sanitizer: DomSanitizer,
-    private modalController: ModalController // Add this
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {

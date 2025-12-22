@@ -20,12 +20,7 @@
   </ion-toolbar>
 
   <ion-toolbar>
-    <h1
-      style="color: #ffc107 !important;"
-      class="title"
-    >
-      Coupon Details
-    </h1>
+    <h1 class="title">Coupon Details</h1>
   </ion-toolbar>
 </ion-header>
 
@@ -39,12 +34,7 @@
         (click)="nextPage(details.web_id, details.web_coupons_merchant_type, details.web_coupon_circulation, details.web_coupon_url)"
       >
         <ion-card-header>
-          <ion-card-title
-            style="
-              white-space: break-spaces !important;
-              font-size: 27px !important;
-            "
-            class="title"
+          <ion-card-title class="title"
             >{{details.web_coupon_title}}</ion-card-title
           >
           <div class="center">
@@ -67,15 +57,14 @@
         <ion-card-content>
           <div class="inner-css" [innerHTML]="sanitizedHtml"></div>
           <h3
-            style="font-size: 24px !important"
             *ngIf="details.web_coupon_id !=''"
           >
             Coupon ID : {{details.web_coupon_id}}
           </h3>
-          <h4 style="font-size: 16px !important">
+          <h4>
             Valid Up To: {{details.web_coupon_expiredate}}
           </h4>
-          <h3 class="company" style="font-size: 24px !important">
+          <h3 class="company">
             {{details.web_coupon_bname}}
           </h3>
           <div class="para">
@@ -87,14 +76,9 @@
             <p>{{details.web_coupon_country}}</p>
           </div>
           <a
-            style="
-              font-size: 18px !important;
-              border-bottom: 1px solid #488aff !important;
-            "
             *ngIf="details.web_coupon_url !='' || details.web_coupon_url != 'Not Available'"
             (click)="inappclick(details.web_coupon_url)"
             >Visit website <br /><img
-              style="width: 30px !important"
               src="https://www.dynamiccoupons.com/images/image002.gif"
           /></a>
         </ion-card-content>

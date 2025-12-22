@@ -12,6 +12,7 @@ import { Subscription, interval } from 'rxjs';
 import { CommonService } from '../../../providers/common/common.service';
 import { DetailsService } from '../../../providers/details/details.service';
 import { CouponDetailsPage } from '../coupon-details/coupon-details.page';
+import { SearchResultPage } from '../search-result/search-result.page';
 
 @Component({
   selector: 'app-grocery',
@@ -202,18 +203,33 @@ export class GroceryPage implements OnInit, OnDestroy {
     this.showButton = true;
   }
 
-  async searchresult() {
+  async searchresult(key: string) {
+    if (!key) return;
+
     const searchValue = this.val;
 
     if (!searchValue || searchValue.trim() === '') {
-      await this.presentToast('Please enter search terms');
+      // Optional: Show toast message if search is empty
+      const toast = await this.toastController.create({
+        message: 'Please enter search terms',
+        duration: 2000,
+        position: 'bottom',
+      });
+      await toast.present();
       return;
     }
 
-    // Close current modal
-    await this.closeModal();
+    await this.modalController.dismiss();
 
-    // Parent component (CouponPage) should handle opening search modal
+    const modal = await this.modalController.create({
+      component: SearchResultPage,
+      componentProps: {
+        searchValue: searchValue,
+        search: 1,
+      },
+    });
+
+    await modal.present();
   }
 
   // HELPER METHODS
@@ -269,10 +285,6 @@ export class GroceryPage implements OnInit, OnDestroy {
       return coupon.randomDefaultImage;
     }
     return this.defaultImages[0];
-  }
-
-  performSearch() {
-    this.searchresult();
   }
 
   onSearchInput(event: any) {

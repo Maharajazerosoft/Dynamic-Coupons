@@ -187,29 +187,20 @@
   </ion-infinite-scroll>
 </ion-content>
 
-<ion-footer class="search-footer ion-no-border">
+<ion-footer>
   <ion-toolbar>
-    <ion-searchbar
-      [(ngModel)]="val"
-      (ionInput)="onSearchInput($event)"
-      (keyup.enter)="performSearch()"
-      placeholder="Search {{cat}} offers..."
-      animated="true"
-      showClearButton="focus"
-    >
-    </ion-searchbar>
-
-    <div class="footer-buttons">
-      <ion-button expand="block" color="primary" (click)="performSearch()">
-        Search
-      </ion-button>
-      <ion-button
-        expand="block"
-        color="medium"
-        fill="outline"
-        (click)="closeModal()"
+    <div class="search-container">
+      <ion-icon name="search" class="search-icon"></ion-icon>
+      <ion-searchbar
+        [(ngModel)]="val"
+        (ionInput)="getItems($event)"
+        enterkeyhint="done"
+        placeholder="Combine Keywords, biz, city, Zip, country…"
+        class="search-input"
       >
-        Close
+      </ion-searchbar>
+      <ion-button (click)="searchresult(val)" class="search-button">
+        Go
       </ion-button>
     </div>
   </ion-toolbar>

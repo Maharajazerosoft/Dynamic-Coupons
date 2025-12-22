@@ -1,51 +1,36 @@
-// Remove :host or replace with proper styling
-.home-toolbar {
-  height: 120px;
-  
-  .toolbar-content {
-    text-align: center;
-  }
-  
-  img {
-    margin-top: 10px;
-    width: 90%;
-  }
-}
-
-// Fix header styles - don't use :host
 ion-header {
   background-color: #08b8da !important;
-  
+
   ion-toolbar {
     --border-width: 0;
     --min-height: 80px;
     --color: white;
-    
+
     .header-content {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100%;
     }
-    
+
     .header-logo {
       height: 50px;
       width: auto;
       object-fit: contain;
     }
-    
+
     ion-button {
       --padding-start: 8px;
       --padding-end: 8px;
       --color: white;
-      
+
       ion-icon {
         font-size: 1.5rem;
         color: white !important;
       }
     }
   }
-  
+
   // Fix for the title in header
   .title {
     text-align: center !important;
@@ -60,15 +45,13 @@ ion-header {
 // Content styling
 ion-content {
   --background: #08b8da !important;
-  background-color: #08b8da !important;
-  
+  height: calc(100vh - 155px);
+
   .border {
     border: 2px solid #ffffff !important;
     margin: 26px 25px 30px 25px;
     background-color: transparent;
-    border-radius: 8px;
-    min-height: calc(100vh - 120px);
-    
+
     // If border still not visible, try a more prominent color
     &.border-visible {
       border: 3px solid #ffffff !important;
@@ -77,109 +60,121 @@ ion-content {
   }
 }
 
-// Card styling
-ion-card {
-  background: white !important;
-  border-radius: 8px !important;
-  margin: 16px !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-  
-  &.couponPg {
-    margin-top: 5% !important;
-    margin-bottom: 5% !important;
-    
-    img {
-      width: 65%;
-      max-width: 300px;
-      height: auto;
+ion-card.couponPg {
+  margin-top: 5% !important;
+  margin-bottom: 5% !important;
+
+  img {
+    width: 65%;
+    max-width: 300px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+  }
+
+  ion-card-header {
+    background: white !important;
+    padding: 16px 16px 8px 16px !important;
+    display: flex;
+    flex-direction: column;
+
+    ion-card-title {
+      font-family: "Lobster" !important;
+      font-size: 22px !important;
+      font-weight: bold;
+      white-space: break-spaces !important;
+      margin-bottom: 8px;
+      font-size: 24px;
+      order: 1;
+      text-align: center;
+    }
+
+    .center {
+      order: 2; /* Image comes after title */
+      margin-top: 10px;
+    }
+  }
+
+  ion-card-content {
+    background: white !important;
+    padding: 16px !important;
+
+    h3,
+    h4,
+    p,
+    .company,
+    .para {
+      color: #000000 !important;
+    }
+
+    h3 {
+      font-size: 24px !important;
+      margin-top: 10px !important;
+    }
+
+    h4 {
+      font-size: 16px !important;
+      margin-top: 8px !important;
+      font-family: "Lobster" !important;
+    }
+
+    .company {
+      font-size: 24px !important;
+      margin-top: 12px !important;
+      font-family: "Lobster" !important;
+    }
+
+    .para {
+      font-family: "Lobster";
+      margin-top: 12px !important;
+      margin-bottom: 8px !important;
+      text-align: center;
+
+      p {
+        margin: 4px 0;
+        color: #333 !important;
+      }
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #488aff !important;
       margin: 0 auto;
-      display: block;
-    }
-    
-    ion-card-header {
-      background: white !important;
-      padding: 16px 16px 8px 16px !important;
-      
-      ion-card-title {
-        color: #e17f38 !important;
-        font-family: "Lobster" !important;
-        font-size: 22px !important;
-        white-space: break-spaces !important;
-        margin-bottom: 8px;
-      }
-    }
-    
-    ion-card-content {
-      background: white !important;
-      padding: 16px !important;
-      
-      h3, h4, p, .company, .para {
-        color: #000000 !important;
-      }
-      
-      h3 {
-        font-size: 24px !important;
-        margin-top: 10px !important;
-      }
-      
-      h4 {
-        font-size: 16px !important;
-        margin-top: 8px !important;
-      }
-      
-      .company {
-        font-size: 24px !important;
-        margin-top: 12px !important;
-      }
-      
-      .para {
-        font-family: "Lobster";
-        margin-top: 12px !important;
-        margin-bottom: 8px !important;
-        
-        p {
-          margin: 4px 0;
-          color: #333 !important;
-        }
-      }
-      
-      a {
-        display: inline-block;
-        margin-top: 10px;
-        color: #488aff !important;
-        text-decoration: none;
-        border-bottom: 1px solid #488aff !important;
-        
-        img {
-          width: 30px !important;
-          margin-top: 5px;
-        }
+      width: 100%;
+      text-align: center;
+
+      img {
+        width: 30px !important;
+        margin-top: 5px;
       }
     }
   }
-  
+
   &.redeempg {
     margin-top: 5% !important;
     margin-bottom: 5% !important;
-    
+
     ion-card-header {
       ion-card-title {
         word-wrap: break-word !important;
         margin-top: 5% !important;
       }
-      
+
       p {
         font-size: 20px !important;
-        font-family: 'Lobster' !important;
+        font-family: "Lobster" !important;
         color: black !important;
       }
     }
-    
-    ion-card-content {
-      .inner-css {
-        h3, h4, p {
-          color: #000000 !important;
-        }
+
+    .inner-css {
+      h3,
+      h4,
+      p {
+        font-family: "Lobster";
+        color: #000000 !important;
+        text-align: center;
       }
     }
   }
@@ -187,14 +182,15 @@ ion-card {
 
 // Inner content styling
 .inner-css {
-  * {
-    color: #000000 !important;
-  }
-  
-  h3, h4 {
-    padding-top: 3% !important;
-    color: #000000 !important;
-  }
+  color: #000000 !important;
+  text-align: center;
+}
+
+h3,
+h4 {
+  padding-top: 3% !important;
+  color: #000000 !important;
+  text-align: center;
 }
 
 // Login button styling
@@ -204,7 +200,7 @@ ion-card {
   display: flex;
   justify-content: center;
   margin: 16px 0;
-  
+
   button {
     background: #ff7000 !important;
     color: white !important;
@@ -213,11 +209,11 @@ ion-card {
     font-size: 1.5rem !important;
     border: none;
     cursor: pointer;
-    
+
     &:hover {
       opacity: 0.9;
     }
-    
+
     &[hidden] {
       display: none !important;
     }
@@ -225,11 +221,17 @@ ion-card {
 }
 
 // Text styling fixes
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: #000000 !important;
 }
 
-p, p > span {
+p,
+p > span {
   color: #000000 !important;
 }
 
@@ -248,7 +250,7 @@ ion-input {
   border: 1px solid #ddd !important;
   border-radius: 4px !important;
   margin: 10px 0;
-  
+
   &.ng-invalid.ng-touched {
     border-color: #ff0000 !important;
   }
@@ -268,13 +270,4 @@ ion-checkbox {
   bottom: 60px;
   --background: #08b8da;
   --color: white;
-}
-
-// Force white background for all text content
-ion-card-content,
-ion-card-header,
-ion-card-title,
-ion-card-subtitle,
-p, h1, h2, h3, h4, h5, h6 {
-  color: #000000 !important;
 }

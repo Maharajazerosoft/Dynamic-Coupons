@@ -24,7 +24,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  <!-- 类别导航表格 - Only show for local offers in modal -->
   <ion-card *ngIf="type === 'local'">
     <ion-card-content>
       <table class="category-table">
@@ -142,11 +141,9 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- 优惠券列表 -->
   <ion-grid>
     <ion-row>
       <ion-col size="12" *ngFor="let coupon of content">
-        <!-- 处理不同类型的优惠券 -->
         <ion-card
           (click)="handleCouponClick(coupon)"
           *ngIf="coupon.image_type === 'img_link' || coupon.image_type === 'img_upload'"
@@ -189,16 +186,14 @@
     </ion-row>
   </ion-grid>
 
-  <!-- 无限滚动加载 -->
-  <ion-infinite-scroll (ionInfinite)="loadMoreData($event)" *ngIf="hasMoreData">
+  <!-- <ion-infinite-scroll (ionInfinite)="loadMoreData($event)" *ngIf="hasMoreData">
     <ion-infinite-scroll-content
       loadingSpinner="bubbles"
       loadingText="Loading more offers..."
     >
     </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+  </ion-infinite-scroll> -->
 
-  <!-- 无搜索结果提示 -->
   <div class="no-results" *ngIf="searchlen">
     <ion-text color="danger">
       <h2>No Search Results Found</h2>
@@ -208,27 +203,19 @@
 
 <ion-footer>
   <ion-toolbar>
-    <ion-searchbar
-      [(ngModel)]="val"
-      (ionInput)="onSearchInput($event)"
-      (keyup.enter)="performSearch()"
-      placeholder="Combine Keywords, business, city, Zip, country…"
-      animated="true"
-      showClearButton="focus"
-    ></ion-searchbar>
-    <ion-button expand="block" (click)="performSearch()" style="margin: 10px">
-      Search
-    </ion-button>
-    
-    <!-- Add a close modal button for better UX -->
-    <ion-button 
-      expand="block" 
-      fill="outline" 
-      color="medium"
-      (click)="closeModal()"
-      style="margin: 10px"
-    >
-      Close
-    </ion-button>
+    <div class="search-container">
+      <ion-icon name="search" class="search-icon"></ion-icon>
+      <ion-searchbar
+        [(ngModel)]="searchValue1"
+        (ionInput)="getItems($event)"
+        enterkeyhint="done"
+        placeholder="Combine Keywords, biz, city, Zip, country…"
+        class="search-input"
+      >
+      </ion-searchbar>
+      <ion-button (click)="searchresult(searchValue1)" class="search-button">
+        Go
+      </ion-button>
+    </div>
   </ion-toolbar>
 </ion-footer>

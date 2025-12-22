@@ -14,31 +14,13 @@
 
     <ion-buttons slot="end">
       <ion-button (click)="toggleMenu()" fill="clear">
-        <ion-icon
-          slot="icon-only"
-          [name]="menu"
-          color="light"
-        ></ion-icon>
+        <ion-icon slot="icon-only" [name]="menu" color="light"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="search-container" *ngIf="showButton">
-    <ion-searchbar
-      [(ngModel)]="searchValue"
-      (ionInput)="getItems($event)"
-      placeholder="Try keywords, biz name, city, zip…"
-      enterkeyhint="search"
-      (keyup.enter)="searchresult(searchValue)"
-    >
-    </ion-searchbar>
-    <ion-button expand="block" (click)="searchresult(searchValue)"
-      >Go</ion-button
-    >
-  </div>
-
   <div [hidden]="showButton" style="margin-top: 7%">
     <h2 class="allresult">The following search results include all keywords</h2>
 
@@ -182,7 +164,6 @@
     <ion-grid *ngIf="relatedResult && relatedResult.length > 0">
       <ion-row *ngFor="let rlocal of relatedResult">
         <ion-col size="12">
-          <!-- Copy the same card structure from exactResult -->
           <ion-card *ngIf="rlocal.image_type === '1'">
             <ion-card-header>
               <div [innerHTML]="rlocal.web_content | safeHtml"></div>
@@ -317,21 +298,19 @@
 
 <ion-footer>
   <ion-toolbar>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-searchbar
-            [(ngModel)]="searchValue"
-            (ionInput)="getItems($event)"
-            enterkeyhint="done"
-            placeholder="Combine Keywords, biz, city, Zip, country…"
-          >
-          </ion-searchbar>
-          <ion-button expand="block" (click)="searchresult(searchValue)"
-            >Go</ion-button
-          >
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <div class="search-container">
+      <ion-icon name="search" class="search-icon"></ion-icon>
+      <ion-searchbar
+        [(ngModel)]="searchValue1"
+        (ionInput)="getItems($event)"
+        enterkeyhint="done"
+        placeholder="Combine Keywords, biz, city, Zip, country…"
+        class="search-input"
+      >
+      </ion-searchbar>
+      <ion-button (click)="searchresult(searchValue1)" class="search-button">
+        Go
+      </ion-button>
+    </div>
   </ion-toolbar>
 </ion-footer>

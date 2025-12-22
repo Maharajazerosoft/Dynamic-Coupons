@@ -21,6 +21,12 @@
     position: relative;
     width: 80%;
     margin: 0 auto;
+
+    ion-searchbar {
+      .searchbar-search-icon {
+        display: none !important;
+      }
+    }
   }
 
   .custom-searchbar .search-icon {
@@ -204,5 +210,4 @@
     border-radius: 4px;
     color: #000;
   }
-    
 }

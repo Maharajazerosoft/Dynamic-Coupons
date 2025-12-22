@@ -66,6 +66,7 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
   isLoading: boolean = false;
   showAd: boolean = false;
   hasMoreData: boolean = true;
+  searchValue1: string = '';
 
   constructor(
     private router: Router,
@@ -80,9 +81,7 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
     await this.initcontent();
   }
 
-  ngAfterViewInit() {
-    // Your existing code
-  }
+  ngAfterViewInit() {}
 
   ngOnDestroy() {
     if (this.subscriber) {
@@ -203,7 +202,9 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
     await modal.present();
   }
 
-  async searchresult() {
+  async searchresult(key: string) {
+    if (!key) return;
+
     const searchValue = this.val;
 
     if (!searchValue || searchValue.trim() === '') {
@@ -293,10 +294,6 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
 
   handleImageError(event: any, coupon: any) {
     event.target.src = this.defaultImages[0];
-  }
-
-  performSearch() {
-    this.searchresult();
   }
 
   onSearchInput(event: any) {

@@ -22,11 +22,10 @@ table {
 }
 
 .page-title {
-  display: flex;
-  justify-content: center;
   font-size: 27px !important;
   font-family: "Lobster" !important;
   color: white !important;
+  text-align: center;
 }
 
 // Ensure font-family applies to all table elements
@@ -132,7 +131,7 @@ ion-card-header {
 }
 
 ion-card-content {
-  padding: 8px 16px 16px;
+  padding: 2px;
   text-align: center;
 }
 
@@ -142,67 +141,6 @@ img {
   height: auto;
   margin: 0 auto;
   display: block;
-}
-
-// Search bar styles
-ion-footer {
-  background: rgba(0, 0, 0, 0.2);
-
-  ion-toolbar {
-    --background: rgba(0, 0, 0, 0.2);
-    --padding-start: 8px;
-    --padding-end: 8px;
-    --padding-top: 4px;
-    --padding-bottom: 4px;
-
-    .searchbox {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      gap: 8px;
-    }
-
-    ion-searchbar {
-      flex: 1;
-      --background: white;
-      --color: #ff7000;
-      --placeholder-color: #ff7000;
-      --border-radius: 3px;
-      --box-shadow: none;
-      height: 44px;
-
-      .searchbar-input-container {
-        .searchbar-input {
-          padding: 10px 10px !important;
-          height: 40px !important;
-          font-size: 14px;
-
-          &::placeholder {
-            color: #ff7000 !important;
-          }
-        }
-      }
-    }
-
-    ion-button.gobutton {
-      --background: #ff7000;
-      --color: white;
-      --border-radius: 3px;
-      height: 40px;
-      margin: 0;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      font-size: 14px;
-      min-width: 60px;
-    }
-  }
-}
-
-.search-footer {
-  .searchbar-search-icon {
-    display: none !important;
-  }
 }
 
 // Visit count styles
@@ -250,4 +188,57 @@ ion-footer {
 ion-spinner {
   display: block;
   margin: 20px auto;
+}
+
+ion-footer {
+  position: fixed;
+  bottom: 0px;
+  z-index: 1000;
+  background: #08b8da;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-top: 0.55px solid transparent;
+  border-bottom: 0.55px solid rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.2);
+  height: 75px;
+}
+
+.search-input {
+  --background: #ffffff;
+  --border-radius: 8px;
+  --placeholder-color: #666;
+  --color: #333;
+  padding: 7px 0px !important;
+  width: 78%;
+}
+
+.search-button {
+  --background: #ff7000;
+  --background-hover: #ff8000;
+  --color: white;
+  font-size: 14px;
+  text-transform: uppercase;
+  height: 35px !important;
+  min-height: 35px !important;
+}
+
+.search-icon {
+  position: absolute;
+  left: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #555;
+  pointer-events: none;
+  z-index: 10;
+}
+
+ion-content {
+  --background: #08b8da !important;
+  height: calc(100vh - 70px);
 }

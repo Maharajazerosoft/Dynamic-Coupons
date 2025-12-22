@@ -1,1 +1,1 @@
-# dynamic-coupons-new
+# DynamicCoupons App/Web
