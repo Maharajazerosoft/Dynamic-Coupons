@@ -1,8 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ChangeDetectorRef,
+} from '@angular/core';
 import {
   LoadingController,
   ToastController,
   NavController,
+  IonContent,
 } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Browser } from '@capacitor/browser';
@@ -19,6 +26,7 @@ import { DetailsService } from '../../../providers/details/details.service';
 export class GroceryPage implements OnInit, OnDestroy {
   cat: string = ''; // Category from route params
 
+  renderGrid: boolean = false;
   val: any;
   content: any = [];
   data: any;
@@ -45,6 +53,8 @@ export class GroceryPage implements OnInit, OnDestroy {
     'https://dynamiccoupons.com/webupload/thumb/default/default7.png',
   ];
 
+  @ViewChild(IonContent) ionContent!: IonContent;
+
   constructor(
     private commonService: CommonService,
     private detailsService: DetailsService,
@@ -52,12 +62,13 @@ export class GroceryPage implements OnInit, OnDestroy {
     private toastController: ToastController,
     private navController: NavController,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
     // Get category from route parameters
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       const categoryParam = params.get('category');
       if (categoryParam) {
         this.cat = categoryParam;
@@ -73,6 +84,44 @@ export class GroceryPage implements OnInit, OnDestroy {
     }
   }
 
+  ionViewWillEnter() {
+    console.log('GroceryPage loaded');
+
+    // Controlled one-time reload to fix ion-content offset issue
+    const reloadKey = 'grocery-reloaded';
+    const navigationType = (
+      performance.getEntriesByType(
+        'navigation'
+      )[0] as PerformanceNavigationTiming
+    )?.type;
+
+    // Only reload if:
+    // 1. This is a router navigation (not browser refresh)
+    // 2. We haven't already reloaded this session
+    if (!sessionStorage.getItem(reloadKey)) {
+      sessionStorage.setItem(reloadKey, 'true');
+      console.log('Performing controlled reload for grocery page');
+      window.location.reload();
+      return;
+    }
+
+    // Clear the flag after successful reload to allow future navigation
+    if (navigationType === 'reload') {
+      sessionStorage.removeItem(reloadKey);
+    }
+  }
+
+  ionViewDidEnter() {
+    // Force ion-content to recalculate offsets after page fully entered
+    // and after DOM has stabilized with all content
+    requestAnimationFrame(() => {
+      // First ensure any pending renders complete
+      this.cdr.detectChanges();
+
+      // Reset scroll position to top
+      this.ionContent.scrollToTop(0);
+    });
+  }
 
   async initcontent() {
     await this.presentLoading();
@@ -97,6 +146,11 @@ export class GroceryPage implements OnInit, OnDestroy {
         this.hasMoreData = this.content.length < this.totalData;
 
         await this.dismissLoading();
+
+        // Data is loaded and bound, allow grid to render
+        this.cdr.detectChanges();
+        this.renderGrid = true;
+        this.cdr.detectChanges();
       } else {
         await this.dismissLoading();
         await this.presentToast(response.error || 'Failed to load offers');
@@ -203,7 +257,7 @@ export class GroceryPage implements OnInit, OnDestroy {
 
     // Navigate to search result page
     this.router.navigate(['/search-result'], {
-      queryParams: { search: searchValue }
+      queryParams: { search: searchValue },
     });
   }
 
@@ -299,5 +353,9 @@ export class GroceryPage implements OnInit, OnDestroy {
         this.menu.close();
       }
     }
+  }
+
+  trackByGroceryId(index: number, item: any): string {
+    return item.web_id || index;
   }
 }

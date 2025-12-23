@@ -4,9 +4,11 @@ import {
   OnDestroy,
   ViewChild,
   AfterViewInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   IonInfiniteScroll,
+  IonContent,
   LoadingController,
   ToastController,
   NavController,
@@ -26,9 +28,11 @@ import { DetailsService } from '../../../providers/details/details.service';
 })
 export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
+  @ViewChild(IonContent) ionContent!: IonContent;
 
   type: string = 'local';
   title: string = '';
+  renderGrid: boolean = false;
 
   content: any[] = [];
   data: any[] = [];
@@ -65,7 +69,8 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
     private detailsService: DetailsService,
     private loadingController: LoadingController,
     private toastController: ToastController,
-    private navController: NavController
+    private navController: NavController,
+    private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
@@ -80,6 +85,33 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {}
+
+  ionViewWillEnter() {
+    console.log('CouponPage loaded');
+    
+    // Controlled one-time reload to fix ion-content offset issue
+    const reloadKey = 'coupon-reloaded';
+    const navigationType = (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming)?.type;
+    
+    if (!sessionStorage.getItem(reloadKey)) {
+      sessionStorage.setItem(reloadKey, 'true');
+      console.log('Performing controlled reload for coupon page');
+      window.location.reload();
+      return;
+    }
+    
+    // Clear the flag after successful reload to allow future navigation
+    if (navigationType === 'reload') {
+      sessionStorage.removeItem(reloadKey);
+    }
+  }
+
+  ionViewDidEnter() {
+    requestAnimationFrame(() => {
+      this.cdr.detectChanges();
+      this.ionContent.scrollToTop(0);
+    });
+  }
 
   ngOnDestroy() {
     if (this.subscriber) {
@@ -109,6 +141,11 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
         this.hasMoreData = this.content.length < this.totalData;
 
         await this.dismissLoading();
+
+        // Data is loaded and bound, allow grid to render
+        this.cdr.detectChanges();
+        this.renderGrid = true;
+        this.cdr.detectChanges();
       } else {
         await this.dismissLoading();
         await this.presentToast(response.error || 'Failed to load coupons');
@@ -317,5 +354,9 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
   navigateToCategory(category: string) {
     console.log('Navigating to category:', category);
     this.router.navigate(['/grocery', category]);
+  }
+
+  trackByCouponId(index: number, item: any): string {
+    return item.web_id || index;
   }
 }

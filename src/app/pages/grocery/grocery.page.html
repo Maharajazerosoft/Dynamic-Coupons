@@ -45,9 +45,9 @@
 
 <ion-content [fullscreen]="true">
   <!-- Main Content Grid -->
-  <div *ngIf="!isLoading" class="border">
-    <ion-grid>
-      <ion-row *ngFor="let grocery of content">
+  <div class="border">
+    <ion-grid *ngIf="renderGrid">
+      <ion-row *ngFor="let grocery of content; trackBy: trackByGroceryId">
         <!-- For img_link type coupons -->
         <ion-col
           size="12"

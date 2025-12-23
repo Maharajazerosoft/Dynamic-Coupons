@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import {
   LoadingController,
   ToastController,
   InfiniteScrollCustomEvent,
-  NavController
+  NavController,
+  IonContent,
 } from '@ionic/angular';
 import {
   DomSanitizer,
@@ -22,7 +23,10 @@ import { ActivatedRoute } from '@angular/router';
   standalone: false,
 })
 export class SearchResultPage implements OnInit {
+  @ViewChild(IonContent) ionContent!: IonContent;
+
   searchValue: string = '';
+  renderGrid: boolean = false;
   
   submitted: boolean = true;
   resultStatus: string = 'exact';
@@ -65,7 +69,8 @@ export class SearchResultPage implements OnInit {
     private toastController: ToastController,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -80,6 +85,34 @@ export class SearchResultPage implements OnInit {
 
   ionViewWillEnter() {
     console.log('SearchResultsPage loaded');
+    
+    // Controlled one-time reload to fix ion-content offset issue
+    const reloadKey = 'search-result-reloaded';
+    const navigationType = (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming)?.type;
+
+    console.log("navigationType",navigationType)
+
+    console.log("reloadKey",reloadKey)
+    
+    if (!sessionStorage.getItem(reloadKey)) {
+      sessionStorage.setItem(reloadKey, 'true');
+      console.log('Performing controlled reload for search-result page');
+      window.location.reload();
+      return;
+    }
+    
+    // Clear the flag after successful reload to allow future navigation
+    if (navigationType === 'reload') {
+      sessionStorage.removeItem(reloadKey);
+    }
+  }
+
+  ionViewDidEnter() {
+    console.log('SearchResultsPage did enter');
+    requestAnimationFrame(() => {
+      this.cdr.detectChanges();
+      this.ionContent.scrollToTop(0);
+    });
   }
 
   async nextPage(id: number, type?: any, circulation?: any, link?: string) {
@@ -189,6 +222,11 @@ export class SearchResultPage implements OnInit {
       this.assignRandomDefaultImagesRelated();
 
       await loading.dismiss();
+
+      // Data is loaded and bound, allow grid to render
+      this.cdr.detectChanges();
+      this.renderGrid = true;
+      this.cdr.detectChanges();
     } catch (error) {
       console.error('Search error:', error);
       this.showButton = false;

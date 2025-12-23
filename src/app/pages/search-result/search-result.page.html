@@ -20,34 +20,11 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- Loading State -->
-  <div *ngIf="showButton && searchValue" class="loading-container">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p>Searching for "{{searchValue}}"...</p>
-  </div>
-
-  <!-- Initial State - No Search Yet -->
-  <div *ngIf="!searchValue && !showButton" class="initial-state">
-    <div class="empty_hei"></div>
-    <div class="chat-begin">
-      <h1>
-        Search and discover offers,<br />coupons, promotions, sales<br />and
-        much more!
-      </h1>
-      
-      <!-- Search instructions -->
-      <div class="search-instructions">
-        <p>Enter keywords, business names, cities, or zip codes to find offers.</p>
-      </div>
-    </div>
-  </div>
-
   <!-- Search Results -->
   <div *ngIf="!showButton && searchValue" class="search-results-container">
     <!-- Exact Results Section -->
+    <h2 class="allresult">The following search results include all keywords</h2>
     <div *ngIf="exactResult && exactResult.length > 0">
-      <h2 class="allresult">The following search results include all keywords</h2>
-
       <ion-grid>
         <ion-row *ngFor="let clocal of exactResult">
           <ion-col size="12">
@@ -186,18 +163,18 @@
     </div>
 
     <!-- No Exact Results -->
-    <div *ngIf="(!exactResult || exactResult.length === 0) && searchValue" class="chat-begin">
-      <h3>
-        No exact search results found.<br />See related results below.
-      </h3>
+    <div
+      *ngIf="(!exactResult || exactResult.length === 0) && searchValue"
+      class="chat-begin"
+    >
+      <h3>No exact search results found.<br />See related results below.</h3>
     </div>
 
+    <h2 class="allresult">
+      The following search results include individual keywords
+    </h2>
     <!-- Related Results Section -->
     <div *ngIf="relatedResult && relatedResult.length > 0">
-      <h2 class="allresult">
-        The following search results include individual keywords
-      </h2>
-
       <ion-grid>
         <ion-row *ngFor="let rlocal of relatedResult">
           <ion-col size="12">
@@ -333,12 +310,6 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-    </div>
-
-    <!-- No Results at All -->
-    <div *ngIf="(!exactResult || exactResult.length === 0) && (!relatedResult || relatedResult.length === 0) && searchValue" class="chat-begin no-results">
-      <h3>No search results found for "{{searchValue}}"</h3>
-      <p>Try different keywords or check your spelling.</p>
     </div>
   </div>
 </ion-content>

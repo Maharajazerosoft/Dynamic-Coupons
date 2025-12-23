@@ -29,34 +29,6 @@ export class AppComponent {
     this.menuCtrl.toggle('main-menu');
   }
 
-  // Navigate to internal pages
-  navigateTo(type: string) {
-    this.closeMenu();
-    
-    // Add small delay for menu close animation
-    setTimeout(() => {
-      switch(type) {
-        case 'search':
-          this.router.navigate(['/search']);
-          break;
-        case 'local':
-          this.router.navigate(['/coupons/local']);
-          break;
-        case 'national':
-          this.router.navigate(['/coupons/national']);
-          break;
-        case 'privacy':
-          this.router.navigate(['/privacy']);
-          break;
-        case 'contact':
-          this.router.navigate(['/contact']);
-          break;
-        default:
-          console.warn('Unknown menu item:', type);
-      }
-    }, 100);
-  }
-
   // Open external links
   async openExternalLink(url: string) {
     this.closeMenu();

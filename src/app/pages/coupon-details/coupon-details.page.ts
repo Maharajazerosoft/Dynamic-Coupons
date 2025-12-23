@@ -64,7 +64,7 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
   // New variables for better state management
   isLoading = false;
   error: string | null = null;
-  name: "" | undefined
+  name: '' | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -87,7 +87,7 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
     console.log('🔄 Initializing CouponDetailsPage...');
 
     // Get coupon ID from route parameters
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       this.cid = params.get('id');
       console.log('🆔 Coupon ID from route:', this.cid);
 
@@ -108,6 +108,30 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
     }
   }
 
+  ionViewWillEnter() {
+    console.log('CouponPage loaded');
+
+    // Controlled one-time reload to fix ion-content offset issue
+    const reloadKey = 'coupon-details-reloaded';
+    const navigationType = (
+      performance.getEntriesByType(
+        'navigation'
+      )[0] as PerformanceNavigationTiming
+    )?.type;
+
+    if (!sessionStorage.getItem(reloadKey)) {
+      sessionStorage.setItem(reloadKey, 'true');
+      console.log('Performing controlled reload for coupon page');
+      window.location.reload();
+      return;
+    }
+
+    // Clear the flag after successful reload to allow future navigation
+    if (navigationType === 'reload') {
+      sessionStorage.removeItem(reloadKey);
+    }
+  }
+
   async initLoad() {
     this.isLoading = true;
     this.error = null;
@@ -116,10 +140,7 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
 
     try {
       // Load user email and history in parallel
-      await Promise.all([
-        this.loadUserEmail(),
-        this.loadEmailHistory()
-      ]);
+      await Promise.all([this.loadUserEmail(), this.loadEmailHistory()]);
 
       console.log('🔍 Loading coupon content...');
       await this.initcontent();
@@ -178,14 +199,15 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
 
         // Process the data
         if (this.details.web_content) {
-          this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.details.web_content);
+          this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(
+            this.details.web_content
+          );
         }
 
         // Initialize map if needed
         if (this.details.latitude && this.details.longitude) {
           this.initializeMap();
         }
-
       } else {
         throw new Error(`API returned status: ${Response.status}`);
       }
@@ -196,7 +218,7 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
       await loading.dismiss();
     }
   }
-  
+
   async initializeMap() {
     if (!this.mapElement?.nativeElement || !this.address) return;
 
