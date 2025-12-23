@@ -21,12 +21,6 @@
     position: relative;
     width: 80%;
     margin: 0 auto;
-
-    ion-searchbar {
-      .searchbar-search-icon {
-        display: none !important;
-      }
-    }
   }
 
   .custom-searchbar .search-icon {
@@ -52,9 +46,12 @@
     .searchbar-input-container {
       input {
         font-size: 14px !important;
-        padding-left: 40px !important;
       }
     }
+  }
+
+  .searchbar-input {
+    padding: 6px 0px 6px 25px !important; 
   }
 
   .button-inner {
@@ -210,5 +207,8 @@
     background-color: #ff7000;
     border-radius: 4px;
     color: #000;
+  }
+  ion-searchbar::part(search-icon) {
+    display: none !important;
   }
 }

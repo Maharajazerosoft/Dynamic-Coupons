@@ -6,7 +6,8 @@ import {
   LoadingController,
   ToastController,
   InfiniteScrollCustomEvent,
-  ModalController, // Add this
+  ModalController,
+  MenuController
 } from '@ionic/angular';
 import {
   DomSanitizer,
@@ -87,7 +88,8 @@ export class SearchResultPage implements OnInit {
     private loadingController: LoadingController,
     private toastController: ToastController,
     private sanitizer: DomSanitizer,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private menuCtrl: MenuController,
   ) {}
 
   ngOnInit() {
@@ -102,7 +104,7 @@ export class SearchResultPage implements OnInit {
   }
 
   // Add this method to close modal
-  goBack() {
+  closeModal() {
     this.modalController.dismiss();
   }
 

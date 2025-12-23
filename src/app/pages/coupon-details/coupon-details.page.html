@@ -1,28 +1,9 @@
-<!-- Main Header -->
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="goBack()" fill="clear">
-        <ion-icon slot="icon-only" name="arrow-back" color="light"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-
-    <!-- Title or Logo -->
-    <div class="header-content">
-      <img [src]="logoPath" alt="Logo" class="header-logo" />
-    </div>
-
-    <ion-buttons slot="end">
-      <ion-button (click)="toggleMenu()" fill="clear">
-        <ion-icon slot="icon-only" [name]="menu" color="light"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-
-  <ion-toolbar>
-    <h1 class="title">Coupon Details</h1>
-  </ion-toolbar>
-</ion-header>
+<app-header
+  [showLogo]="true"
+  [showBackButton]="true"
+  (backClicked)="closeModal()"
+>
+</app-header>
 
 <ion-content>
   <div class="border">

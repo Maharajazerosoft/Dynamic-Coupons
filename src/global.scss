@@ -294,3 +294,14 @@ ion-header ion-toolbar:first-of-type {
 .header-md {
   box-shadow: unset !important;
 }
+
+.searchbar-search-icon.sc-ion-searchbar-md {
+  display: none !important;
+}
+
+.searchbar-input.sc-ion-searchbar-md {
+  -webkit-padding-start: 1rem;
+  padding-inline-start: 2rem;
+  -webkit-padding-end: 1rem;
+  padding-inline-end: 1rem;
+}

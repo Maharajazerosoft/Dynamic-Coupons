@@ -45,14 +45,13 @@ ion-header {
 // Content styling
 ion-content {
   --background: #08b8da !important;
-  height: calc(100vh - 155px);
+  height: calc(100vh - 100px);
 
   .border {
     border: 2px solid #ffffff !important;
     margin: 26px 25px 30px 25px;
     background-color: transparent;
 
-    // If border still not visible, try a more prominent color
     &.border-visible {
       border: 3px solid #ffffff !important;
       box-shadow: 0 0 0 1px #08b8da;

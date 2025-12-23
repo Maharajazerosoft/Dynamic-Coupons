@@ -25,7 +25,7 @@ ion-header {
     
     .header-logo {
       height: 50px;
-      width: auto;
+      width: 100%;
       object-fit: contain;
     }
     
@@ -62,9 +62,7 @@ ion-menu {
     
     .menu-logo {
       height: 50px;
-      width: auto;
-      margin: 0 auto;
-      display: block;
+      width: 95%;
     }
     
     ion-button {

@@ -1,190 +1,190 @@
 <app-header
   [showLogo]="true"
   [showBackButton]="true"
-  (backButtonClick)="closeModal()"
+  (backClicked)="closeModal()"
 >
 </app-header>
 
 <ion-header class="page-sub-header">
   <ion-toolbar color="primary">
-    <ion-title
-      *ngIf="type === 'local'"
-      size="large"
-      class="page-title">
+    <ion-title *ngIf="type === 'local'" size="large" class="page-title">
       Local Offers
     </ion-title>
 
-    <ion-title
-      *ngIf="type === 'national'"
-      size="large"
-      class="page-title">
+    <ion-title *ngIf="type === 'national'" size="large" class="page-title">
       National Offers
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <ion-card *ngIf="type === 'local'">
-    <ion-card-content>
-      <table class="category-table">
-        <tr>
-          <td style="color: #ff7000; font-weight: 600" colspan="4">
-            Freebies, Manufacturer Coupons, Discounts, Lists
-          </td>
-        </tr>
+<ion-content
+  [fullscreen]="true"
+  class="ion-padding"
+  [ngClass]="(type =='local')?'local_offers':'national_offers'"
+>
+  <div class="border">
+    <ion-card *ngIf="type === 'local'">
+      <ion-card-content>
+        <table class="category-table">
+          <tr>
+            <td style="color: #ff7000; font-weight: 600" colspan="4">
+              Freebies, Manufacturer Coupons, Discounts, Lists
+            </td>
+          </tr>
 
-        <tr>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('grocery')">
-            Grocery Weekly Flyers
-          </td>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('babies')">
-            Babies, Children, Toys
-          </td>
-        </tr>
+          <tr>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('grocery')">
+              Grocery Weekly Flyers
+            </td>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('babies')">
+              Babies, Children, Toys
+            </td>
+          </tr>
 
-        <tr>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('home')">
-            Household & Parenting
-          </td>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('birthday')">
-            Birthday Offers
-          </td>
-        </tr>
+          <tr>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('home')">
+              Household & Parenting
+            </td>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('birthday')">
+              Birthday Offers
+            </td>
+          </tr>
 
-        <tr>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('beauty')">
-            Beauty, Health, Fitness
-          </td>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('shipping')">
-            Free Shipping / Returns
-          </td>
-        </tr>
+          <tr>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('beauty')">
+              Beauty, Health, Fitness
+            </td>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('shipping')">
+              Free Shipping / Returns
+            </td>
+          </tr>
 
-        <tr>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('books')">
-            Books & Prints
-          </td>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('supplies')">
-            Pet Supplies
-          </td>
-        </tr>
+          <tr>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('books')">
+              Books & Prints
+            </td>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('supplies')">
+              Pet Supplies
+            </td>
+          </tr>
 
-        <tr>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('business')">
-            Minority, Women, Ethnic
-          </td>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('finance')">
-            Money, Finance, Cars
-          </td>
-        </tr>
+          <tr>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('business')">
+              Minority, Women, Ethnic
+            </td>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('finance')">
+              Money, Finance, Cars
+            </td>
+          </tr>
 
-        <tr>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('student')">
-            Student Discounts
-          </td>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('productivity')">
-            Business, Tech & Careers
-          </td>
-        </tr>
+          <tr>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('student')">
+              Student Discounts
+            </td>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('productivity')">
+              Business, Tech & Careers
+            </td>
+          </tr>
 
-        <tr>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('discounts')">
-            Senior Discounts
-          </td>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('military')">
-            Veterans & Military
-          </td>
-        </tr>
+          <tr>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('discounts')">
+              Senior Discounts
+            </td>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('military')">
+              Veterans & Military
+            </td>
+          </tr>
 
-        <tr>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('holidays')">
-            Fun, Games, Sweepstakes
-          </td>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('travel')">
-            Travel / Holidays
-          </td>
-        </tr>
+          <tr>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('holidays')">
+              Fun, Games, Sweepstakes
+            </td>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('travel')">
+              Travel / Holidays
+            </td>
+          </tr>
 
-        <tr>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('parenting')">
-            All Countries
-          </td>
-          <td class="arrow">›</td>
-          <td class="text" (click)="navigateToCategory('podcasts')">
-            Blogs & Podcasts
-          </td>
-        </tr>
+          <tr>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('parenting')">
+              All Countries
+            </td>
+            <td class="arrow">›</td>
+            <td class="text" (click)="navigateToCategory('podcasts')">
+              Blogs & Podcasts
+            </td>
+          </tr>
 
-        <tr>
-          <td colspan="4" style="color: #ff7000; font-weight: 600">
-            Search or Scroll for Other Offers
-          </td>
-        </tr>
-      </table>
-    </ion-card-content>
-  </ion-card>
+          <tr>
+            <td colspan="4" style="color: #ff7000; font-weight: 600">
+              Search or Scroll for Other Offers
+            </td>
+          </tr>
+        </table>
+      </ion-card-content>
+    </ion-card>
 
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12" *ngFor="let coupon of content">
-        <ion-card
-          (click)="handleCouponClick(coupon)"
-          *ngIf="coupon.image_type === 'img_link' || coupon.image_type === 'img_upload'"
-        >
-          <ion-card-header>
-            <ion-card-title [ngClass]="getCardTitleClass(coupon)">
-              {{coupon.web_coupon_title}}
-            </ion-card-title>
-            <div class="image-container">
-              <img
-                [src]="getCouponImage(coupon)"
-                [alt]="coupon.web_coupon_title"
-                (error)="handleImageError($event, coupon)"
-                class="coupon-image"
-              />
-            </div>
-          </ion-card-header>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" *ngFor="let coupon of content">
+          <ion-card
+            (click)="handleCouponClick(coupon)"
+            *ngIf="coupon.image_type === 'img_link' || coupon.image_type === 'img_upload'"
+          >
+            <ion-card-header>
+              <ion-card-title [ngClass]="getCardTitleClass(coupon)">
+                {{coupon.web_coupon_title}}
+              </ion-card-title>
+              <div class="image-container">
+                <img
+                  [src]="getCouponImage(coupon)"
+                  [alt]="coupon.web_coupon_title"
+                  (error)="handleImageError($event, coupon)"
+                  class="coupon-image"
+                />
+              </div>
+            </ion-card-header>
 
-          <ion-card-content>
-            <p class="coupon-online" *ngIf="coupon.image_size !== 'large'">
-              Online
-            </p>
-            <p class="coupon-business">{{coupon.web_coupon_bname}}</p>
-            <p class="coupon-location" *ngIf="coupon.image_size !== 'large'">
-              {{coupon.web_coupon_city}} {{coupon.web_coupon_state}}
-              {{coupon.web_coupon_postalcode}}<br />
-              {{coupon.web_coupon_country}}
-            </p>
-            <p class="coupon-expiry" *ngIf="coupon.image_size !== 'large'">
-              Valid up to: {{coupon.web_coupon_expiredate | date:'mediumDate'}}
-            </p>
+            <ion-card-content>
+              <p class="coupon-online" *ngIf="coupon.image_size !== 'large'">
+                Online
+              </p>
+              <p class="coupon-business">{{coupon.web_coupon_bname}}</p>
+              <p class="coupon-location" *ngIf="coupon.image_size !== 'large'">
+                {{coupon.web_coupon_city}} {{coupon.web_coupon_state}}
+                {{coupon.web_coupon_postalcode}}<br />
+                {{coupon.web_coupon_country}}
+              </p>
+              <p class="coupon-expiry" *ngIf="coupon.image_size !== 'large'">
+                Valid up to: {{coupon.web_coupon_expiredate}}
+              </p>
+            </ion-card-content>
             <div class="visit-count">
               <ion-badge color="medium"
                 >Visits: {{coupon.click_count || 0}}</ion-badge
               >
             </div>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 
   <!-- <ion-infinite-scroll (ionInfinite)="loadMoreData($event)" *ngIf="hasMoreData">
     <ion-infinite-scroll-content

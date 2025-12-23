@@ -22,6 +22,7 @@ import { Share } from '@capacitor/share';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { HeaderComponent } from '../../components/header/header.component';
 
 // Import your services
 import { CommonService } from '../../../providers/common/common.service';
@@ -34,7 +35,7 @@ declare const google: any;
   templateUrl: './coupon-details.page.html',
   styleUrls: ['./coupon-details.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule, HeaderComponent],
 })
 export class CouponDetailsPage implements OnInit, AfterViewInit {
   @ViewChild('mapElement', { static: false }) mapElement!: ElementRef;
@@ -647,15 +648,8 @@ async initcontent() {
     }
   }
 
-  // Navigation
-  goBack() {
-    if (this.modalController) {
-      console.log('🔙 Closing modal');
-      this.modalController.dismiss();
-    } else {
-      console.log('🔙 Navigating back to search');
-      this.router.navigate(['/search']);
-    }
+  closeModal() {
+    this.modalController.dismiss();
   }
 
   // Alert methods - keeping your original structure
