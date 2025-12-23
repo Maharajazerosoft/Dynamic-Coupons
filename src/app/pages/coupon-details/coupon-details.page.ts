@@ -4,6 +4,9 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  Inject,
+  PLATFORM_ID,
+  OnDestroy,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -18,12 +21,27 @@ import {
 import { Preferences } from '@capacitor/preferences';
 import { Browser } from '@capacitor/browser';
 import { Share } from '@capacitor/share';
+import { isPlatformBrowser } from '@angular/common';
+
+// Type for performance navigation
+interface PerformanceNavigationTiming extends PerformanceEntry {
+  type: 'navigate' | 'reload' | 'back_forward' | 'prerender';
+}
+
+// Google Maps declaration
+declare const google: any;
 
 // Import your services
 import { CommonService } from '../../../providers/common/common.service';
 import { DetailsService } from '../../../providers/details/details.service';
 
-declare const google: any;
+// Declare google as global
+declare global {
+  interface Window {
+    google: any;
+    initMap: () => void;
+  }
+}
 
 @Component({
   selector: 'app-coupon-details',
@@ -31,11 +49,11 @@ declare const google: any;
   styleUrls: ['./coupon-details.page.scss'],
   standalone: false,
 })
-export class CouponDetailsPage implements OnInit, AfterViewInit {
-  @ViewChild('mapElement', { static: false }) mapElement!: ElementRef;
+export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('map', { static: false }) mapElement!: ElementRef;
   cid: any;
 
-  // Variables - matching your original names
+  // Variables
   sanitizedHtml: SafeHtml;
   emailHistory: string[] = [];
   DCloginEmail: any;
@@ -50,23 +68,48 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
   address: any;
   city: any;
   country: any;
-  directionsService: any;
-  directionsRenderer: any;
   state: any;
   postalcode: any;
   map: any;
   marker: any;
+  infoWindow: any;
 
-  menu: any;
-  isMenuOpen = false;
-  logoPath: string = 'assets/icon/logo.png';
-
-  // New variables for better state management
+  // New variables
   isLoading = false;
   error: string | null = null;
-  name: '' | undefined;
+  name: string | undefined;
+  isGoogleMapsLoaded = false;
+  isMapInitialized = false;
+
+  public alertInputs: AlertInput[] = [
+    {
+      type: 'email',
+      name: 'email',
+      placeholder: 'Email Address',
+      attributes: {
+        autocorrect: 'on',
+        required: true,
+      },
+    },
+  ];
+
+  public alertButtons = [
+    {
+      text: 'Cancel',
+      role: 'cancel',
+      cssClass: 'secondary',
+    },
+    {
+      text: 'Ok',
+      handler: async (e: any) => {
+        await this.handleEmailSubmission(e.email);
+        return false;
+      },
+    },
+  ];
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: any,
     private route: ActivatedRoute,
     private router: Router,
     private _commonService: CommonService,
@@ -81,10 +124,14 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
     this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml('');
   }
 
-  public alertInputs: AlertInput[] = [];
-
   async ngOnInit() {
     console.log('🔄 Initializing CouponDetailsPage...');
+
+    // Only run in browser environment
+    if (!isPlatformBrowser(this.platformId)) {
+      console.log('⚠️ Not in browser environment, skipping map initialization');
+      return;
+    }
 
     // Get coupon ID from route parameters
     this.route.paramMap.subscribe((params) => {
@@ -102,34 +149,11 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Initialize map after view is loaded
-    if (this.details.web_coupon_address) {
-      setTimeout(() => this.initializeMap(), 500);
-    }
+    // Map will be initialized after data loads
   }
 
-  ionViewWillEnter() {
-    console.log('CouponPage loaded');
-
-    // Controlled one-time reload to fix ion-content offset issue
-    const reloadKey = 'coupon-details-reloaded';
-    const navigationType = (
-      performance.getEntriesByType(
-        'navigation'
-      )[0] as PerformanceNavigationTiming
-    )?.type;
-
-    if (!sessionStorage.getItem(reloadKey)) {
-      sessionStorage.setItem(reloadKey, 'true');
-      console.log('Performing controlled reload for coupon page');
-      window.location.reload();
-      return;
-    }
-
-    // Clear the flag after successful reload to allow future navigation
-    if (navigationType === 'reload') {
-      sessionStorage.removeItem(reloadKey);
-    }
+  ngOnDestroy() {
+    this.cleanupMap();
   }
 
   async initLoad() {
@@ -197,6 +221,13 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
         this.details = Response.data;
         console.log('✅ Details loaded successfully');
 
+        // Set address variables from API response
+        this.address = this.details.web_coupon_address;
+        this.city = this.details.web_coupon_city;
+        this.country = this.details.web_coupon_country;
+        this.state = this.details.web_coupon_state;
+        this.postalcode = this.details.web_coupon_postalcode;
+
         // Process the data
         if (this.details.web_content) {
           this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(
@@ -204,9 +235,12 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
           );
         }
 
-        // Initialize map if needed
-        if (this.details.latitude && this.details.longitude) {
-          this.initializeMap();
+        // Initialize map if address exists
+        if (this.address && this.address.trim() !== '') {
+          // Use setTimeout to ensure the view is rendered
+          setTimeout(() => {
+            this.loadAndInitializeMap();
+          }, 500);
         }
       } else {
         throw new Error(`API returned status: ${Response.status}`);
@@ -219,61 +253,299 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
     }
   }
 
-  async initializeMap() {
-    if (!this.mapElement?.nativeElement || !this.address) return;
+  async loadAndInitializeMap() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    if (!this.mapElement?.nativeElement) {
+      console.error('❌ Map element not found');
+      return;
+    }
+
+    if (!this.address || this.address.trim() === '') {
+      console.log('⚠️ No address available for map');
+      return;
+    }
 
     try {
-      const geocoder = new google.maps.Geocoder();
-      const fullAddress = `${this.address}, ${this.city}, ${this.country}, ${this.state}, ${this.postalcode}`;
-
-      geocoder.geocode(
-        { address: fullAddress },
-        (results: any, status: any) => {
-          if (status === google.maps.GeocoderStatus.OK) {
-            const latitude = results[0].geometry.location.lat();
-            const longitude = results[0].geometry.location.lng();
-            const latlng = new google.maps.LatLng(latitude, longitude);
-
-            const mapOptions = {
-              center: latlng,
-              zoom: 14,
-              mapTypeId: google.maps.MapTypeId.ROADMAP,
-            };
-
-            this.map = new google.maps.Map(
-              this.mapElement.nativeElement,
-              mapOptions
-            );
-
-            this.marker = new google.maps.Marker({
-              position: latlng,
-              map: this.map,
-              title: this.details.web_coupon_bname,
-            });
-
-            // Info window
-            const infoWindow = new google.maps.InfoWindow({
-              content: `
-              <div style="padding: 10px;">
-                <strong>${this.details.web_coupon_bname}</strong><br>
-                ${this.address}<br>
-                ${this.city}, ${this.state} ${this.postalcode}
-              </div>
-            `,
-            });
-
-            this.marker.addListener('click', () => {
-              infoWindow.open(this.map, this.marker);
-            });
-
-            // Open info window by default
-            infoWindow.open(this.map, this.marker);
-          }
-        }
-      );
+      // Load Google Maps API
+      await this.loadGoogleMaps();
+      
+      // Initialize the map
+      this.initializeMap();
     } catch (error) {
-      console.error('Error initializing map:', error);
+      console.error('❌ Error loading/initializing map:', error);
     }
+  }
+
+  loadGoogleMaps(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // Check if Google Maps is already loaded
+      if (typeof google !== 'undefined' && google.maps) {
+        console.log('✅ Google Maps already loaded');
+        this.isGoogleMapsLoaded = true;
+        resolve();
+        return;
+      }
+
+      // Check if script is already loading or loaded
+      const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+      if (existingScript) {
+        console.log('✅ Google Maps script already exists');
+        
+        // Check if Google Maps is loaded
+        const checkLoaded = () => {
+          if (typeof google !== 'undefined' && google.maps) {
+            console.log('✅ Google Maps loaded successfully');
+            this.isGoogleMapsLoaded = true;
+            resolve();
+          } else {
+            setTimeout(checkLoaded, 100);
+          }
+        };
+        
+        checkLoaded();
+        
+        // Timeout after 10 seconds
+        setTimeout(() => {
+          console.error('❌ Google Maps failed to load within timeout');
+          reject(new Error('Google Maps loading timeout'));
+        }, 10000);
+        
+        return;
+      }
+
+      // Load Google Maps script
+      console.log('📡 Loading Google Maps script...');
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDflqPuXRlq_r7kbtfQtM_Jb4BxjflJcdE&libraries=places`;
+      script.async = true;
+      script.defer = true;
+      
+      script.onload = () => {
+        console.log('✅ Google Maps script loaded');
+        // Check if Google Maps API is available
+        const checkApi = () => {
+          if (typeof google !== 'undefined' && google.maps) {
+            console.log('✅ Google Maps API loaded successfully');
+            this.isGoogleMapsLoaded = true;
+            resolve();
+          } else {
+            setTimeout(checkApi, 100);
+          }
+        };
+        checkApi();
+      };
+      
+      script.onerror = (error) => {
+        console.error('❌ Failed to load Google Maps script:', error);
+        reject(new Error('Failed to load Google Maps'));
+      };
+      
+      document.head.appendChild(script);
+    });
+  }
+
+  initializeMap() {
+    if (!this.isGoogleMapsLoaded || typeof google === 'undefined') {
+      console.error('❌ Google Maps not loaded');
+      return;
+    }
+
+    if (!this.mapElement?.nativeElement) {
+      console.error('❌ Map element not found');
+      return;
+    }
+
+    // Clean up existing map
+    this.cleanupMap();
+
+    console.log('🗺️ Initializing Google Map...');
+
+    try {
+      // Build address string for geocoding
+      const addressParts = [
+        this.address,
+        this.city,
+        this.state,
+        this.postalcode,
+        this.country
+      ].filter(part => part && part.trim() !== '');
+      
+      const fullAddress = addressParts.join(', ');
+      console.log('📍 Geocoding address:', fullAddress);
+
+      // Create geocoder
+      const geocoder = new google.maps.Geocoder();
+
+      geocoder.geocode({ address: fullAddress }, (results: any, status: any) => {
+        if (status === google.maps.GeocoderStatus.OK && results && results.length > 0) {
+          console.log('✅ Geocoding successful');
+          
+          const location = results[0].geometry.location;
+          const latLng = new google.maps.LatLng(location.lat(), location.lng());
+
+          // Create map options
+          const mapOptions = {
+            center: latLng,
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            zoomControl: true,
+            mapTypeControl: false,
+            scaleControl: true,
+            streetViewControl: true,
+            rotateControl: false,
+            fullscreenControl: true,
+            styles: [
+              {
+                featureType: 'poi.business',
+                elementType: 'labels',
+                stylers: [{ visibility: 'off' }]
+              }
+            ]
+          };
+
+          // Create the map
+          this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+          // Create marker
+          this.marker = new google.maps.Marker({
+            position: latLng,
+            map: this.map,
+            title: this.details.web_coupon_bname || 'Business Location',
+            animation: google.maps.Animation.DROP,
+            icon: {
+              url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+            }
+          });
+
+          // Create info window content
+          const infoContent = `
+            <div style="padding: 10px; font-family: Arial, sans-serif; max-width: 250px;">
+              <h3 style="margin: 0 0 8px 0; color: #08b8da; font-size: 16px; font-weight: bold;">
+                ${this.details.web_coupon_bname || 'Business'}
+              </h3>
+              <p style="margin: 4px 0; font-size: 14px; color: #333;">
+                <strong>Address:</strong> ${this.address}
+              </p>
+              <p style="margin: 4px 0; font-size: 14px; color: #666;">
+                ${this.city}${this.state ? `, ${this.state}` : ''} ${this.postalcode || ''}
+              </p>
+              ${this.country ? `<p style="margin: 4px 0; font-size: 14px; color: #666;">${this.country}</p>` : ''}
+              ${this.details.web_coupon_phone ? 
+                `<p style="margin: 4px 0; font-size: 14px; color: #666;">
+                  <strong>Phone:</strong> ${this.details.web_coupon_phone}
+                </p>` : ''
+              }
+              <div style="margin-top: 10px;">
+                <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(fullAddress)}" 
+                   target="_blank" 
+                   style="background: #08b8da; color: white; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 13px; display: inline-block;">
+                  Get Directions
+                </a>
+              </div>
+            </div>
+          `;
+
+          // Create info window
+          this.infoWindow = new google.maps.InfoWindow({
+            content: infoContent,
+            maxWidth: 300
+          });
+
+          // Open info window by default
+          this.infoWindow.open(this.map, this.marker);
+
+          // Add click listener to marker
+          this.marker.addListener('click', () => {
+            this.infoWindow.open(this.map, this.marker);
+          });
+
+          // Fit bounds to marker with padding
+          const bounds = new google.maps.LatLngBounds();
+          bounds.extend(latLng);
+          this.map.fitBounds(bounds, { padding: 50 });
+
+          this.isMapInitialized = true;
+          console.log('✅ Map initialized successfully');
+        } else {
+          console.error('❌ Geocoding failed with status:', status);
+          this.showDefaultMap();
+        }
+      });
+    } catch (error) {
+      console.error('❌ Error initializing map:', error);
+      this.showDefaultMap();
+    }
+  }
+
+  showDefaultMap() {
+    if (!this.isGoogleMapsLoaded || typeof google === 'undefined') {
+      console.error('❌ Google Maps not available for default map');
+      return;
+    }
+
+    if (!this.mapElement?.nativeElement) {
+      return;
+    }
+
+    try {
+      // Default location (center of the US)
+      const defaultLatLng = new google.maps.LatLng(39.8283, -98.5795);
+      
+      const mapOptions = {
+        center: defaultLatLng,
+        zoom: 4,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        disableDefaultUI: true
+      };
+      
+      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+      
+      // Show message
+      this.infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div style="padding: 15px; text-align: center;">
+            <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">
+              <strong>Location Not Found</strong>
+            </p>
+            <p style="margin: 0; color: #999; font-size: 13px;">
+              Unable to display map for the provided address.
+            </p>
+          </div>
+        `,
+        position: defaultLatLng
+      });
+      
+      this.infoWindow.open(this.map);
+      
+      this.isMapInitialized = true;
+      console.log('⚠️ Default map displayed');
+    } catch (error) {
+      console.error('❌ Error showing default map:', error);
+    }
+  }
+
+  cleanupMap() {
+    if (this.infoWindow) {
+      this.infoWindow.close();
+      this.infoWindow = null;
+    }
+
+    if (this.marker) {
+      this.marker.setMap(null);
+      this.marker = null;
+    }
+
+    if (this.map) {
+      // Clear all event listeners
+      google.maps.event.clearInstanceListeners(this.map);
+      this.map = null;
+    }
+
+    this.isMapInitialized = false;
+    console.log('🗺️ Map cleaned up');
   }
 
   /* view redeem button click alert */
@@ -332,7 +604,7 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
       this.emailredeem = email;
       localStorage.setItem('redeemEmail', email);
 
-      // Update email in database - using your original service call
+      // Update email in database
       const data = { email: email, cid: this.cid };
       const Response = await this._detailsService.updateemail(data);
 
@@ -581,7 +853,7 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
         cids: cids || '',
       };
 
-      // Send email - using your original service call
+      // Send email
       const Response = await this._detailsService.sendcoupontoemail(data);
 
       await loading.dismiss();
@@ -647,38 +919,6 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
     this.navController.back();
   }
 
-  // Alert methods - keeping your original structure
-  public alertButtons = [
-    {
-      text: 'Cancel',
-      role: 'cancel',
-      cssClass: 'secondary',
-    },
-    {
-      text: 'Ok',
-      handler: async (e: any) => {
-        await this.handleEmailSubmission(e.email);
-        return false;
-      },
-    },
-  ];
-
-  private initializeAlertInputs() {
-    this.alertInputs = [
-      {
-        type: 'email' as const,
-        name: 'email',
-        placeholder: 'Email Address',
-        value: this.emailredeem || '',
-        attributes: {
-          autocorrect: 'on',
-          required: true,
-        },
-        // Remove 'autocomplete' and 'list' - they don't exist in AlertInput type
-      },
-    ];
-  }
-
   async presentAlert() {
     const alert = await this.alertController.create({
       header: 'Before View Redeem Options Enter your Email Address!',
@@ -703,14 +943,27 @@ export class CouponDetailsPage implements OnInit, AfterViewInit {
     await this.initLoad();
   }
 
-  toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
-    if (this.menu) {
-      if (this.isMenuOpen) {
-        this.menu.open();
-      } else {
-        this.menu.close();
-      }
+  ionViewWillEnter() {
+    console.log('CouponPage loaded');
+
+    // Controlled one-time reload to fix ion-content offset issue
+    const reloadKey = 'coupon-details-reloaded';
+    const navigationType = (
+      performance.getEntriesByType(
+        'navigation'
+      )[0] as PerformanceNavigationTiming
+    )?.type;
+
+    if (!sessionStorage.getItem(reloadKey)) {
+      sessionStorage.setItem(reloadKey, 'true');
+      console.log('Performing controlled reload for coupon page');
+      window.location.reload();
+      return;
+    }
+
+    // Clear the flag after successful reload to allow future navigation
+    if (navigationType === 'reload') {
+      sessionStorage.removeItem(reloadKey);
     }
   }
 }
