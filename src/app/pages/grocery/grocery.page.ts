@@ -13,13 +13,14 @@ import { CommonService } from '../../../providers/common/common.service';
 import { DetailsService } from '../../../providers/details/details.service';
 import { CouponDetailsPage } from '../coupon-details/coupon-details.page';
 import { SearchResultPage } from '../search-result/search-result.page';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-grocery',
   templateUrl: 'grocery.page.html',
   styleUrls: ['grocery.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule, HeaderComponent],
 })
 export class GroceryPage implements OnInit, OnDestroy {
   @Input() cat: string = ''; // Category from modal props

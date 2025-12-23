@@ -1,5 +1,6 @@
 :host {
   display: block;
+  font-family: "Tahoma", sans-serif !important;
 }
 
 ion-header {
@@ -53,6 +54,7 @@ ion-header {
 ion-menu {
   --width: 85%;
   --max-width: 320px;
+  font-family: "Tahoma", sans-serif !important;
   
   .menu-toolbar {
     --background: #0cd1e8;

@@ -1,53 +1,35 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="goBack()" fill="clear">
-        <ion-icon slot="icon-only" name="arrow-back" color="light"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+<app-header
+  [showLogo]="true"
+  [showBackButton]="true"
+  (backClicked)="closeModal()"
+>
+</app-header>
 
-    <!-- Title or Logo -->
-    <div class="header-content">
-      <img [src]="logoPath" alt="Logo" class="header-logo" />
-    </div>
-
-    <ion-buttons slot="end">
-      <ion-button (click)="toggleMenu()" fill="clear">
-        <ion-icon slot="icon-only" [name]="menu" color="light"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-
+<ion-header class="page-sub-header">
   <!-- Dynamic title based on category -->
-  <ion-toolbar>
-    <span *ngIf="cat == 'grocery'">Grocery Weekly Flyers</span>
-    <span *ngIf="cat == 'babies'">Babies, Children, Toys</span>
-    <span *ngIf="cat == 'home'">Household & Parenting</span>
-    <span *ngIf="cat == 'birthday'">Birthday Offers</span>
-    <span *ngIf="cat == 'beauty'">Beauty, Health, Fitness</span>
-    <span *ngIf="cat == 'shipping'">Free Shipping / Returns</span>
-    <span *ngIf="cat == 'books'">Books & Prints</span>
-    <span *ngIf="cat == 'supplies'">Pet Supplies</span>
-    <span *ngIf="cat == 'business'">Minority, Women, Ethnic</span>
-    <span *ngIf="cat == 'finance'">Money, Finance, Cars</span>
-    <span *ngIf="cat == 'student'">Student Discounts</span>
-    <span *ngIf="cat == 'productivity'">Business, Tech & Careers</span>
-    <span *ngIf="cat == 'discounts'">Senior Discounts</span>
-    <span *ngIf="cat == 'military'">Veterans & Military</span>
-    <span *ngIf="cat == 'holidays'">Fun, Games, Sweepstakes</span>
-    <span *ngIf="cat == 'travel'">Travel / Holidays</span>
-    <span *ngIf="cat == 'parenting'">All Countries</span>
-    <span *ngIf="cat == 'podcasts'">Blogs & Podcasts</span>
+  <ion-toolbar color="primary">
+    <ion-title size="large" class="page-title" *ngIf="cat == 'grocery'">Grocery Weekly Flyers</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'babies'">Babies, Children, Toys</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'home'">Household & Parenting</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'birthday'">Birthday Offers</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'beauty'">Beauty, Health, Fitness</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'shipping'">Free Shipping / Returns</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'books'">Books & Prints</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'supplies'">Pet Supplies</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'business'">Minority, Women, Ethnic</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'finance'">Money, Finance, Cars</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'student'">Student Discounts</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'productivity'">Business, Tech & Careers</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'discounts'">Senior Discounts</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'military'">Veterans & Military</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'holidays'">Fun, Games, Sweepstakes</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'travel'">Travel / Holidays</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'parenting'">All Countries</ion-title>
+    <ion-title size="large" class="page-title" *ngIf="cat == 'podcasts'">Blogs & Podcasts</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-container">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p>Loading offers...</p>
-  </div>
-
   <!-- Main Content Grid -->
   <div *ngIf="!isLoading" class="border">
     <ion-grid>
@@ -106,8 +88,7 @@
                 {{grocery.web_coupon_country}}
               </p>
               <p class="coupon_valid_upto" *ngIf="grocery.image_size!='large';">
-                Valid up to: {{grocery.web_coupon_expiredate |
-                date:'mediumDate'}}
+                Valid up to: {{grocery.web_coupon_expiredate}}
               </p>
             </ion-card-content>
             <!-- Visit count -->
@@ -157,8 +138,7 @@
                 {{grocery.web_coupon_country}}
               </p>
               <p class="coupon_valid_upto" *ngIf="grocery.image_size!='large';">
-                Valid up to: {{grocery.web_coupon_expiredate |
-                date:'mediumDate'}}
+                Valid up to: {{grocery.web_coupon_expiredate}}
               </p>
             </ion-card-content>
             <!-- Visit count -->

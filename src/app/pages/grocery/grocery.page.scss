@@ -2,53 +2,26 @@
   display: block;
   height: 100%;
 
-  ion-header {
-    background-color: #08b8da !important;
+  .page-sub-header {
+    background-color: #08b8da;
 
     ion-toolbar {
-      --border-width: 0;
-      --min-height: 80px;
-      --color: white;
-      text-align: center;
-
-      .header-content {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-      }
-
-      .header-logo {
-        height: 50px;
-        width: auto;
-        object-fit: contain;
-      }
-
-      ion-button {
-        --padding-start: 8px;
-        --padding-end: 8px;
-        --color: white;
-
-        ion-icon {
-          font-size: 1.5rem;
-          color: white !important;
-        }
-      }
-
-      span {
-        text-align: center !important;
-        font-size: 27px !important;
-        font-family: "Lobster" !important;
-        color: #ffc107 !important;
-        margin: 0;
-        padding: 10px 0;
-      }
+      padding: 0px !important;
     }
+  }
+
+  .page-title {
+    font-size: 27px !important;
+    font-family: "Lobster" !important;
+    color: white !important;
+    text-align: center;
   }
 
   // Modal content styling
   ion-content {
     --background: #08b8da;
+    --padding-bottom: 180px !important;
+    height: calc(100vh - 160px);
 
     .border {
       margin-top: 0;
@@ -63,6 +36,7 @@
   ion-card,
   ion-card-header,
   ion-card-content {
+    font-family: "Tahoma", sans-serif;
     background-color: #fff;
     background: #fff;
     padding: 8px;
@@ -72,9 +46,8 @@
     margin-inline-start: 0;
     -webkit-margin-end: 0;
     margin-inline-end: 0;
-    margin-bottom: 16px;
     pointer-events: all;
-    position: relative; // For visit-count positioning
+    position: relative;
   }
 
   ion-card-title {
@@ -134,7 +107,7 @@
     position: absolute;
     bottom: 10px;
     right: 20px;
-    color: #d3d3d3;
+    color: #bbbbbb;
     font-size: 15px;
   }
 
@@ -178,10 +151,6 @@
     padding: 0;
   }
 
-  ion-row {
-    margin-bottom: 16px;
-  }
-
   ion-col {
     display: flex;
     justify-content: center;
@@ -196,7 +165,6 @@
     position: fixed;
     bottom: calc(60px + var(--ion-safe-area-bottom, 0px));
     width: 100%;
-    z-index: 1000;
     background: #08b8da;
     padding: 8px 0;
   }
