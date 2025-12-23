@@ -4,41 +4,31 @@ import {
   OnDestroy,
   ViewChild,
   AfterViewInit,
-  Input,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
-
 import {
   IonInfiniteScroll,
   LoadingController,
   ToastController,
-  ModalController,
+  NavController,
 } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Browser } from '@capacitor/browser';
-import { interval, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { CommonService } from '../../../providers/common/common.service';
 import { DetailsService } from '../../../providers/details/details.service';
-import { CouponDetailsPage } from '../coupon-details/coupon-details.page';
-import { SearchResultPage } from '../search-result/search-result.page';
-import { GroceryPage } from '../grocery/grocery.page';
-import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-coupon-modal',
   templateUrl: './coupon.page.html',
   styleUrls: ['./coupon.page.scss'],
-  standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule, HeaderComponent],
+  standalone: false,
 })
 export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
 
-  @Input() type: string = 'local';
-  @Input() title: string = '';
+  type: string = 'local';
+  title: string = '';
 
   content: any[] = [];
   data: any[] = [];
@@ -70,15 +60,23 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private commonService: CommonService,
     private detailsService: DetailsService,
     private loadingController: LoadingController,
     private toastController: ToastController,
-    private modalController: ModalController
+    private navController: NavController
   ) {}
 
   async ngOnInit() {
-    await this.initcontent();
+    // Get type from route parameters
+    this.route.paramMap.subscribe(params => {
+      const typeParam = params.get('type');
+      if (typeParam) {
+        this.type = typeParam;
+      }
+      this.initcontent();
+    });
   }
 
   ngAfterViewInit() {}
@@ -89,8 +87,8 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async closeModal() {
-    await this.modalController.dismiss();
+  goBack() {
+    this.navController.back();
   }
 
   async initcontent() {
@@ -122,29 +120,10 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // UPDATED: Open grocery page as modal
-  async groceryclick(type: string) {
-    console.log(type, 'type');
-
-    // Close current modal first
-    await this.modalController.dismiss();
-
-    // Open grocery page as modal
-    await this.openGroceryModal(type);
-  }
-
-  // UPDATED: New method to open grocery modal
-  async openGroceryModal(category: string) {
-    const modal = await this.modalController.create({
-      component: GroceryPage,
-      componentProps: {
-        cat: category,
-      },
-      cssClass: 'grocery-modal',
-      backdropDismiss: true,
-    });
-
-    await modal.present();
+  // Navigate to grocery page
+  groceryclick(category: string) {
+    console.log(category, 'category');
+    this.router.navigate(['/grocery', category]);
   }
 
   async inappclick(link: string, id: string) {
@@ -159,8 +138,6 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
     } catch (error) {
       console.error('Error updating click count:', error);
     }
-
-    await this.closeModal();
 
     await Browser.open({
       url: link,
@@ -184,22 +161,8 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
       console.error('Error updating click count:', error);
     }
 
-    // Close modal first
-    await this.modalController.dismiss();
-
-    await this.openCouponDetailsModal(id);
-  }
-
-  // Add this new method to open coupon details modal
-  async openCouponDetailsModal(cid: number) {
-    const modal = await this.modalController.create({
-      component: CouponDetailsPage,
-      componentProps: {
-        cid: cid,
-      },
-    });
-
-    await modal.present();
+    // Navigate to coupon details page
+    this.navController.navigateForward(['/coupon-details', id]);
   }
 
   async searchresult(key: string) {
@@ -208,7 +171,6 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
     const searchValue = this.val;
 
     if (!searchValue || searchValue.trim() === '') {
-      // Optional: Show toast message if search is empty
       const toast = await this.toastController.create({
         message: 'Please enter search terms',
         duration: 2000,
@@ -218,17 +180,10 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    await this.modalController.dismiss();
-
-    const modal = await this.modalController.create({
-      component: SearchResultPage,
-      componentProps: {
-        searchValue: searchValue,
-        search: 1,
-      },
+    // Navigate to search result page
+    this.router.navigate(['/search-result'], {
+      queryParams: { search: searchValue }
     });
-
-    await modal.present();
   }
 
   getItems(event: any) {
@@ -359,13 +314,8 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
     await toast.present();
   }
 
-  async navigateToCategory(category: string) {
+  navigateToCategory(category: string) {
     console.log('Navigating to category:', category);
-
-    // Close current modal first
-    await this.modalController.dismiss();
-
-    // Open grocery page as modal
-    await this.openGroceryModal(category);
+    this.router.navigate(['/grocery', category]);
   }
 }

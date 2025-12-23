@@ -1,20 +1,15 @@
-import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
-import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { IonicModule, ModalController, NavController, Platform } from "@ionic/angular";
+import { Platform } from "@ionic/angular";
 import { MenuController } from "@ionic/angular";
 import { environment } from "../../../environments/environment";
 import { AdMobService } from "../../../providers/admob/admob";
-import { CouponPage } from "../coupon/coupon.page";
-import { SearchResultPage } from "../search-result/search-result.page";
 
 @Component({
   selector: "search-page",
   templateUrl: "./search.page.html",
   styleUrls: ["./search.page.scss"],
-  standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  standalone: false
 })
 export class SearchPage implements OnInit {
   submitted: boolean = true;
@@ -27,7 +22,6 @@ export class SearchPage implements OnInit {
 
   constructor(
     private menuCtrl: MenuController,
-    private modalController: ModalController,
     private router: Router,
     private adMobService: AdMobService,
     private platform: Platform,
@@ -90,49 +84,26 @@ export class SearchPage implements OnInit {
     this.val = ev.target.value;
   }
 
+  // searchResult(searchValue: string) {
+  //   if (searchValue) {
+  //     this.openSearchResultModal(searchValue);
+  //   }
+  // }
+
   searchResult(searchValue: string) {
     if (searchValue) {
-      this.openSearchResultModal(searchValue);
+      this.router.navigate(['/search-result'], {
+        queryParams: { search: searchValue }
+      });
     }
   }
 
-  async openSearchResultModal(searchValue: string) {
-    const modal = await this.modalController.create({
-      component: SearchResultPage,
-      componentProps: {
-        searchValue: searchValue,
-        search: 1,
-      },
-    });
-
-    await modal.present();
+  // Navigate to coupon page with type parameter
+  nextLocalPage() {
+    this.router.navigate(['/coupon', 'local']);
   }
 
-  async openCouponModal(type: "local" | "national") {
-    const modal = await this.modalController.create({
-      component: CouponPage, // Use your modal component
-      componentProps: {
-        type: type,
-      },
-      // Optional modal options
-      cssClass: "coupon-modal",
-    });
-
-    await modal.present();
-
-    // Optional: Handle modal dismissal
-    const { data } = await modal.onWillDismiss();
-    if (data) {
-      console.log("Modal dismissed with data:", data);
-    }
-  }
-
-  // Update these methods to use modals
-  async nextLocalPage() {
-    await this.openCouponModal("local");
-  }
-
-  async nextNationalPage() {
-    await this.openCouponModal("national");
+  nextNationalPage() {
+    this.router.navigate(['/coupon', 'national']);
   }
 }

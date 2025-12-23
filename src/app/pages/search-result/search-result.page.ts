@@ -1,13 +1,9 @@
-import { Component, OnInit, Pipe, PipeTransform, Input } from '@angular/core'; // Add Input
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import {
-  IonicModule,
   LoadingController,
   ToastController,
   InfiniteScrollCustomEvent,
-  ModalController,
-  MenuController
+  NavController
 } from '@ionic/angular';
 import {
   DomSanitizer,
@@ -17,40 +13,20 @@ import {
 import { Browser } from '@capacitor/browser';
 import { CommonService } from '../../../providers/common/common.service';
 import { DetailsService } from '../../../providers/details/details.service';
-import { CouponDetailsPage } from '../coupon-details/coupon-details.page';
-import { HttpClientModule } from '@angular/common/http';
-import { HeaderComponent } from '../../components/header/header.component';
-
-@Pipe({ name: 'safeHtml' })
-export class SafeHtmlPipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
-  transform(value: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(value);
-  }
-}
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-search-results',
   templateUrl: './search-result.page.html',
   styleUrls: ['./search-result.page.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    SafeHtmlPipe,
-    HttpClientModule,
-    HeaderComponent,
-  ],
+  standalone: false,
 })
 export class SearchResultPage implements OnInit {
-  // Add these Inputs for modal mode
-  @Input() searchValue: string = '';
-  @Input() search: number = 1;
-
+  searchValue: string = '';
+  
   submitted: boolean = true;
   resultStatus: string = 'exact';
-  showButton: boolean = true;
+  showButton: boolean = false;
 
   exactResult: any[] = [];
   data: any[] = [];
@@ -88,32 +64,22 @@ export class SearchResultPage implements OnInit {
     private loadingController: LoadingController,
     private toastController: ToastController,
     private sanitizer: DomSanitizer,
-    private modalController: ModalController,
-    private menuCtrl: MenuController,
+    private route: ActivatedRoute,
+    private navCtrl: NavController
   ) {}
 
   ngOnInit() {
-    if (this.searchValue && this.search === 1) {
-      console.log('Loading from modal props:', this.searchValue);
-      this.searchresult(this.searchValue);
-    }
+    // Get search value from route params
+    this.route.queryParams.subscribe(params => {
+      if (params['search']) {
+        this.searchValue = params['search'];
+        this.searchresult(this.searchValue);
+      }
+    });
   }
 
   ionViewWillEnter() {
     console.log('SearchResultsPage loaded');
-  }
-
-  // Add this method to close modal
-  closeModal() {
-    this.modalController.dismiss();
-  }
-
-  // Add this method to handle coupon selection in modal mode
-  selectCoupon(id: number) {
-    this.modalController.dismiss({
-      selectedCouponId: id,
-      action: 'viewDetails',
-    });
   }
 
   async nextPage(id: number, type?: any, circulation?: any, link?: string) {
@@ -136,23 +102,10 @@ export class SearchResultPage implements OnInit {
       }
     }
 
-    // Open coupon details as modal
-    await this.openCouponDetailsModal(id);
+    // Navigate to coupon details page
+    this.navCtrl.navigateForward(['/coupon-details', id]);
   }
 
-  // Add this new method to open coupon details modal
-  async openCouponDetailsModal(cid: number) {
-    const modal = await this.modalController.create({
-      component: CouponDetailsPage,
-      componentProps: {
-        cid: cid,
-      }
-    });
-
-    await modal.present();
-  }
-
-  // Keep all other methods EXACTLY as they are
   getSafeUrl(url: string): SafeResourceUrl {
     const modifiedSrcValue = this.getSrcFromIframeWithHttps(url) || '';
     return this.sanitizer.bypassSecurityTrustResourceUrl(modifiedSrcValue);
@@ -195,6 +148,7 @@ export class SearchResultPage implements OnInit {
   async searchresult(key: string) {
     if (!key) return;
 
+    this.showButton = true;
     const loading = await this.loadingController.create({
       message: 'Searching...',
       spinner: 'crescent',
@@ -214,14 +168,9 @@ export class SearchResultPage implements OnInit {
       this.data = [];
       this.dataR = [];
 
-      console.log('this.exactResult', this.exactResult);
-
       // Store exact results
       if (Array.isArray(response.exact)) {
         this.exactResult = response.exact;
-
-        console.log('this.exactResult', this.exactResult);
-
         this.data = response.exact;
         this.totalData = response.exact.length;
         this.totalPage = Math.ceil(this.totalData / this.perPage);
@@ -230,8 +179,6 @@ export class SearchResultPage implements OnInit {
       // Store related results
       if (Array.isArray(response.related)) {
         this.relatedResult = response.related;
-
-        console.log('this.relatedResult', this.relatedResult);
         this.dataR = response.related;
         this.totalDataR = response.related.length;
         this.totalPageR = Math.ceil(this.totalDataR / this.perPageR);
@@ -244,6 +191,7 @@ export class SearchResultPage implements OnInit {
       await loading.dismiss();
     } catch (error) {
       console.error('Search error:', error);
+      this.showButton = false;
       await loading.dismiss();
 
       const toast = await this.toastController.create({
@@ -395,7 +343,11 @@ export class SearchResultPage implements OnInit {
     return item.web_id || index;
   }
 
-  toggleMenu() {
+  openMenu() {
     // Implement menu toggle logic if needed
+  }
+
+  goBack() {
+    this.navCtrl.back();
   }
 }

@@ -12,7 +12,7 @@ import { SearchPage } from './search.page';
     FormsModule,
     IonicModule,
     SearchPageRoutingModule,
-    SearchPage
-  ]
+  ],
+  declarations: [SearchPage]
 })
 export class SearchPageModule {}

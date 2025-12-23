@@ -20,15 +20,19 @@ const routes: Routes = [
     loadChildren: () => import('./pages/search-result/search-result.module').then( m => m.SearchResultPageModule)
   },
   {
-    path: 'coupon',
+    path: 'coupon/:type',
     loadChildren: () => import('./pages/coupon/coupon.module').then( m => m.CouponPageModule)
   },
   {
-    path: 'coupon-details',
+    path: 'coupon-details/:id',
     loadChildren: () => import('./pages/coupon-details/coupon-details.module').then( m => m.CouponDetailsPageModule)
   },
   {
     path: 'grocery',
+    loadChildren: () => import('./pages/grocery/grocery.module').then( m => m.GroceryPageModule)
+  },
+  {
+    path: 'grocery/:category',
     loadChildren: () => import('./pages/grocery/grocery.module').then( m => m.GroceryPageModule)
   },
   {

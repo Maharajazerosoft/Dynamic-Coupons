@@ -1,29 +1,23 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   LoadingController,
   ToastController,
-  ModalController,
+  NavController,
 } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Browser } from '@capacitor/browser';
-import { Subscription, interval } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { CommonService } from '../../../providers/common/common.service';
 import { DetailsService } from '../../../providers/details/details.service';
-import { CouponDetailsPage } from '../coupon-details/coupon-details.page';
-import { SearchResultPage } from '../search-result/search-result.page';
-import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-grocery',
   templateUrl: 'grocery.page.html',
   styleUrls: ['grocery.page.scss'],
-  standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule, HeaderComponent],
+  standalone: false,
 })
 export class GroceryPage implements OnInit, OnDestroy {
-  @Input() cat: string = ''; // Category from modal props
+  cat: string = ''; // Category from route params
 
   val: any;
   content: any = [];
@@ -56,12 +50,21 @@ export class GroceryPage implements OnInit, OnDestroy {
     private detailsService: DetailsService,
     private loadingController: LoadingController,
     private toastController: ToastController,
-    private modalController: ModalController
+    private navController: NavController,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   async ngOnInit() {
-    console.log('Grocery modal opened with category:', this.cat);
-    await this.initcontent();
+    // Get category from route parameters
+    this.route.paramMap.subscribe(params => {
+      const categoryParam = params.get('category');
+      if (categoryParam) {
+        this.cat = categoryParam;
+      }
+      console.log('Grocery page opened with category:', this.cat);
+      this.initcontent();
+    });
   }
 
   ngOnDestroy(): void {
@@ -70,10 +73,6 @@ export class GroceryPage implements OnInit, OnDestroy {
     }
   }
 
-  // MODAL METHODS
-  async closeModal() {
-    await this.modalController.dismiss();
-  }
 
   async initcontent() {
     await this.presentLoading();
@@ -151,9 +150,6 @@ export class GroceryPage implements OnInit, OnDestroy {
       console.error('Error updating click count:', error);
     }
 
-    // Close modal before opening browser
-    await this.closeModal();
-
     await Browser.open({
       url: link,
       presentationStyle: 'popover',
@@ -177,22 +173,8 @@ export class GroceryPage implements OnInit, OnDestroy {
       console.error('Error updating click count:', error);
     }
 
-    // Close modal first
-    await this.closeModal();
-
-    await this.openCouponDetailsModal(id);
-  }
-
-  // Add this new method to open coupon details modal
-  async openCouponDetailsModal(cid: number) {
-    const modal = await this.modalController.create({
-      component: CouponDetailsPage,
-      componentProps: {
-        cid: cid,
-      },
-    });
-
-    await modal.present();
+    // Navigate to coupon details page
+    this.navController.navigateForward(['/coupon-details', id]);
   }
 
   // SEARCH METHODS
@@ -210,7 +192,6 @@ export class GroceryPage implements OnInit, OnDestroy {
     const searchValue = this.val;
 
     if (!searchValue || searchValue.trim() === '') {
-      // Optional: Show toast message if search is empty
       const toast = await this.toastController.create({
         message: 'Please enter search terms',
         duration: 2000,
@@ -220,17 +201,10 @@ export class GroceryPage implements OnInit, OnDestroy {
       return;
     }
 
-    await this.modalController.dismiss();
-
-    const modal = await this.modalController.create({
-      component: SearchResultPage,
-      componentProps: {
-        searchValue: searchValue,
-        search: 1,
-      },
+    // Navigate to search result page
+    this.router.navigate(['/search-result'], {
+      queryParams: { search: searchValue }
     });
-
-    await modal.present();
   }
 
   // HELPER METHODS
@@ -264,10 +238,7 @@ export class GroceryPage implements OnInit, OnDestroy {
 
   // Navigation
   goBack() {
-    if (this.modalController) {
-      console.log('🔙 Closing modal');
-      this.modalController.dismiss();
-    }
+    this.navController.back();
   }
 
   handleImageError(event: any, coupon: any) {

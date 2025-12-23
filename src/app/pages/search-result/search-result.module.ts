@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
 
-import { SearchResultPageRoutingModule } from './search-result-routing.module';
-
 import { SearchResultPage } from './search-result.page';
-import { HttpClientModule } from '@angular/common/http';
+import { SearchResultPageRoutingModule } from './search-result-routing.module';
+import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SearchResultPageRoutingModule,
+    SearchResultPageRoutingModule
+  ],
+  declarations: [
     SearchResultPage,
-    HttpClientModule
+    SafeHtmlPipe
   ]
 })
 export class SearchResultPageModule {}

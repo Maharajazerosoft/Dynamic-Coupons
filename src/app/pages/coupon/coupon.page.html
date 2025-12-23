@@ -1,9 +1,23 @@
-<app-header
-  [showLogo]="true"
-  [showBackButton]="true"
-  (backClicked)="closeModal()"
->
-</app-header>
+<ion-header style="background-color: #08b8da">
+  <ion-toolbar color="primary" class="mytoolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+
+    <!-- CENTER LOGO -->
+    <ion-title class="ion-text-center">
+      <img
+        src="assets/icon/logo.png"
+        alt="Logo"
+        style="width: 90% !important; margin: auto; display: block"
+      />
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-header class="page-sub-header">
   <ion-toolbar color="primary">

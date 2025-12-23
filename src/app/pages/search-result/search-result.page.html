@@ -1,282 +1,344 @@
-<app-header
-  [showLogo]="true"
-  [showBackButton]="true"
-  (backClicked)="closeModal()"
->
-</app-header>
+<ion-header style="background-color: #08b8da">
+  <ion-toolbar color="primary" class="mytoolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+
+    <!-- CENTER LOGO -->
+    <ion-title class="ion-text-center">
+      <img
+        src="assets/icon/logo.png"
+        alt="Logo"
+        style="width: 90% !important; margin: auto; display: block"
+      />
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content [fullscreen]="true">
-  <div [hidden]="showButton" style="margin-top: 7%">
-    <h2 class="allresult">The following search results include all keywords</h2>
+  <!-- Loading State -->
+  <div *ngIf="showButton && searchValue" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Searching for "{{searchValue}}"...</p>
+  </div>
 
-    <ion-grid *ngIf="exactResult && exactResult.length > 0">
-      <ion-row *ngFor="let clocal of exactResult">
-        <ion-col size="12">
-          <ion-card *ngIf="clocal.image_type === '1'">
-            <ion-card-header>
-              <div [innerHTML]="clocal.web_content | safeHtml"></div>
-              <div *ngIf="clocal.web_title === 'Adsense1'">
-                <a
-                  href="https://www.amazon.com/dp/B08KTW1YD3"
-                  target="_blank"
-                  rel="noopener"
-                >
+  <!-- Initial State - No Search Yet -->
+  <div *ngIf="!searchValue && !showButton" class="initial-state">
+    <div class="empty_hei"></div>
+    <div class="chat-begin">
+      <h1>
+        Search and discover offers,<br />coupons, promotions, sales<br />and
+        much more!
+      </h1>
+      
+      <!-- Search instructions -->
+      <div class="search-instructions">
+        <p>Enter keywords, business names, cities, or zip codes to find offers.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Results -->
+  <div *ngIf="!showButton && searchValue" class="search-results-container">
+    <!-- Exact Results Section -->
+    <div *ngIf="exactResult && exactResult.length > 0">
+      <h2 class="allresult">The following search results include all keywords</h2>
+
+      <ion-grid>
+        <ion-row *ngFor="let clocal of exactResult">
+          <ion-col size="12">
+            <!-- Adsense Card -->
+            <ion-card *ngIf="clocal.image_type === '1'">
+              <ion-card-header>
+                <div [innerHTML]="clocal.web_content | safeHtml"></div>
+                <div *ngIf="clocal.web_title === 'Adsense1'">
+                  <a
+                    href="https://www.amazon.com/dp/B08KTW1YD3"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    <img
+                      src="https://m.media-amazon.com/images/I/41bw4Q3UCgL._AC_SL115_.jpg"
+                      alt="Apple Watch"
+                    />
+                  </a>
+                </div>
+              </ion-card-header>
+              <ion-card-content>
+                <div [innerHTML]="clocal.web_sponsor | safeHtml"></div>
+              </ion-card-content>
+            </ion-card>
+
+            <!-- Image Link Card -->
+            <ion-card
+              *ngIf="clocal.image_type === 'img_link' || clocal.image_type === ''"
+              (click)="nextPage(clocal.web_id, clocal.web_coupons_merchant_type, clocal.web_coupon_circulation, clocal.web_coupon_url)"
+              class="clickable-card"
+            >
+              <ion-card-header>
+                <ion-card-title>{{clocal.web_coupon_title}}</ion-card-title>
+
+                <div class="center">
+                  <iframe
+                    *ngIf="checkImageTagType(clocal.web_coupon_image_url) === 'iframe'"
+                    [src]="getSafeUrl(clocal.web_coupon_image_url)"
+                    width="120"
+                    height="240"
+                    frameborder="0"
+                    scrolling="no"
+                  ></iframe>
+
                   <img
-                    src="https://m.media-amazon.com/images/I/41bw4Q3UCgL._AC_SL115_.jpg"
-                    alt="Apple Watch"
+                    *ngIf="checkImageTagType(clocal.web_coupon_image_url) === 'imgTag' && clocal.web_coupon_image_url"
+                    [src]="clocal.web_coupon_image_url"
+                    alt="Coupon"
+                    class="coupon-image"
                   />
-                </a>
-              </div>
-            </ion-card-header>
-            <ion-card-content>
-              <div [innerHTML]="clocal.web_sponsor | safeHtml"></div>
-            </ion-card-content>
-          </ion-card>
 
-          <ion-card
-            *ngIf="clocal.image_type === 'img_link' || clocal.image_type === ''"
-            (click)="nextPage(clocal.web_id, clocal.web_coupons_merchant_type, clocal.web_coupon_circulation, clocal.web_coupon_url)"
-          >
-            <ion-card-header>
-              <ion-card-title>{{clocal.web_coupon_title}}</ion-card-title>
+                  <img
+                    *ngIf="checkImageTagType(clocal.web_coupon_image_url) === 'imgTag' && clocal.web_coupon_image"
+                    src="https://www.dynamiccoupons.com/webupload/thumb/coupons/{{clocal.web_coupon_image}}"
+                    alt="Coupon"
+                    class="coupon-image"
+                  />
 
-              <div class="center">
-                <iframe
-                  *ngIf="checkImageTagType(clocal.web_coupon_image_url) === 'iframe'"
-                  [src]="getSafeUrl(clocal.web_coupon_image_url)"
-                  width="120"
-                  height="240"
-                  frameborder="0"
-                  scrolling="no"
-                ></iframe>
+                  <div
+                    *ngIf="checkImageTagType(clocal.web_coupon_image_url) === 'aTag'"
+                    [innerHTML]="getSafeHtml(updateImageUrl(clocal.web_coupon_image_url))"
+                  ></div>
 
-                <img
-                  *ngIf="checkImageTagType(clocal.web_coupon_image_url) === 'imgTag' && clocal.web_coupon_image_url"
-                  [src]="clocal.web_coupon_image_url"
-                  alt="Coupon"
-                />
+                  <img
+                    *ngIf="!clocal.web_coupon_image && !clocal.web_coupon_image_url"
+                    [src]="clocal.randomDefaultImage"
+                    alt="Default"
+                    class="default-image"
+                  />
+                </div>
+              </ion-card-header>
 
-                <img
-                  *ngIf="checkImageTagType(clocal.web_coupon_image_url) === 'imgTag' && clocal.web_coupon_image"
-                  src="https://www.dynamiccoupons.com/webupload/thumb/coupons/{{clocal.web_coupon_image}}"
-                  alt="Coupon"
-                />
+              <ion-card-content>
+                <p class="coupon_online" *ngIf="clocal.image_size !== 'large'">
+                  Online
+                </p>
+                <p class="coupon_bname">{{clocal.web_coupon_bname}}</p>
+                <p class="coupon_city">
+                  {{clocal.web_coupon_city}} {{clocal.web_coupon_state}}
+                  {{clocal.web_coupon_postalcode}}<br />
+                  {{clocal.web_coupon_country}}
+                </p>
+                <p class="coupon_valid_upto">
+                  Valid up to: {{clocal.web_coupon_expiredate}}
+                </p>
+              </ion-card-content>
 
-                <div
-                  *ngIf="checkImageTagType(clocal.web_coupon_image_url) === 'aTag'"
-                  [innerHTML]="getSafeHtml(updateImageUrl(clocal.web_coupon_image_url))"
-                ></div>
+              <div class="visit-count">Visits: {{clocal.click_count || 0}}</div>
+            </ion-card>
 
-                <img
-                  *ngIf="!clocal.web_coupon_image && !clocal.web_coupon_image_url"
-                  [src]="clocal.randomDefaultImage"
-                  alt="Default"
-                />
-              </div>
-            </ion-card-header>
+            <!-- Uploaded Image Card -->
+            <ion-card
+              *ngIf="clocal.image_type === 'img_upload'"
+              (click)="nextPage(clocal.web_id, clocal.web_coupons_merchant_type, clocal.web_coupon_circulation, clocal.web_coupon_url)"
+              class="clickable-card"
+            >
+              <ion-card-header>
+                <ion-card-title>{{clocal.web_coupon_title}}</ion-card-title>
+                <div class="center">
+                  <img
+                    *ngIf="clocal.web_coupon_image"
+                    src="https://www.dynamiccoupons.com/webupload/thumb/coupons/{{clocal.web_coupon_image}}"
+                    [class.full-width]="clocal.image_size === 'large'"
+                    alt="Local Offer"
+                    class="coupon-image"
+                  />
+                  <img
+                    *ngIf="!clocal.web_coupon_image"
+                    [src]="clocal.randomDefaultImage"
+                    alt="Default"
+                    class="default-image"
+                  />
+                </div>
+              </ion-card-header>
 
-            <ion-card-content>
-              <p class="coupon_online" *ngIf="clocal.image_size !== 'large'">
-                Online
-              </p>
-              <p class="coupon_bname">{{clocal.web_coupon_bname}}</p>
-              <p class="coupon_city">
-                {{clocal.web_coupon_city}} {{clocal.web_coupon_state}}
-                {{clocal.web_coupon_postalcode}}<br />
-                {{clocal.web_coupon_country}}
-              </p>
-              <p class="coupon_valid_upto">
-                Valid up to: {{clocal.web_coupon_expiredate}}
-              </p>
-            </ion-card-content>
+              <ion-card-content>
+                <p class="coupon_online" *ngIf="clocal.image_size !== 'large'">
+                  Online
+                </p>
+                <p class="coupon_bname">{{clocal.web_coupon_bname}}</p>
+                <p class="coupon_city">
+                  {{clocal.web_coupon_city}} {{clocal.web_coupon_state}}
+                  {{clocal.web_coupon_postalcode}}<br />
+                  {{clocal.web_coupon_country}}
+                </p>
+                <p class="coupon_valid_upto">
+                  Valid up to: {{clocal.web_coupon_expiredate}}
+                </p>
+              </ion-card-content>
 
-            <div class="visit-count">Visits: {{clocal.click_count}}</div>
-          </ion-card>
+              <div class="visit-count">Visits: {{clocal.click_count || 0}}</div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
 
-          <ion-card
-            *ngIf="clocal.image_type === 'img_upload'"
-            (click)="nextPage(clocal.web_id, clocal.web_coupons_merchant_type, clocal.web_coupon_circulation, clocal.web_coupon_url)"
-          >
-            <ion-card-header>
-              <ion-card-title>{{clocal.web_coupon_title}}</ion-card-title>
-              <div class="center">
-                <img
-                  *ngIf="clocal.web_coupon_image"
-                  src="https://www.dynamiccoupons.com/webupload/thumb/coupons/{{clocal.web_coupon_image}}"
-                  [class.full-width]="clocal.image_size === 'large'"
-                  alt="Local Offer"
-                />
-                <img
-                  *ngIf="!clocal.web_coupon_image"
-                  [src]="clocal.randomDefaultImage"
-                  alt="Default"
-                />
-              </div>
-            </ion-card-header>
-
-            <ion-card-content>
-              <p class="coupon_online" *ngIf="clocal.image_size !== 'large'">
-                Online
-              </p>
-              <p class="coupon_bname">{{clocal.web_coupon_bname}}</p>
-              <p class="coupon_city">
-                {{clocal.web_coupon_city}} {{clocal.web_coupon_state}}
-                {{clocal.web_coupon_postalcode}}<br />
-                {{clocal.web_coupon_country}}
-              </p>
-              <p class="coupon_valid_upto">
-                Valid up to: {{clocal.web_coupon_expiredate}}
-              </p>
-            </ion-card-content>
-
-            <div class="visit-count">Visits: {{clocal.click_count}}</div>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <div class="chat-begin" *ngIf="!exactResult || exactResult.length === 0">
+    <!-- No Exact Results -->
+    <div *ngIf="(!exactResult || exactResult.length === 0) && searchValue" class="chat-begin">
       <h3>
-        No Search Results found.<br />See Related Search for more search
-        results.
+        No exact search results found.<br />See related results below.
       </h3>
     </div>
 
-    <h2 class="allresult">
-      The following search results include individual keywords
-    </h2>
+    <!-- Related Results Section -->
+    <div *ngIf="relatedResult && relatedResult.length > 0">
+      <h2 class="allresult">
+        The following search results include individual keywords
+      </h2>
 
-    <ion-grid *ngIf="relatedResult && relatedResult.length > 0">
-      <ion-row *ngFor="let rlocal of relatedResult">
-        <ion-col size="12">
-          <ion-card *ngIf="rlocal.image_type === '1'">
-            <ion-card-header>
-              <div [innerHTML]="rlocal.web_content | safeHtml"></div>
-              <div *ngIf="rlocal.web_title === 'Adsense1'">
-                <a
-                  href="https://www.amazon.com/dp/B08KTW1YD3"
-                  target="_blank"
-                  rel="noopener"
-                >
+      <ion-grid>
+        <ion-row *ngFor="let rlocal of relatedResult">
+          <ion-col size="12">
+            <!-- Adsense Card -->
+            <ion-card *ngIf="rlocal.image_type === '1'">
+              <ion-card-header>
+                <div [innerHTML]="rlocal.web_content | safeHtml"></div>
+                <div *ngIf="rlocal.web_title === 'Adsense1'">
+                  <a
+                    href="https://www.amazon.com/dp/B08KTW1YD3"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    <img
+                      src="https://m.media-amazon.com/images/I/41bw4Q3UCgL._AC_SL115_.jpg"
+                      alt="Apple Watch"
+                    />
+                  </a>
+                </div>
+              </ion-card-header>
+              <ion-card-content>
+                <div [innerHTML]="rlocal.web_sponsor | safeHtml"></div>
+              </ion-card-content>
+            </ion-card>
+
+            <!-- Image Link Card -->
+            <ion-card
+              *ngIf="rlocal.image_type === 'img_link' || rlocal.image_type === ''"
+              (click)="nextPage(rlocal.web_id, rlocal.web_coupons_merchant_type, rlocal.web_coupon_circulation, rlocal.web_coupon_url)"
+              class="clickable-card"
+            >
+              <ion-card-header>
+                <ion-card-title>{{rlocal.web_coupon_title}}</ion-card-title>
+
+                <div class="center">
+                  <iframe
+                    *ngIf="checkImageTagType(rlocal.web_coupon_image_url) === 'iframe'"
+                    [src]="getSafeUrl(rlocal.web_coupon_image_url)"
+                    width="120"
+                    height="240"
+                    frameborder="0"
+                    scrolling="no"
+                  ></iframe>
+
                   <img
-                    src="https://m.media-amazon.com/images/I/41bw4Q3UCgL._AC_SL115_.jpg"
-                    alt="Apple Watch"
+                    *ngIf="checkImageTagType(rlocal.web_coupon_image_url) === 'imgTag' && rlocal.web_coupon_image_url"
+                    [src]="rlocal.web_coupon_image_url"
+                    alt="Coupon"
+                    class="coupon-image"
                   />
-                </a>
-              </div>
-            </ion-card-header>
-            <ion-card-content>
-              <div [innerHTML]="rlocal.web_sponsor | safeHtml"></div>
-            </ion-card-content>
-          </ion-card>
 
-          <ion-card
-            *ngIf="rlocal.image_type === 'img_link' || rlocal.image_type === ''"
-            (click)="nextPage(rlocal.web_id, rlocal.web_coupons_merchant_type, rlocal.web_coupon_circulation, rlocal.web_coupon_url)"
-          >
-            <ion-card-header>
-              <ion-card-title>{{rlocal.web_coupon_title}}</ion-card-title>
+                  <img
+                    *ngIf="checkImageTagType(rlocal.web_coupon_image_url) === 'imgTag' && rlocal.web_coupon_image"
+                    src="https://www.dynamiccoupons.com/webupload/thumb/coupons/{{rlocal.web_coupon_image}}"
+                    alt="Coupon"
+                    class="coupon-image"
+                  />
 
-              <div class="center">
-                <iframe
-                  *ngIf="checkImageTagType(rlocal.web_coupon_image_url) === 'iframe'"
-                  [src]="getSafeUrl(rlocal.web_coupon_image_url)"
-                  width="120"
-                  height="240"
-                  frameborder="0"
-                  scrolling="no"
-                ></iframe>
+                  <div
+                    *ngIf="checkImageTagType(rlocal.web_coupon_image_url) === 'aTag'"
+                    [innerHTML]="getSafeHtml(updateImageUrl(rlocal.web_coupon_image_url))"
+                  ></div>
 
-                <img
-                  *ngIf="checkImageTagType(rlocal.web_coupon_image_url) === 'imgTag' && rlocal.web_coupon_image_url"
-                  [src]="rlocal.web_coupon_image_url"
-                  alt="Coupon"
-                />
+                  <img
+                    *ngIf="!rlocal.web_coupon_image && !rlocal.web_coupon_image_url"
+                    [src]="rlocal.randomDefaultImage"
+                    alt="Default"
+                    class="default-image"
+                  />
+                </div>
+              </ion-card-header>
 
-                <img
-                  *ngIf="checkImageTagType(rlocal.web_coupon_image_url) === 'imgTag' && rlocal.web_coupon_image"
-                  src="https://www.dynamiccoupons.com/webupload/thumb/coupons/{{rlocal.web_coupon_image}}"
-                  alt="Coupon"
-                />
+              <ion-card-content>
+                <p class="coupon_online" *ngIf="rlocal.image_size !== 'large'">
+                  Online
+                </p>
+                <p class="coupon_bname">{{rlocal.web_coupon_bname}}</p>
+                <p class="coupon_city">
+                  {{rlocal.web_coupon_city}} {{rlocal.web_coupon_state}}
+                  {{rlocal.web_coupon_postalcode}}<br />
+                  {{rlocal.web_coupon_country}}
+                </p>
+                <p class="coupon_valid_upto">
+                  Valid up to: {{rlocal.web_coupon_expiredate}}
+                </p>
+              </ion-card-content>
 
-                <div
-                  *ngIf="checkImageTagType(rlocal.web_coupon_image_url) === 'aTag'"
-                  [innerHTML]="getSafeHtml(updateImageUrl(rlocal.web_coupon_image_url))"
-                ></div>
+              <div class="visit-count">Visits: {{rlocal.click_count || 0}}</div>
+            </ion-card>
 
-                <img
-                  *ngIf="!rlocal.web_coupon_image && !rlocal.web_coupon_image_url"
-                  [src]="rlocal.randomDefaultImage"
-                  alt="Default"
-                />
-              </div>
-            </ion-card-header>
+            <!-- Uploaded Image Card -->
+            <ion-card
+              *ngIf="rlocal.image_type === 'img_upload'"
+              (click)="nextPage(rlocal.web_id, rlocal.web_coupons_merchant_type, rlocal.web_coupon_circulation, rlocal.web_coupon_url)"
+              class="clickable-card"
+            >
+              <ion-card-header>
+                <ion-card-title>{{rlocal.web_coupon_title}}</ion-card-title>
+                <div class="center">
+                  <img
+                    *ngIf="rlocal.web_coupon_image"
+                    src="https://www.dynamiccoupons.com/webupload/thumb/coupons/{{rlocal.web_coupon_image}}"
+                    [class.full-width]="rlocal.image_size === 'large'"
+                    alt="Local Offer"
+                    class="coupon-image"
+                  />
+                  <img
+                    *ngIf="!rlocal.web_coupon_image"
+                    [src]="rlocal.randomDefaultImage"
+                    alt="Default"
+                    class="default-image"
+                  />
+                </div>
+              </ion-card-header>
 
-            <ion-card-content>
-              <p class="coupon_online" *ngIf="rlocal.image_size !== 'large'">
-                Online
-              </p>
-              <p class="coupon_bname">{{rlocal.web_coupon_bname}}</p>
-              <p class="coupon_city">
-                {{rlocal.web_coupon_city}} {{rlocal.web_coupon_state}}
-                {{rlocal.web_coupon_postalcode}}<br />
-                {{rlocal.web_coupon_country}}
-              </p>
-              <p class="coupon_valid_upto">
-                Valid up to: {{rlocal.web_coupon_expiredate}}
-              </p>
-            </ion-card-content>
+              <ion-card-content>
+                <p class="coupon_online" *ngIf="rlocal.image_size !== 'large'">
+                  Online
+                </p>
+                <p class="coupon_bname">{{rlocal.web_coupon_bname}}</p>
+                <p class="coupon_city">
+                  {{rlocal.web_coupon_city}} {{rlocal.web_coupon_state}}
+                  {{rlocal.web_coupon_postalcode}}<br />
+                  {{rlocal.web_coupon_country}}
+                </p>
+                <p class="coupon_valid_upto">
+                  Valid up to: {{rlocal.web_coupon_expiredate}}
+                </p>
+              </ion-card-content>
 
-            <div class="visit-count">Visits: {{rlocal.click_count}}</div>
-          </ion-card>
+              <div class="visit-count">Visits: {{rlocal.click_count || 0}}</div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
 
-          <ion-card
-            *ngIf="rlocal.image_type === 'img_upload'"
-            (click)="nextPage(rlocal.web_id, rlocal.web_coupons_merchant_type, rlocal.web_coupon_circulation, rlocal.web_coupon_url)"
-          >
-            <ion-card-header>
-              <ion-card-title>{{rlocal.web_coupon_title}}</ion-card-title>
-              <div class="center">
-                <img
-                  *ngIf="rlocal.web_coupon_image"
-                  src="https://www.dynamiccoupons.com/webupload/thumb/coupons/{{rlocal.web_coupon_image}}"
-                  [class.full-width]="rlocal.image_size === 'large'"
-                  alt="Local Offer"
-                />
-                <img
-                  *ngIf="!rlocal.web_coupon_image"
-                  [src]="rlocal.randomDefaultImage"
-                  alt="Default"
-                />
-              </div>
-            </ion-card-header>
-
-            <ion-card-content>
-              <p class="coupon_online" *ngIf="rlocal.image_size !== 'large'">
-                Online
-              </p>
-              <p class="coupon_bname">{{rlocal.web_coupon_bname}}</p>
-              <p class="coupon_city">
-                {{rlocal.web_coupon_city}} {{rlocal.web_coupon_state}}
-                {{rlocal.web_coupon_postalcode}}<br />
-                {{rlocal.web_coupon_country}}
-              </p>
-              <p class="coupon_valid_upto">
-                Valid up to: {{rlocal.web_coupon_expiredate}}
-              </p>
-            </ion-card-content>
-
-            <div class="visit-count">Visits: {{rlocal.click_count}}</div>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <div
-      class="chat-begin"
-      *ngIf="!relatedResult || relatedResult.length === 0"
-    >
-      <h3>No Search Results found.</h3>
+    <!-- No Results at All -->
+    <div *ngIf="(!exactResult || exactResult.length === 0) && (!relatedResult || relatedResult.length === 0) && searchValue" class="chat-begin no-results">
+      <h3>No search results found for "{{searchValue}}"</h3>
+      <p>Try different keywords or check your spelling.</p>
     </div>
   </div>
 </ion-content>
@@ -291,6 +353,7 @@
         enterkeyhint="done"
         placeholder="Combine Keywords, biz, city, Zip, country…"
         class="search-input"
+        (keyup.enter)="searchresult(searchValue1)"
       >
       </ion-searchbar>
       <ion-button (click)="searchresult(searchValue1)" class="search-button">

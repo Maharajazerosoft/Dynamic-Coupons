@@ -1,5 +1,9 @@
-<ion-header>
+<ion-header style="background-color: #08b8da">
   <ion-toolbar color="primary" class="mytoolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+
     <!-- CENTER LOGO -->
     <ion-title class="ion-text-center">
       <img
@@ -9,14 +13,12 @@
       />
     </ion-title>
 
-    <!-- RIGHT: Menu Toggle Button -->
     <ion-buttons slot="end">
-      <ion-button (click)="openMenu()">
-        <ion-icon slot="icon-only" name="menu"></ion-icon>
-      </ion-button>
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content [fullscreen]="true">
   <div class="content">
