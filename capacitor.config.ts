@@ -7,10 +7,11 @@ const config: CapacitorConfig = {
   bundledWebRuntime: false,
 
   plugins: {
-    AdMob: {
-      appId: "YOUR_ADMOB_APP_ID",
+    StatusBar: {
+      style: "Dark",
+      overlaysWebView: false,
+      backgroundColor: "#1ac1ee",
     },
-
     SplashScreen: {
       launchShowDuration: 3000, // 👈 3 seconds
       launchAutoHide: false,

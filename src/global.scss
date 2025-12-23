@@ -1,5 +1,6 @@
 ion-header {
   --background: #08b8da;
+  background: #08b8da;
 
   ion-toolbar {
     --background: #08b8da;
@@ -291,5 +292,5 @@ ion-header ion-toolbar:first-of-type {
 }
 
 .header-md {
-    box-shadow: unset !important;
+  box-shadow: unset !important;
 }
