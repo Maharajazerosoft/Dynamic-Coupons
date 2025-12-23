@@ -283,5 +283,13 @@ ion-menu ion-header img {
 }
 
 :host .ionicon {
-    stroke: #fff !important;
+  stroke: #fff !important;
+}
+
+ion-header ion-toolbar:first-of-type {
+  padding: 15px 0px;
+}
+
+.header-md {
+    box-shadow: unset !important;
 }

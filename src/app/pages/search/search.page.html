@@ -1,16 +1,13 @@
 <ion-header>
   <ion-toolbar color="primary" class="mytoolbar">
-    <!-- LEFT: Back Button (Optional) -->
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/" *ngIf="false"></ion-back-button>
-      <!-- Or use custom back button -->
-      <ion-button (click)="goBack()" *ngIf="false">
-        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-
-    <!-- CENTER: Title -->
-    <ion-title>Contact</ion-title>
+    <!-- CENTER LOGO -->
+    <ion-title class="ion-text-center">
+      <img
+        src="assets/icon/logo.png"
+        alt="Logo"
+        style="width: 90% !important; margin: auto; display: block"
+      />
+    </ion-title>
 
     <!-- RIGHT: Menu Toggle Button -->
     <ion-buttons slot="end">
