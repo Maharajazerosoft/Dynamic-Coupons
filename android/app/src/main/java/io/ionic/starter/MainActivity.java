@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.dynamic.dynamiccoupons;
 
 import com.getcapacitor.BridgeActivity;
 
