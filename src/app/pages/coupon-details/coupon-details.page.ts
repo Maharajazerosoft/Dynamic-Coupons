@@ -36,13 +36,6 @@ import { CommonService } from '../../../providers/common/common.service';
 import { DetailsService } from '../../../providers/details/details.service';
 
 // Declare google as global
-declare global {
-  interface Window {
-    google: any;
-    initMap: () => void;
-  }
-}
-
 @Component({
   selector: 'app-coupon-details',
   templateUrl: './coupon-details.page.html',
@@ -271,7 +264,7 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
     try {
       // Load Google Maps API
       await this.loadGoogleMaps();
-      
+
       // Initialize the map
       this.initializeMap();
     } catch (error) {
@@ -290,29 +283,31 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
       }
 
       // Check if script is already loading or loaded
-      const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+      const existingScript = document.querySelector(
+        'script[src*="maps.googleapis.com"]'
+      );
       if (existingScript) {
         console.log('✅ Google Maps script already exists');
-        
-        // Check if Google Maps is loaded
+
+        // Check if Google Maps is loaded with timeout
+        const checkInterval = 100;
+        const timeout = 10000;
+        const startTime = Date.now();
+
         const checkLoaded = () => {
           if (typeof google !== 'undefined' && google.maps) {
             console.log('✅ Google Maps loaded successfully');
             this.isGoogleMapsLoaded = true;
             resolve();
+          } else if (Date.now() - startTime > timeout) {
+            console.error('❌ Google Maps failed to load within timeout');
+            reject(new Error('Google Maps loading timeout'));
           } else {
-            setTimeout(checkLoaded, 100);
+            setTimeout(checkLoaded, checkInterval);
           }
         };
-        
+
         checkLoaded();
-        
-        // Timeout after 10 seconds
-        setTimeout(() => {
-          console.error('❌ Google Maps failed to load within timeout');
-          reject(new Error('Google Maps loading timeout'));
-        }, 10000);
-        
         return;
       }
 
@@ -322,27 +317,27 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
       script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDflqPuXRlq_r7kbtfQtM_Jb4BxjflJcdE&libraries=places`;
       script.async = true;
       script.defer = true;
-      
+
       script.onload = () => {
         console.log('✅ Google Maps script loaded');
-        // Check if Google Maps API is available
-        const checkApi = () => {
+        // Wait a bit for the API to initialize
+        setTimeout(() => {
           if (typeof google !== 'undefined' && google.maps) {
             console.log('✅ Google Maps API loaded successfully');
             this.isGoogleMapsLoaded = true;
             resolve();
           } else {
-            setTimeout(checkApi, 100);
+            console.error('❌ Google Maps API not available after script load');
+            reject(new Error('Google Maps API not available'));
           }
-        };
-        checkApi();
+        }, 500);
       };
-      
+
       script.onerror = (error) => {
         console.error('❌ Failed to load Google Maps script:', error);
         reject(new Error('Failed to load Google Maps'));
       };
-      
+
       document.head.appendChild(script);
     });
   }
@@ -370,110 +365,212 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
         this.city,
         this.state,
         this.postalcode,
-        this.country
-      ].filter(part => part && part.trim() !== '');
-      
+        this.country,
+      ].filter((part) => part && part.trim() !== '');
+
       const fullAddress = addressParts.join(', ');
       console.log('📍 Geocoding address:', fullAddress);
 
       // Create geocoder
       const geocoder = new google.maps.Geocoder();
 
-      geocoder.geocode({ address: fullAddress }, (results: any, status: any) => {
-        if (status === google.maps.GeocoderStatus.OK && results && results.length > 0) {
-          console.log('✅ Geocoding successful');
-          
-          const location = results[0].geometry.location;
-          const latLng = new google.maps.LatLng(location.lat(), location.lng());
+      geocoder.geocode(
+        { address: fullAddress },
+        (results: any, status: any) => {
+          if (
+            status === google.maps.GeocoderStatus.OK &&
+            results &&
+            results.length > 0
+          ) {
+            console.log('✅ Geocoding successful');
 
-          // Create map options
-          const mapOptions = {
-            center: latLng,
-            zoom: 15,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            zoomControl: true,
-            mapTypeControl: false,
-            scaleControl: true,
-            streetViewControl: true,
-            rotateControl: false,
-            fullscreenControl: true,
-            styles: [
-              {
-                featureType: 'poi.business',
-                elementType: 'labels',
-                stylers: [{ visibility: 'off' }]
-              }
-            ]
-          };
+            const location = results[0].geometry.location;
+            const latLng = new google.maps.LatLng(
+              location.lat(),
+              location.lng()
+            );
 
-          // Create the map
-          this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+            // Create map options with better defaults
+            const mapOptions = {
+              center: latLng,
+              zoom: 12, // Reduced from 15 for better overview
+              mapTypeId: google.maps.MapTypeId.ROADMAP,
+              zoomControl: true,
+              zoomControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_CENTER,
+              },
+              mapTypeControl: true,
+              mapTypeControlOptions: {
+                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                position: google.maps.ControlPosition.TOP_RIGHT,
+                mapTypeIds: [
+                  google.maps.MapTypeId.ROADMAP,
+                  google.maps.MapTypeId.SATELLITE,
+                  google.maps.MapTypeId.HYBRID,
+                ],
+              },
+              scaleControl: true,
+              streetViewControl: true,
+              streetViewControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_CENTER,
+              },
+              rotateControl: false,
+              fullscreenControl: true,
+              fullscreenControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_TOP,
+              },
+              styles: [
+                {
+                  featureType: 'poi.business',
+                  elementType: 'labels',
+                  stylers: [{ visibility: 'on' }], // Changed to 'on' to show business labels
+                },
+                {
+                  featureType: 'water',
+                  elementType: 'geometry',
+                  stylers: [{ color: '#e9e9e9' }],
+                },
+                {
+                  featureType: 'landscape',
+                  elementType: 'geometry',
+                  stylers: [{ color: '#f5f5f5' }],
+                },
+              ],
+              gestureHandling: 'greedy', // Better touch handling
+            };
 
-          // Create marker
-          this.marker = new google.maps.Marker({
-            position: latLng,
-            map: this.map,
-            title: this.details.web_coupon_bname || 'Business Location',
-            animation: google.maps.Animation.DROP,
-            icon: {
-              url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-            }
-          });
+            // Create the map
+            this.map = new google.maps.Map(
+              this.mapElement.nativeElement,
+              mapOptions
+            );
 
-          // Create info window content
-          const infoContent = `
-            <div style="padding: 10px; font-family: Arial, sans-serif; max-width: 250px;">
-              <h3 style="margin: 0 0 8px 0; color: #08b8da; font-size: 16px; font-weight: bold;">
-                ${this.details.web_coupon_bname || 'Business'}
-              </h3>
-              <p style="margin: 4px 0; font-size: 14px; color: #333;">
-                <strong>Address:</strong> ${this.address}
+            // Create marker
+            this.marker = new google.maps.Marker({
+              position: latLng,
+              map: this.map,
+              title: this.details.web_coupon_bname || 'Business Location',
+              animation: google.maps.Animation.DROP,
+              icon: {
+                url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png', // Changed to red for better visibility
+                scaledSize: new google.maps.Size(40, 40),
+              },
+              optimized: false, // Better for performance
+            });
+
+            // Create info window content
+            const infoContent = `
+          <div style="padding: 15px; font-family: Arial, sans-serif; max-width: 250px; line-height: 1.4;">
+            <h3 style="margin: 0 0 10px 0; color: #08b8da; font-size: 16px; font-weight: bold;">
+              ${this.details.web_coupon_bname || 'Business'}
+            </h3>
+            <div style="margin-bottom: 10px;">
+              <p style="margin: 5px 0; font-size: 14px; color: #333;">
+                <strong>Address:</strong><br>
+                ${this.address || ''}
+                ${this.city ? `<br>${this.city}` : ''}
+                ${this.state ? `, ${this.state}` : ''}
+                ${this.postalcode ? ` ${this.postalcode}` : ''}
+                ${this.country ? `<br>${this.country}` : ''}
               </p>
-              <p style="margin: 4px 0; font-size: 14px; color: #666;">
-                ${this.city}${this.state ? `, ${this.state}` : ''} ${this.postalcode || ''}
-              </p>
-              ${this.country ? `<p style="margin: 4px 0; font-size: 14px; color: #666;">${this.country}</p>` : ''}
-              ${this.details.web_coupon_phone ? 
-                `<p style="margin: 4px 0; font-size: 14px; color: #666;">
-                  <strong>Phone:</strong> ${this.details.web_coupon_phone}
-                </p>` : ''
-              }
-              <div style="margin-top: 10px;">
-                <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(fullAddress)}" 
-                   target="_blank" 
-                   style="background: #08b8da; color: white; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 13px; display: inline-block;">
-                  Get Directions
-                </a>
-              </div>
             </div>
-          `;
+            ${
+              this.details.web_coupon_phone
+                ? `<div style="margin: 8px 0;">
+                <p style="margin: 0; font-size: 14px; color: #666;">
+                  <strong>Phone:</strong> ${this.details.web_coupon_phone}
+                </p>
+              </div>`
+                : ''
+            }
+            <div style="margin-top: 12px;">
+              <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                fullAddress
+              )}" 
+                 target="_blank" 
+                 style="background: #08b8da; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-size: 14px; display: inline-block; transition: background 0.3s;"
+                 onmouseover="this.style.background='#07a8c9'" 
+                 onmouseout="this.style.background='#08b8da'">
+                Get Directions
+              </a>
+            </div>
+          </div>
+        `;
 
-          // Create info window
-          this.infoWindow = new google.maps.InfoWindow({
-            content: infoContent,
-            maxWidth: 300
-          });
+            // Create info window
+            this.infoWindow = new google.maps.InfoWindow({
+              content: infoContent,
+              maxWidth: 280,
+              pixelOffset: new google.maps.Size(0, -40),
+            });
 
-          // Open info window by default
-          this.infoWindow.open(this.map, this.marker);
+            // Add click listener to marker
+            this.marker.addListener('click', () => {
+              this.infoWindow.open(this.map, this.marker);
+            });
 
-          // Add click listener to marker
-          this.marker.addListener('click', () => {
-            this.infoWindow.open(this.map, this.marker);
-          });
+            // Add click listener to map to close info window
+            this.map.addListener('click', () => {
+              this.infoWindow.close();
+            });
 
-          // Fit bounds to marker with padding
-          const bounds = new google.maps.LatLngBounds();
-          bounds.extend(latLng);
-          this.map.fitBounds(bounds, { padding: 50 });
+            // Open info window by default with delay
+            setTimeout(() => {
+              this.infoWindow.open(this.map, this.marker);
+            }, 500);
 
-          this.isMapInitialized = true;
-          console.log('✅ Map initialized successfully');
-        } else {
-          console.error('❌ Geocoding failed with status:', status);
-          this.showDefaultMap();
+            // Set a minimum zoom level and adjust bounds
+            const bounds = new google.maps.LatLngBounds();
+            bounds.extend(latLng);
+
+            // Expand bounds slightly for better view
+            const ne = bounds.getNorthEast();
+            const sw = bounds.getSouthWest();
+            const latDiff = Math.abs(ne.lat() - sw.lat());
+            const lngDiff = Math.abs(ne.lng() - sw.lng());
+
+            // Expand bounds to ensure proper zoom
+            bounds.extend(
+              new google.maps.LatLng(
+                ne.lat() + latDiff * 0.05,
+                ne.lng() + lngDiff * 0.05
+              )
+            );
+            bounds.extend(
+              new google.maps.LatLng(
+                sw.lat() - latDiff * 0.05,
+                sw.lng() - lngDiff * 0.05
+              )
+            );
+
+            // Fit bounds with padding
+            this.map.fitBounds(bounds, {
+              padding: { top: 50, right: 50, bottom: 50, left: 50 },
+            });
+
+            // Set minimum zoom after fitting bounds
+            this.map.addListener('bounds_changed', () => {
+              const currentZoom = this.map.getZoom();
+              if (currentZoom > 16) {
+                this.map.setZoom(16); // Maximum zoom
+              } else if (currentZoom < 10) {
+                this.map.setZoom(10); // Minimum zoom for better view
+              }
+            });
+
+            // Listen for map type changes
+            this.map.addListener('maptypeid_changed', () => {
+              console.log('Map type changed to:', this.map.getMapTypeId());
+            });
+
+            this.isMapInitialized = true;
+            console.log('✅ Map initialized successfully');
+          } else {
+            console.error('❌ Geocoding failed with status:', status);
+            this.showDefaultMap();
+          }
         }
-      });
+      );
     } catch (error) {
       console.error('❌ Error initializing map:', error);
       this.showDefaultMap();
@@ -493,33 +590,60 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
     try {
       // Default location (center of the US)
       const defaultLatLng = new google.maps.LatLng(39.8283, -98.5795);
-      
+
       const mapOptions = {
         center: defaultLatLng,
         zoom: 4,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        disableDefaultUI: true
+        zoomControl: true,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+          style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+          position: google.maps.ControlPosition.TOP_RIGHT,
+          mapTypeIds: [
+            google.maps.MapTypeId.ROADMAP,
+            google.maps.MapTypeId.SATELLITE,
+            google.maps.MapTypeId.HYBRID,
+          ],
+        },
+        streetViewControl: true,
+        fullscreenControl: true,
       };
-      
+
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-      
-      // Show message
+
+      // Show message marker
+      const marker = new google.maps.Marker({
+        position: defaultLatLng,
+        map: this.map,
+        title: 'Location Not Found',
+        icon: {
+          url: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+        },
+      });
+
+      // Show info window
       this.infoWindow = new google.maps.InfoWindow({
         content: `
-          <div style="padding: 15px; text-align: center;">
-            <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">
-              <strong>Location Not Found</strong>
-            </p>
-            <p style="margin: 0; color: #999; font-size: 13px;">
-              Unable to display map for the provided address.
-            </p>
-          </div>
-        `,
-        position: defaultLatLng
+        <div style="padding: 15px; text-align: center;">
+          <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">
+            <strong>Location Not Found</strong>
+          </p>
+          <p style="margin: 0; color: #999; font-size: 13px;">
+            Unable to display map for the provided address.
+          </p>
+        </div>
+      `,
+        position: defaultLatLng,
       });
-      
+
       this.infoWindow.open(this.map);
-      
+
+      // Add click listener to marker
+      marker.addListener('click', () => {
+        this.infoWindow.open(this.map, marker);
+      });
+
       this.isMapInitialized = true;
       console.log('⚠️ Default map displayed');
     } catch (error) {

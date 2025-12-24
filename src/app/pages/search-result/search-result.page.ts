@@ -15,6 +15,8 @@ import { Browser } from '@capacitor/browser';
 import { CommonService } from '../../../providers/common/common.service';
 import { DetailsService } from '../../../providers/details/details.service';
 import { ActivatedRoute } from '@angular/router';
+import { AdMobBannerManager } from '../../../providers/admob/admob-banner-manager';
+import { AdMobService } from '../../../providers/admob/admob';
 
 @Component({
   selector: 'app-search-results',
@@ -22,12 +24,12 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./search-result.page.scss'],
   standalone: false,
 })
-export class SearchResultPage implements OnInit {
+export class SearchResultPage extends AdMobBannerManager implements OnInit {
   @ViewChild(IonContent) ionContent!: IonContent;
 
   searchValue: string = '';
   renderGrid: boolean = false;
-  
+
   submitted: boolean = true;
   resultStatus: string = 'exact';
   showButton: boolean = false;
@@ -52,6 +54,8 @@ export class SearchResultPage implements OnInit {
   logoPath: string = 'assets/icon/logo.png';
   searchValue1: string = '';
 
+  protected override pageName: string = 'SearchResultPage';
+
   defaultImages = [
     'https://dynamiccoupons.com/webupload/thumb/default/default.png',
     'https://dynamiccoupons.com/webupload/thumb/default/default5.png',
@@ -70,12 +74,15 @@ export class SearchResultPage implements OnInit {
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
     private navCtrl: NavController,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    protected override admobService: AdMobService
+  ) {
+    super(admobService);
+  }
 
   ngOnInit() {
     // Get search value from route params
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       if (params['search']) {
         this.searchValue = params['search'];
         this.searchresult(this.searchValue);
@@ -85,30 +92,34 @@ export class SearchResultPage implements OnInit {
 
   ionViewWillEnter() {
     console.log('SearchResultsPage loaded');
-    
-    // Controlled one-time reload to fix ion-content offset issue
+
     const reloadKey = 'search-result-reloaded';
-    const navigationType = (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming)?.type;
+    const navigationType = (
+      performance.getEntriesByType(
+        'navigation'
+      )[0] as PerformanceNavigationTiming
+    )?.type;
 
-    console.log("navigationType",navigationType)
+    console.log('navigationType', navigationType);
 
-    console.log("reloadKey",reloadKey)
-    
+    console.log('reloadKey', reloadKey);
+
     if (!sessionStorage.getItem(reloadKey)) {
       sessionStorage.setItem(reloadKey, 'true');
       console.log('Performing controlled reload for search-result page');
       window.location.reload();
       return;
     }
-    
+
     // Clear the flag after successful reload to allow future navigation
     if (navigationType === 'reload') {
       sessionStorage.removeItem(reloadKey);
     }
   }
 
-  ionViewDidEnter() {
+  override async ionViewDidEnter() {
     console.log('SearchResultsPage did enter');
+    await super.ionViewDidEnter();
     requestAnimationFrame(() => {
       this.cdr.detectChanges();
       this.ionContent.scrollToTop(0);
