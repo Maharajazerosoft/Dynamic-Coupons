@@ -141,7 +141,7 @@ ion-spinner {
 
 ion-footer {
   position: fixed;
-  bottom: calc(60px + var(--ion-safe-area-bottom, 0px));
+  bottom: calc(40px + var(--ion-safe-area-bottom, 0px) + var(--admob-space, 0px));
   width: 100%;
   background: #08b8da;
   padding: 8px 0;

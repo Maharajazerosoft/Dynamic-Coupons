@@ -194,6 +194,7 @@ ion-footer {
 
     .title-default {
       -webkit-user-select: text;
+      user-select: text;
       font-weight: 400;
       font-size: 14px;
       background: #fff;
@@ -304,4 +305,8 @@ ion-header ion-toolbar:first-of-type {
   padding-inline-start: 2rem;
   -webkit-padding-end: 1rem;
   padding-inline-end: 1rem;
+}
+
+:root {
+  --admob-space: 0px;
 }

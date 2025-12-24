@@ -19,6 +19,8 @@ import { Subscription } from 'rxjs';
 
 import { CommonService } from '../../../providers/common/common.service';
 import { DetailsService } from '../../../providers/details/details.service';
+import { AdMobBannerManager } from '../../../providers/admob/admob-banner-manager';
+import { AdMobService } from '../../../providers/admob/admob';
 
 @Component({
   selector: 'app-coupon-modal',
@@ -26,7 +28,10 @@ import { DetailsService } from '../../../providers/details/details.service';
   styleUrls: ['./coupon.page.scss'],
   standalone: false,
 })
-export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
+export class CouponPage
+  extends AdMobBannerManager
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
   @ViewChild(IonContent) ionContent!: IonContent;
 
@@ -62,6 +67,8 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
   hasMoreData: boolean = true;
   searchValue1: string = '';
 
+  protected override pageName: string = 'CouponPage';
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -70,12 +77,15 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
     private loadingController: LoadingController,
     private toastController: ToastController,
     private navController: NavController,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    protected override admobService: AdMobService
+  ) {
+    super(admobService);
+  }
 
   async ngOnInit() {
     // Get type from route parameters
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       const typeParam = params.get('type');
       if (typeParam) {
         this.type = typeParam;
@@ -88,25 +98,30 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
 
   ionViewWillEnter() {
     console.log('CouponPage loaded');
-    
+
     // Controlled one-time reload to fix ion-content offset issue
     const reloadKey = 'coupon-reloaded';
-    const navigationType = (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming)?.type;
-    
+    const navigationType = (
+      performance.getEntriesByType(
+        'navigation'
+      )[0] as PerformanceNavigationTiming
+    )?.type;
+
     if (!sessionStorage.getItem(reloadKey)) {
       sessionStorage.setItem(reloadKey, 'true');
       console.log('Performing controlled reload for coupon page');
       window.location.reload();
       return;
     }
-    
+
     // Clear the flag after successful reload to allow future navigation
     if (navigationType === 'reload') {
       sessionStorage.removeItem(reloadKey);
     }
   }
 
-  ionViewDidEnter() {
+  override async ionViewDidEnter() {
+    await super.ionViewDidEnter();
     requestAnimationFrame(() => {
       this.cdr.detectChanges();
       this.ionContent.scrollToTop(0);
@@ -219,7 +234,7 @@ export class CouponPage implements OnInit, OnDestroy, AfterViewInit {
 
     // Navigate to search result page
     this.router.navigate(['/search-result'], {
-      queryParams: { search: searchValue }
+      queryParams: { search: searchValue },
     });
   }
 

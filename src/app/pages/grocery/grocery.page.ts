@@ -16,6 +16,8 @@ import { Browser } from '@capacitor/browser';
 import { Subscription } from 'rxjs';
 import { CommonService } from '../../../providers/common/common.service';
 import { DetailsService } from '../../../providers/details/details.service';
+import { AdMobBannerManager } from '../../../providers/admob/admob-banner-manager';
+import { AdMobService } from '../../../providers/admob/admob';
 
 @Component({
   selector: 'app-grocery',
@@ -23,7 +25,7 @@ import { DetailsService } from '../../../providers/details/details.service';
   styleUrls: ['grocery.page.scss'],
   standalone: false,
 })
-export class GroceryPage implements OnInit, OnDestroy {
+export class GroceryPage extends AdMobBannerManager implements OnInit, OnDestroy {
   cat: string = ''; // Category from route params
 
   renderGrid: boolean = false;
@@ -55,6 +57,8 @@ export class GroceryPage implements OnInit, OnDestroy {
 
   @ViewChild(IonContent) ionContent!: IonContent;
 
+  protected override pageName: string = 'GroceryPage';
+
   constructor(
     private commonService: CommonService,
     private detailsService: DetailsService,
@@ -63,8 +67,11 @@ export class GroceryPage implements OnInit, OnDestroy {
     private navController: NavController,
     private route: ActivatedRoute,
     private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    protected override admobService: AdMobService
+  ) {
+    super(admobService);
+  }
 
   async ngOnInit() {
     // Get category from route parameters
@@ -87,7 +94,6 @@ export class GroceryPage implements OnInit, OnDestroy {
   ionViewWillEnter() {
     console.log('GroceryPage loaded');
 
-    // Controlled one-time reload to fix ion-content offset issue
     const reloadKey = 'grocery-reloaded';
     const navigationType = (
       performance.getEntriesByType(
@@ -111,9 +117,10 @@ export class GroceryPage implements OnInit, OnDestroy {
     }
   }
 
-  ionViewDidEnter() {
+  override async ionViewDidEnter() {
     // Force ion-content to recalculate offsets after page fully entered
     // and after DOM has stabilized with all content
+    await super.ionViewDidEnter();
     requestAnimationFrame(() => {
       // First ensure any pending renders complete
       this.cdr.detectChanges();
