@@ -216,20 +216,24 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
+  <ion-toolbar class="search-toolbar">
     <div class="search-container">
       <ion-icon name="search" class="search-icon"></ion-icon>
       <ion-searchbar
         [(ngModel)]="searchValue1"
         (ionInput)="getItems($event)"
         enterkeyhint="done"
-        placeholder="Combine Keywords, biz, city, Zip, country…"
+        placeholder="Search by keyword, city, zip…"
         class="search-input"
+      ></ion-searchbar>
+
+      <ion-button
+        class="search-button"
+        (click)="searchresult(searchValue1)"
       >
-      </ion-searchbar>
-      <ion-button (click)="searchresult(searchValue1)" class="search-button">
         Go
       </ion-button>
     </div>
   </ion-toolbar>
 </ion-footer>
+

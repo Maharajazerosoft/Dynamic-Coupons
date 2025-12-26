@@ -43,10 +43,6 @@
     }
   }
 
-  .search-toolbar {
-    height: 70px;
-  }
-
   .home-toolbar {
     height: 120px;
 
@@ -159,56 +155,6 @@
       width: 100%;
       padding: 10px;
     }
-  }
-
-  ion-footer {
-    position: fixed;
-    bottom: calc(40px + var(--ion-safe-area-bottom, 0px) + var(--admob-space, 0px));
-    width: 100%;
-    background: #08b8da;
-    padding: 8px 0;
-  }
-
-  .search-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 12px;
-    border-top: 0.55px solid transparent;
-    border-bottom: 0.55px solid rgba(0, 0, 0, 0.05);
-    background: rgba(0, 0, 0, 0.2);
-    height: 70px;
-    padding-bottom: var(--ion-safe-area-bottom, 0px);
-  }
-
-  .search-input {
-    --background: #ffffff;
-    --border-radius: 8px;
-    --placeholder-color: #666;
-    --color: #333;
-    padding: 7px 0px !important;
-    width: 78%;
-  }
-
-  .search-button {
-    --background: #ff7000;
-    --background-hover: #ff8000;
-    --color: white;
-    font-size: 14px;
-    text-transform: uppercase;
-    height: 40px !important;
-    min-height: 40px !important;
-  }
-
-  .search-icon {
-    position: absolute;
-    left: 22px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 20px;
-    color: #555;
-    pointer-events: none;
-    z-index: 10;
   }
 
   ion-content {

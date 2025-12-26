@@ -42,9 +42,27 @@ ion-header {
   }
 }
 
+.page-sub-header {
+  background-color: #08b8da;
+
+  ion-toolbar {
+    background-color: #08b8da;
+    padding: 0px !important;
+  }
+}
+
+.page-title {
+  font-size: 27px !important;
+  font-family: "Lobster" !important;
+  color: white !important;
+  text-align: center;
+}
+
+
 // Content styling
 ion-content {
   --background: #08b8da !important;
+  --padding-bottom: 180px !important;
   height: calc(100vh - 100px);
 
   .border {
