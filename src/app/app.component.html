@@ -22,7 +22,7 @@
           routerDirection="root"
           (click)="closeMenu()"
         >
-          <ion-label>Search Offers / Deals</ion-label>
+          <ion-label style="font-size: 14px;">Search Offers / Deals</ion-label>
         </ion-item>
 
         <ion-item
@@ -32,9 +32,9 @@
           routerDirection="root"
           (click)="closeMenu()"
         >
-          <ion-label
-            >Browse Local Offers / Grocery Flyers / Freebies etc</ion-label
-          >
+          <ion-label style="font-size: 14px;">
+            {{ 'Browse Local Offers / Grocery Flyers / Freebies etc' | slice:0:28 }}...
+          </ion-label>        
         </ion-item>
 
         <ion-item
@@ -44,7 +44,9 @@
           routerDirection="root"
           (click)="closeMenu()"
         >
-          <ion-label>Browse National / Online offers</ion-label>
+          <ion-label style="font-size: 14px;">
+            {{ 'Browse National / Online offers' | slice:0:28 }}...
+          </ion-label>     
         </ion-item>
 
         <ion-item
@@ -54,7 +56,7 @@
           routerDirection="root"
           (click)="closeMenu()"
         >
-          <ion-label>Privacy Policy</ion-label>
+          <ion-label style="font-size: 14px;">Privacy Policy</ion-label>
         </ion-item>
 
         <ion-item
@@ -66,7 +68,7 @@
             )
           "
         >
-          <ion-label>Let's Fundraise Together</ion-label>
+          <ion-label style="font-size: 14px;">Let's Fundraise Together</ion-label>
         </ion-item>
 
         <ion-item
@@ -74,11 +76,11 @@
           detail="false"
           (click)="openExternalLink('https://www.dynamiccoupons.com/faq.php')"
         >
-          <ion-label>FAQ</ion-label>
+          <ion-label style="font-size: 14px;">FAQ</ion-label>
         </ion-item>
 
         <div class="menu-notice">
-          <p>
+          <p style="font-size: 19px;">
             Report any inappropriate or age-inappropriate ads or any questions
             or concerns via our form below.
           </p>
@@ -91,7 +93,7 @@
           routerDirection="root"
           (click)="closeMenu()"
         >
-          <ion-label>Contact us</ion-label>
+          <ion-label style="font-size: 14px;">Contact us</ion-label>
         </ion-item>
       </ion-list>
 
@@ -104,9 +106,6 @@
         />
         <div class="copyright-year">2025</div>
 
-        <div class="menu-notice">
-          <p>Create your offer and become <br> part of our searchable database</p>
-        </div>
         <div class="website-link" style="margin-bottom: 25px">
           <a
             (click)="openExternalLink('https://www.dynamiccoupons.com')"

@@ -1,3 +1,7 @@
+body {
+  font-family: "Tahoma", sans-serif !important;
+}
+
 ion-header {
   --background: #08b8da;
   background: #08b8da;
@@ -368,3 +372,10 @@ ion-footer {
     z-index: 10;
   }
 }
+
+// sidebar css
+
+.item.ios {
+  border-bottom: 1px solid #08b8da;
+}
+  
