@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { MenuController, Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Browser, OpenOptions } from '@capacitor/browser';
+import { SplashScreen } from '@capacitor/splash-screen';
 import { AdMobService } from '../providers/admob/admob';
 
 @Component({
@@ -10,6 +11,7 @@ import { AdMobService } from '../providers/admob/admob';
   standalone: false,
 })
 export class AppComponent implements OnInit, OnDestroy {
+
   private readonly browserOptions: Partial<OpenOptions> = {
     toolbarColor: '#08b8da',
     presentationStyle: 'popover'
@@ -18,45 +20,52 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private menuCtrl: MenuController,
     private router: Router,
-    private adMobService: AdMobService // Add AdMobService
-  ) {}
+    private platform: Platform,
+    private adMobService: AdMobService
+  ) {
+    this.initializeApp();
+  }
 
-  async ngOnInit() {
-    // Initialize and show banner ad when app starts
-    await this.initializeAd();
+  initializeApp() {
+    this.platform.ready().then(async () => {
+      // ✅ App is ready → hide splash
+      await SplashScreen.hide();
+
+      // ✅ Load ads AFTER splash is gone
+      this.initializeAd();
+    });
+  }
+
+  ngOnInit() {
+    // ❌ DO NOT initialize AdMob here
   }
 
   async ngOnDestroy() {
-    // Clean up banner ad when app closes
     await this.adMobService.removeBannerAd();
   }
 
   async initializeAd() {
     try {
-      // Wait a bit for the app to fully initialize
       setTimeout(async () => {
         await this.adMobService.showBannerAd();
-      }, 1000);
+      }, 500);
     } catch (error) {
       console.error('Failed to initialize ad:', error);
     }
   }
 
-  // Close menu
   closeMenu() {
     this.menuCtrl.close('main-menu');
   }
 
-  // Toggle menu
   toggleMenu() {
     this.menuCtrl.toggle('main-menu');
   }
 
-  // Open external links
   async openExternalLink(url: string) {
     this.closeMenu();
     await Browser.open({
-      url: url,
+      url,
       ...this.browserOptions
     });
   }

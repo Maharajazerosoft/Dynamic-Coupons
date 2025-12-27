@@ -22,7 +22,6 @@ export class AdMobService {
     try {
       console.log('Initializing AdMob...');
       
-      // Use testing only in development
       const isTesting = window.location.hostname === 'localhost' || 
                        window.location.hostname === '127.0.0.1';
       
@@ -46,18 +45,16 @@ export class AdMobService {
     try {
       await this.initialize();
       
-      // Use test ID in development, real ID in production
       const adId = this.isTestEnvironment() 
-        ? 'ca-app-pub-3940256099942544/6300978111' // Test ID
-        : 'YOUR_REAL_BANNER_AD_ID'; // Replace with real ID
+        ? 'ca-app-pub-3940256099942544/6300978111'
+        : 'YOUR_REAL_BANNER_AD_ID';
       
       const options: BannerAdOptions = {
         adId: adId,
-        adSize: BannerAdSize.ADAPTIVE_BANNER, // Better than fixed BANNER
+        adSize: BannerAdSize.ADAPTIVE_BANNER,
         position: BannerAdPosition.BOTTOM_CENTER,
-        margin: 0, // We'll handle positioning in CSS
+        margin: 0,
         isTesting: this.isTestEnvironment(),
-        // npa: true // Uncomment for non-personalized ads if needed
       };
       
       console.log('Showing banner ad...');
@@ -104,19 +101,17 @@ export class AdMobService {
   }
 
   private isTestEnvironment(): boolean {
-    // Check if we're in development
     return window.location.hostname === 'localhost' || 
            window.location.hostname === '127.0.0.1' ||
            window.location.hostname.includes('ionic');
   }
 
-  // Optional: Add interstitial ad support
   async showInterstitialAd(): Promise<void> {
     try {
       await this.initialize();
       
       const adId = this.isTestEnvironment()
-        ? 'ca-app-pub-3940256099942544/1033173712' // Test interstitial ID
+        ? 'ca-app-pub-3940256099942544/1033173712'
         : 'YOUR_REAL_INTERSTITIAL_AD_ID';
       
       await AdMob.prepareInterstitial({

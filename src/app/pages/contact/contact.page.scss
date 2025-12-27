@@ -118,10 +118,10 @@ app-contact {
 
 .captcha {
   font-family: "Arial", sans-serif;
-  font-size: 28px;
+  font-size: 20px;
   letter-spacing: 4px;
   background-color: #f1f1f1;
-  padding: 10px;
+  padding: 8px 10px;
   display: inline-block;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -142,7 +142,7 @@ app-contact {
 }
 
 .sc-ion-input-md-h {
-  min-height: 30px;
+  min-height: 20px !important;
 }
 
 :host(.button-block) .button-block {
@@ -160,4 +160,9 @@ app-contact {
 ion-button {
   --background: #ff7000;
   background: #ff7000;
+  min-height: 10px !important;
+}
+
+.sc-ion-input-ios-h {
+  min-height: 28px !important;
 }

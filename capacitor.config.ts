@@ -4,20 +4,18 @@ const config: CapacitorConfig = {
   appId: "com.dynamic.dynamiccoupons",
   appName: "DynamicCoupons",
   webDir: "www",
-  bundledWebRuntime: false,
-
   plugins: {
     StatusBar: {
       style: "Dark",
       overlaysWebView: false,
-      backgroundColor: "#1ac1ee",
+      backgroundColor: "#08b8da",
     },
     SplashScreen: {
-      launchShowDuration: 3000, // 👈 3 seconds
-      launchAutoHide: true,
-      backgroundColor: "#ffffff",
+      launchShowDuration: 0,
+      launchAutoHide: false,
       showSpinner: false,
-    },
+      backgroundColor: "#08b8da",
+    }    
   },
 };
 
