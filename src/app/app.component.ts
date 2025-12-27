@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuController, Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Browser, OpenOptions } from '@capacitor/browser';
-import { SplashScreen } from '@capacitor/splash-screen';
 import { AdMobService } from '../providers/admob/admob';
 
 @Component({
@@ -28,16 +27,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
   initializeApp() {
     this.platform.ready().then(async () => {
-      // ✅ App is ready → hide splash
-      await SplashScreen.hide();
-
       // ✅ Load ads AFTER splash is gone
       this.initializeAd();
     });
   }
 
   ngOnInit() {
-    // ❌ DO NOT initialize AdMob here
   }
 
   async ngOnDestroy() {

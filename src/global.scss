@@ -373,9 +373,39 @@ ion-footer {
   }
 }
 
-// sidebar css
+
+// SIDEBAR CSS START
 
 .item.ios {
   border-bottom: 1px solid #08b8da;
 }
-  
+
+// SIDEBAR CSS END
+
+// SAFE AREA CSS START
+
+/* iOS safe-area coloring */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  left: 0;
+  right: 0;
+  background: #000; /* BLACK */
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Top safe-area (status bar) */
+body::before {
+  top: 0;
+  height: env(safe-area-inset-top);
+}
+
+/* Bottom safe-area (home indicator) */
+body::after {
+  bottom: 0;
+  height: env(safe-area-inset-bottom);
+}
+
+// SAFE AREA CSS END

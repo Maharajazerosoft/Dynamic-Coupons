@@ -6,15 +6,13 @@
   z-index: 9999;
   background: transparent;
   pointer-events: auto;
-
-  height: 100px;
 }
 
-#main-content {
-  padding-bottom: 100px;
-  min-height: 100vh;
-  box-sizing: border-box;
-}
+// #main-content {
+//   padding-bottom: 100px;
+//   min-height: 100vh;
+//   box-sizing: border-box;
+// }
 
 ion-menu-open .banner-ad-container {
   display: none;

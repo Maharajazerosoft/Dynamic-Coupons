@@ -19,7 +19,7 @@
 
   .custom-searchbar {
     position: relative;
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
   }
 
@@ -41,7 +41,7 @@
     --placeholder-color: #888;
     --color: #333;
     height: 50px;
-    margin: 8px 0 !important;
+    margin: 0 !important;
 
     .searchbar-input-container {
       input {
@@ -82,7 +82,7 @@
   }
 
   .btn {
-    width: 60%;
+    width: 100%;
     display: inline-block;
     margin-bottom: 0;
     font-weight: normal !important;
@@ -111,6 +111,7 @@
     font-size: 1rem;
     text-transform: uppercase;
     font-weight: normal;
+    margin: 0;
   }
 
   ion-button.start-button::part(native),
@@ -131,6 +132,7 @@
     font-size: 1rem;
     text-transform: uppercase;
     font-weight: normal;
+    margin: 0;
   }
 
   .national-button {
@@ -145,6 +147,7 @@
     font-size: 1rem;
     text-transform: uppercase;
     font-weight: normal;
+    margin: 0;
   }
 
   .chat-begin {
@@ -211,4 +214,12 @@
   ion-searchbar::part(search-icon) {
     display: none !important;
   }
+}
+
+.searchbar-input.sc-ion-searchbar-ios {
+  font-size: 0.9rem !important;
+}
+
+.searchbar-input {
+  font-size: 0.9rem !important;
 }
