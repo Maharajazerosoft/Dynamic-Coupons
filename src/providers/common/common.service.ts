@@ -44,16 +44,29 @@ export class CommonService {
     }
   }
 
-  async presentToast(msg: string) {
-    const toast = await this.toastController.create({
-      message: `${msg}`,
-      duration: 3000,
-      position: 'bottom',
-      color: 'dark'
-    });
-    await toast.present();
-  }
+  // async presentToast(msg: string) {
+  //   const toast = await this.toastController.create({
+  //     message: `${msg}`,
+  //     duration: 3000,
+  //     position: 'middle',
+  //     color: 'dark'
+  //   });
+  //   await toast.present();
+  // }
 
+  async presentToast(msg: string) {
+    const container = document.getElementById('app-snackbar');
+    if (!container) return;
+  
+    container.innerHTML = `
+      <div class="snackbar">${msg}</div>
+    `;
+  
+    setTimeout(() => {
+      container.innerHTML = '';
+    }, 3000);
+  }
+  
   async presentLongToast(msg: string) {
     const toast = await this.toastController.create({
       message: `${msg}`,

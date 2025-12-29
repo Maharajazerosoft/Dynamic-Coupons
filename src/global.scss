@@ -262,7 +262,7 @@ ion-searchbar {
   .searchbar-input-container {
     input {
       padding: 2% 7%;
-      font-size: 1.5rem;
+      font-size: 1rem;
     }
   }
 }
@@ -363,7 +363,7 @@ ion-footer {
 
   .search-icon {
     position: absolute;
-    left: 15px;
+    left: 8px;
     top: 48%;
     transform: translateY(-50%);
     font-size: 20px;
@@ -409,3 +409,63 @@ body::after {
 }
 
 // SAFE AREA CSS END
+
+ion-searchbar::part(input) {
+  font-size: 0.9rem;
+}
+
+ion-searchbar {
+  --font-size: 0.9rem;
+}
+
+.custom-searchbar ion-searchbar {
+  --font-size: 0.9rem;
+}
+
+.searchbar-input-container.sc-ion-searchbar-ios {
+  min-height: 50px !important;
+}
+
+.searchbar-input.sc-ion-searchbar-ios {
+  font-size: 0.95rem !important;
+}
+
+// TOASTER STYLES START //
+
+#app-snackbar {
+  position: fixed;
+  left: 15%;
+  bottom: 120px;
+  transform: translateX(-50%);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.snackbar {
+  color: #000;
+  padding: 12px 18px;
+  font-size: 12px;
+  min-width: 220px;
+  text-align: left;
+  animation: snackbar-in 0.25s ease, snackbar-out 0.25s ease 2.7s forwards;
+}
+
+@keyframes snackbar-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes snackbar-out {
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+// TOASTER STYLES START END //
