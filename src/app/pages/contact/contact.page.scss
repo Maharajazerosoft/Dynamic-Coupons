@@ -155,11 +155,17 @@ app-contact {
 
 :host(.button-solid) {
   --background: #ff7000;
+  --background-activated: #ff7000 !important;
+  --background-focused: #ff7000 !important;
+  --background-hover: #ff7000 !important;
 }
 
 ion-button {
   --background: #ff7000;
   background: #ff7000;
+  --background-activated: #ff7000 !important;
+  --background-focused: #ff7000 !important;
+  --background-hover: #ff7000 !important;
   min-height: 10px !important;
 }
 

@@ -29,7 +29,7 @@
         <ion-row *ngFor="let clocal of exactResult">
           <ion-col size="12">
             <!-- Adsense Card -->
-            <ion-card *ngIf="clocal.image_type === '1'">
+            <ion-card *ngIf="clocal.image_type === '1'" class="card-fullwidth">
               <ion-card-header>
                 <div [innerHTML]="clocal.web_content | safeHtml"></div>
                 <div *ngIf="clocal.web_title === 'Adsense1'">

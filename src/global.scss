@@ -434,8 +434,8 @@ ion-searchbar {
 
 #app-snackbar {
   position: fixed;
-  left: 15%;
-  bottom: 120px;
+  left: 35%;
+  bottom: 100px;
   transform: translateX(-50%);
   z-index: 9999;
   pointer-events: none;
@@ -469,3 +469,12 @@ ion-searchbar {
 }
 
 // TOASTER STYLES START END //
+
+.page-title {
+  display: flex;
+  justify-content: center;
+}
+
+ion-card.card-fullwidth {
+  width: 100%;
+}
