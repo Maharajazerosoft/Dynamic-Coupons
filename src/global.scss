@@ -320,7 +320,7 @@ ion-header ion-toolbar:first-of-type {
 ion-footer {
   position: fixed;
   bottom: calc(
-    40px + var(--ion-safe-area-bottom, 0px) + var(--admob-space, 0px)
+    34px + var(--ion-safe-area-bottom, 0px) + var(--admob-space, 0px)
   );
   width: 100%;
   background: #08b8da;
