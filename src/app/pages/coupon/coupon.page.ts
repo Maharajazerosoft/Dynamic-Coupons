@@ -311,7 +311,10 @@ export class CouponPage
   loadMoreData(event: any) {
     this.loadData(event);
   }
-
+  goBackArrow() {
+    this.navController.back();
+  }
+  
   getCouponImage(coupon: any): string {
     if (coupon.image_type === 'img_upload' && coupon.web_coupon_image) {
       return `https://www.dynamiccoupons.com/webupload/thumb/coupons/${coupon.web_coupon_image}`;

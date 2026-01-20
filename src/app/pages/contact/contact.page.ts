@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
 import { Router } from "@angular/router";
 import { CommonService } from "../../../providers/common/common.service";
-import { MenuController } from "@ionic/angular";
+import { MenuController, NavController } from "@ionic/angular";
 
 @Component({
   selector: "app-contact",
@@ -34,6 +34,7 @@ export class ContactPage {
     private router: Router,
     public _commonService: CommonService,
     private menuCtrl: MenuController,
+    private navController: NavController
   ) {
     this.generateCaptcha();
   }
@@ -144,4 +145,8 @@ export class ContactPage {
     this.captchaInput = "";
     this.generateCaptcha(); // Generate new CAPTCHA after submission
   }
+  goBackArrow() {
+    this.navController.back();
+  }
+  
 }

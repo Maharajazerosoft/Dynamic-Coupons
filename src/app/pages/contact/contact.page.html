@@ -1,8 +1,15 @@
 <ion-header style="background-color: #08b8da">
   <ion-toolbar color="primary" class="mytoolbar">
-    <ion-buttons slot="start">
+    <!-- <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons> -->
+
+    <ion-buttons slot="start">
+      <ion-button (click)="goBackArrow()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
     </ion-buttons>
+    
 
     <!-- CENTER LOGO -->
     <ion-title class="ion-text-center">

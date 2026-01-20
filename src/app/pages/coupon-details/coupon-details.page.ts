@@ -1090,4 +1090,8 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
       sessionStorage.removeItem(reloadKey);
     }
   }
+  goBackArrow() {
+    this.navController.back();
+  }
+  
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { MenuController } from "@ionic/angular";
+import { MenuController, NavController } from "@ionic/angular";
 import { Router } from "@angular/router";
 
 @Component({
@@ -12,6 +12,7 @@ export class PrivacyPage implements OnInit {
   constructor(
     private router: Router,
     private menuCtrl: MenuController,
+    private navController: NavController
   ) {}
 
   openMenu() {
@@ -23,5 +24,8 @@ export class PrivacyPage implements OnInit {
 
   goBack() {
     this.router.navigate(["/"]);
+  }
+  goBackArrow() {
+    this.navController.back();
   }
 }

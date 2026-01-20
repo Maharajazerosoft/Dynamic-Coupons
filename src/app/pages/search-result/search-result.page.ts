@@ -399,4 +399,8 @@ export class SearchResultPage extends AdMobBannerManager implements OnInit {
   goBack() {
     this.navCtrl.back();
   }
+  goBackArrow() {
+    this.navCtrl.back();
+  }
+  
 }

@@ -336,7 +336,10 @@ export class GroceryPage extends AdMobBannerManager implements OnInit, OnDestroy
     });
     await loading.present();
   }
-
+  goBackArrow() {
+    this.navController.back();
+  }
+  
   async dismissLoading() {
     this.isLoading = false;
     await this.loadingController.dismiss();

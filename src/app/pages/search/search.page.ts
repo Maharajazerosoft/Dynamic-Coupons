@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Platform } from "@ionic/angular";
-import { MenuController } from "@ionic/angular";
+import { MenuController, NavController } from "@ionic/angular";
 import { environment } from "../../../environments/environment";
 import { AdMobService } from "../../../providers/admob/admob";
 
@@ -25,6 +25,7 @@ export class SearchPage implements OnInit {
     private router: Router,
     private adMobService: AdMobService,
     private platform: Platform,
+    private navController: NavController
   ) {}
 
   openMenu() {
@@ -89,7 +90,10 @@ export class SearchPage implements OnInit {
   //     this.openSearchResultModal(searchValue);
   //   }
   // }
-
+  goBackArrow() {
+    this.navController.back();
+  }
+  
   searchResult(searchValue: string) {
     if (searchValue) {
       this.router.navigate(['/search-result'], {
