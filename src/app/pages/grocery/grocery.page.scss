@@ -50,6 +50,10 @@
     position: relative;
   }
 
+  ion-card-header {
+    flex-direction: column;
+  }
+
   ion-card-title {
     white-space: normal; // This makes text wrap
     word-wrap: break-word;
@@ -58,7 +62,7 @@
     font-weight: bold;
     margin: 0px 0 5px 0;
     padding: 5% 0;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
 
   // Image styling
@@ -152,8 +156,7 @@
   }
 
   ion-col {
-    display: flex;
-    justify-content: center;
+    display: block;
     padding: 0;
   }
 
@@ -161,4 +164,8 @@
   ion-infinite-scroll {
     margin-bottom: 20px;
   }
+}
+
+.grocery-card-header {
+  flex-direction: column !important;
 }
