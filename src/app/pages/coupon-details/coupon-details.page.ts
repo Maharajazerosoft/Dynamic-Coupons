@@ -222,9 +222,9 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
         this.postalcode = this.details.web_coupon_postalcode;
 
         // Process the data
-        if (this.details.web_content) {
+        if (this.details.web_coupon_details) {
           this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(
-            this.details.web_content
+            this.details.web_coupon_details
           );
         }
 

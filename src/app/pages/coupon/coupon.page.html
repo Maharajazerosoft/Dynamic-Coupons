@@ -203,13 +203,13 @@
     </ion-grid>
   </div>
 
-  <!-- <ion-infinite-scroll (ionInfinite)="loadMoreData($event)" *ngIf="hasMoreData">
+  <ion-infinite-scroll (ionInfinite)="loadMoreData($event)" *ngIf="hasMoreData">
     <ion-infinite-scroll-content
       loadingSpinner="bubbles"
       loadingText="Loading more offers..."
     >
     </ion-infinite-scroll-content>
-  </ion-infinite-scroll> -->
+  </ion-infinite-scroll>
 
   <div class="no-results" *ngIf="searchlen">
     <ion-text color="danger">
@@ -226,7 +226,7 @@
         [(ngModel)]="searchValue1"
         (ionInput)="getItems($event)"
         enterkeyhint="done"
-        placeholder="Search by keyword, city, zip…"
+        placeholder="Combine Keywords, biz, city, Zip, state, ctry."
         class="search-input"
       ></ion-searchbar>
 

@@ -1,0 +1,32 @@
+{
+	"appId": "com.dynamic.dynamiccoupons",
+	"appName": "DynamicCoupons",
+	"webDir": "www",
+	"plugins": {
+		"StatusBar": {
+			"style": "Dark",
+			"overlaysWebView": false,
+			"backgroundColor": "#08b8da"
+		},
+		"SplashScreen": {
+			"launchShowDuration": 2000,
+			"launchAutoHide": true,
+			"backgroundColor": "#000",
+			"iosScaleType": "CENTER_CROP",
+			"showSpinner": false
+		}
+	},
+	"packageClassList": [
+		"AdMobPlugin",
+		"AppPlugin",
+		"CAPBrowserPlugin",
+		"GeolocationPlugin",
+		"HapticsPlugin",
+		"KeyboardPlugin",
+		"PreferencesPlugin",
+		"SharePlugin",
+		"SplashScreenPlugin",
+		"StatusBarPlugin",
+		"EmailComposerPlugin"
+	]
+}
