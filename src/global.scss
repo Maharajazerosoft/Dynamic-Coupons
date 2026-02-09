@@ -428,7 +428,14 @@ ion-searchbar {
 
 .searchbar-input.sc-ion-searchbar-ios {
   font-size: 0.95rem !important;
+  text-align: left;
+  padding-left: 35px !important;
 }
+
+.searchbar-input.sc-ion-searchbar-ios:not(:placeholder-shown) {
+  font-size: 22px !important;
+}
+
 
 // TOASTER STYLES START //
 

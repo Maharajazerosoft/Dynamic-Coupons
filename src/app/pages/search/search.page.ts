@@ -4,6 +4,7 @@ import { Platform } from "@ionic/angular";
 import { MenuController, NavController } from "@ionic/angular";
 import { environment } from "../../../environments/environment";
 import { AdMobService } from "../../../providers/admob/admob";
+import { Keyboard } from '@capacitor/keyboard';
 
 @Component({
   selector: "search-page",
@@ -12,6 +13,9 @@ import { AdMobService } from "../../../providers/admob/admob";
   standalone: false
 })
 export class SearchPage implements OnInit {
+
+  private keyboardShowListener: any;
+  private keyboardHideListener: any;
   submitted: boolean = true;
   resultStatus: any;
   showButton: boolean = true;
@@ -19,6 +23,10 @@ export class SearchPage implements OnInit {
   val: string = "";
   adStatus: string = "Loading...";
   environment = environment;
+
+
+hideFakeCaret: boolean = false;
+
 
   constructor(
     private menuCtrl: MenuController,
@@ -38,11 +46,44 @@ export class SearchPage implements OnInit {
 
   async ngOnInit() {
     await this.loadAd();
+    this.listenKeyboardEvents();
   }
 
   async ngOnDestroy() {
     await this.adMobService.removeBannerAd();
+
+    // Remove keyboard listeners
+    if (this.keyboardShowListener) {
+      this.keyboardShowListener.remove();
+    }
+    if (this.keyboardHideListener) {
+      this.keyboardHideListener.remove();
+    }
   }
+
+  listenKeyboardEvents() {
+
+    this.keyboardShowListener = Keyboard.addListener('keyboardDidShow', async () => {
+      console.log('Keyboard opened');
+  
+      // Remove banner
+      await this.adMobService.removeBannerAd();
+  
+      // Remove white space
+      document.documentElement.style.setProperty('--admob-space', '0px');
+    });
+  
+    this.keyboardHideListener = Keyboard.addListener('keyboardDidHide', async () => {
+      console.log('Keyboard closed');
+  
+      // Show banner again
+      await this.adMobService.showBannerAd();
+  
+      // Restore white space
+      document.documentElement.style.setProperty('--admob-space', '60px');
+    });
+  }
+  
 
   async loadAd() {
     try {
@@ -81,10 +122,14 @@ export class SearchPage implements OnInit {
     window.open(link, "_blank");
   }
 
+ 
   getItems(ev: any) {
     this.val = ev.target.value;
+    this.searchValue = ev.target.value;
+    this.hideFakeCaret = !!this.searchValue;
   }
 
+  
   // searchResult(searchValue: string) {
   //   if (searchValue) {
   //     this.openSearchResultModal(searchValue);

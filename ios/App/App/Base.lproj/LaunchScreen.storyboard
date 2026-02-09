@@ -12,11 +12,20 @@
         <scene sceneID="EHf-IW-A2E">
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
-                    <imageView key="view" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash" id="snD-IY-ifK">
+                    <view key="view" contentMode="scaleToFill" id="mainView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </imageView>
+                        <subviews>
+                            <imageView contentMode="scaleAspectFill" image="Splash" translatesAutoresizingMaskIntoConstraints="NO" id="splashImage">
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.12" green="0.67" blue="0.73" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="splashImage" firstAttribute="leading" secondItem="mainView" secondAttribute="leading" constant="0" id="c1"/>
+                            <constraint firstItem="splashImage" firstAttribute="trailing" secondItem="mainView" secondAttribute="trailing" constant="0" id="c2"/>
+                            <constraint firstItem="splashImage" firstAttribute="bottom" secondItem="mainView" secondAttribute="bottom" constant="0" id="c3"/>
+                            <constraint firstItem="splashImage" firstAttribute="top" secondItem="mainView" secondAttribute="top" constant="-60" id="c4"/>
+                        </constraints>
+                    </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -35,7 +35,11 @@
         </h1>
 
         <!-- Custom search bar -->
-        <div class="custom-searchbar">
+        <div
+        class="custom-searchbar fake-caret"
+        [class.hide]="hideFakeCaret || searchValue"
+      >
+      
           <ion-icon name="search" class="search-icon"></ion-icon>
           <ion-searchbar
             [(ngModel)]="searchValue"
@@ -43,6 +47,9 @@
             placeholder="Combine Keywords, biz, city, Zip, state, ctry."
             (ionCancel)="onCancel()"
             (ionClear)="onCancel()"
+            (ionFocus)="hideFakeCaret = true"
+(ionBlur)="hideFakeCaret = !!searchValue"
+
             debounce="300"
           >
           </ion-searchbar>
@@ -94,7 +101,7 @@
 
           <p class="house">
             <span class="black-text"
-              >Offers created by<br />self-publishing merchants<br> come with location map &</span
+              >Offers created by<br />self-publishing merchants<br> may come with location map &</span
             ><br />
             <span class="orange-box">Redeem Options.</span>
           </p>

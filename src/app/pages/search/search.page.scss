@@ -216,3 +216,29 @@
     display: none !important;
   }
 }
+
+.fake-caret {
+  position: relative;
+}
+
+.fake-caret::after {
+  content: '';
+  position: absolute;
+  left: 32px;   /* adjust if needed */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 20px;
+  background: #000;
+  animation: blink 1s infinite;
+  pointer-events: none;
+}
+
+.fake-caret.hide::after {
+  display: none;
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+}
