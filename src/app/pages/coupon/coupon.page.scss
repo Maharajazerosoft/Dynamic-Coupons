@@ -269,10 +269,6 @@ ion-searchbar {
     background: none;
   }
 
-  ion-grid.ion-no-padding{
-    padding: unset;
-  }
-
   .coupon-online {
     color: #022949;
   }
@@ -281,4 +277,8 @@ ion-searchbar {
 .page-title {
   display: flex;
   justify-content: center;
+}
+
+ion-grid.ion-no-padding{
+  padding: unset;
 }

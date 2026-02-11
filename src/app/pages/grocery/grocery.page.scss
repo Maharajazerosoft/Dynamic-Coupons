@@ -32,6 +32,11 @@
     }
   }
 
+  ion-card {
+    margin-top: unset !important;
+    margin-bottom: 10px !important;
+  }
+
   // Card styling
   ion-card,
   ion-card-header,
@@ -48,8 +53,6 @@
     margin-inline-end: 0;
     pointer-events: all;
     position: relative;
-    margin-top: unset !important;
-    margin-bottom: 10px !important;
   }
 
   ion-card-header {
