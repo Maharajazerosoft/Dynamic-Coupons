@@ -314,14 +314,23 @@ ion-header ion-toolbar:first-of-type {
 }
 
 :root {
-  --admob-space: 0px;
+  --admob-space: 99px;
+}
+
+.banner-ad-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--admob-space);
+  z-index: 1;
+  background: #ffffff;
+  pointer-events: none;
 }
 
 ion-footer {
   position: fixed;
-  bottom: calc(
-    34px + var(--ion-safe-area-bottom, 0px) + var(--admob-space, 0px)
-  );
+  bottom: calc(var(--ion-safe-area-bottom, 0px) + var(--admob-space, 0px));
   width: 100%;
   background: #08b8da;
 
@@ -482,6 +491,6 @@ ion-searchbar {
   justify-content: center;
 }
 
-ion-card.card-fullwidth {
-  width: 100%;
-}
+// ion-card.card-fullwidth {
+//   width: 100%;
+// }

@@ -19,6 +19,9 @@ import { DetailsService } from '../../../providers/details/details.service';
 import { AdMobBannerManager } from '../../../providers/admob/admob-banner-manager';
 import { AdMobService } from '../../../providers/admob/admob';
 
+import { Keyboard } from '@capacitor/keyboard';
+
+
 @Component({
   selector: 'app-grocery',
   templateUrl: 'grocery.page.html',
@@ -26,6 +29,10 @@ import { AdMobService } from '../../../providers/admob/admob';
   standalone: false,
 })
 export class GroceryPage extends AdMobBannerManager implements OnInit, OnDestroy {
+
+  private keyboardShowListener: any;
+  private keyboardHideListener: any;
+
   cat: string = ''; // Category from route params
 
   renderGrid: boolean = false;
@@ -83,11 +90,52 @@ export class GroceryPage extends AdMobBannerManager implements OnInit, OnDestroy
       console.log('Grocery page opened with category:', this.cat);
       this.initcontent();
     });
+    this.setupKeyboardListeners();
   }
 
-  ngOnDestroy(): void {
+  private setupKeyboardListeners() {
+
+    // Keyboard opened
+    this.keyboardShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      async () => {
+        console.log('Keyboard opened');
+  
+        await this.admobService.removeBannerAd();
+  
+        // Remove white space
+        document.documentElement.style.setProperty('--admob-space', '0px');
+      }
+    );
+  
+    // Keyboard closed
+    this.keyboardHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      async () => {
+        console.log('Keyboard closed');
+  
+        await this.admobService.showBannerAd();
+  
+        // Restore white space
+        document.documentElement.style.setProperty('--admob-space', '99px');
+      }
+    );
+  }
+  
+
+  async ngOnDestroy() {
     if (this.subscriber) {
       this.subscriber.unsubscribe();
+    }
+
+    await this.admobService.removeBannerAd();
+
+    if (this.keyboardShowListener) {
+      this.keyboardShowListener.remove();
+    }
+  
+    if (this.keyboardHideListener) {
+      this.keyboardHideListener.remove();
     }
   }
 

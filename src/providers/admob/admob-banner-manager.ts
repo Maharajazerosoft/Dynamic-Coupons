@@ -116,7 +116,7 @@ export abstract class AdMobBannerManager {
 
   private updateAdMobSpace(height: number) {
     // Update CSS variable on document root
-    document.documentElement.style.setProperty('--admob-space', `${height}px`);
+    // document.documentElement.style.setProperty('--admob-space', `${height}px`);
     console.log(`${this.pageName}: Updated --admob-space to ${height}px`);
   }
 }

@@ -80,7 +80,7 @@ hideFakeCaret: boolean = false;
       await this.adMobService.showBannerAd();
   
       // Restore white space
-      document.documentElement.style.setProperty('--admob-space', '60px');
+      document.documentElement.style.setProperty('--admob-space', '99px');
     });
   }
   

@@ -22,6 +22,8 @@ import { DetailsService } from '../../../providers/details/details.service';
 import { AdMobBannerManager } from '../../../providers/admob/admob-banner-manager';
 import { AdMobService } from '../../../providers/admob/admob';
 
+import { Keyboard } from '@capacitor/keyboard';
+
 @Component({
   selector: 'app-coupon-modal',
   templateUrl: './coupon.page.html',
@@ -34,6 +36,10 @@ export class CouponPage
 {
   @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
   @ViewChild(IonContent) ionContent!: IonContent;
+
+  private keyboardShowListener: any;
+  private keyboardHideListener: any;
+
 
   type: string = 'local';
   title: string = '';
@@ -92,7 +98,38 @@ export class CouponPage
       }
       this.initcontent();
     });
+    this.setupKeyboardListeners();
   }
+
+  private setupKeyboardListeners() {
+
+    // Keyboard opened
+    this.keyboardShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      async () => {
+        console.log('Keyboard opened');
+  
+        await this.admobService.removeBannerAd();
+  
+        // Remove white space
+        document.documentElement.style.setProperty('--admob-space', '0px');
+      }
+    );
+  
+    // Keyboard closed
+    this.keyboardHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      async () => {
+        console.log('Keyboard closed');
+  
+        await this.admobService.showBannerAd();
+  
+        // Restore white space
+        document.documentElement.style.setProperty('--admob-space', '99px');
+      }
+    );
+  }
+  
 
   ngAfterViewInit() {}
 
@@ -128,10 +165,20 @@ export class CouponPage
     });
   }
 
-  ngOnDestroy() {
+  async ngOnDestroy() {
     if (this.subscriber) {
       this.subscriber.unsubscribe();
     }
+
+  await this.admobService.removeBannerAd();
+
+  if (this.keyboardShowListener) {
+    this.keyboardShowListener.remove();
+  }
+
+  if (this.keyboardHideListener) {
+    this.keyboardHideListener.remove();
+  }
   }
 
   goBack() {
