@@ -332,18 +332,24 @@ export class GroceryPage extends AdMobBannerManager implements OnInit, OnDestroy
     });
   }
 
-  handleCouponClick(coupon: any) {
-    if (coupon.image_type === 'img_link') {
-      this.inappclick(coupon.web_coupon_url, coupon.web_id);
-    } else if (coupon.image_type === 'img_upload') {
+  handleCouponClick(grocery: any) {
+    // if (coupon.image_type === 'img_link') {
+    //   this.inappclick(coupon.web_coupon_url, coupon.web_id);
+    // } else if (coupon.image_type === 'img_upload') {
       this.nextPage(
-        coupon.web_id,
-        coupon.web_coupons_merchant_type,
-        coupon.web_coupon_circulation,
-        coupon.web_coupon_url
+        // coupon.web_id,
+        // coupon.web_coupons_merchant_type,
+        // coupon.web_coupon_circulation,
+        // coupon.web_coupon_url
+
+        grocery.web_id,
+      grocery.web_coupons_merchant_type,
+      grocery.web_coupon_circulation,
+      grocery.web_coupon_url
+
       );
     }
-  }
+  //}
 
   // Navigation
   goBack() {

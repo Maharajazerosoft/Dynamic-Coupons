@@ -240,6 +240,8 @@ ion-footer {
         padding-left: 30px !important;
         border-radius: 0px !important;
         height: 50px;
+       // font-size: 13px !important;
+        text-transform: capitalize !important;
       }
     }
   }
@@ -262,7 +264,7 @@ ion-searchbar {
   .searchbar-input-container {
     input {
       padding: 2% 7%;
-      font-size: 1rem;
+     // font-size: 1rem;
     }
   }
 }
@@ -308,9 +310,11 @@ ion-header ion-toolbar:first-of-type {
 
 .searchbar-input.sc-ion-searchbar-md {
   -webkit-padding-start: 1rem;
-  padding-inline-start: 2rem;
+  padding-inline-start: 1rem;
   -webkit-padding-end: 1rem;
-  padding-inline-end: 1rem;
+  padding-inline-end: 0rem;
+ // font-size: 12px !important;
+  text-transform: capitalize !important;
 }
 
 :root {
@@ -420,15 +424,15 @@ body::after {
 // SAFE AREA CSS END
 
 ion-searchbar::part(input) {
-  font-size: 0.9rem;
+ // font-size: 0.9rem;
 }
 
 ion-searchbar {
-  --font-size: 0.9rem;
+ // --font-size: 0.9rem;
 }
 
 .custom-searchbar ion-searchbar {
-  --font-size: 0.9rem;
+ // --font-size: 0.9rem;
 }
 
 .searchbar-input-container.sc-ion-searchbar-ios {
@@ -436,13 +440,13 @@ ion-searchbar {
 }
 
 .searchbar-input.sc-ion-searchbar-ios {
-  font-size: 0.95rem !important;
+ // font-size: 0.95rem !important;
   text-align: left;
   padding-left: 35px !important;
 }
 
 .searchbar-input.sc-ion-searchbar-ios:not(:placeholder-shown) {
-  font-size: 22px !important;
+  //font-size: 22px !important;
 }
 
 
@@ -494,3 +498,12 @@ ion-searchbar {
 // ion-card.card-fullwidth {
 //   width: 100%;
 // }
+ion-searchbar {
+  .searchbar-input-container input::placeholder {
+    font-size: 13px !important; /* Adjust the size as needed */
+  }
+}
+ion-searchbar {
+  --input-font-size: 14px; /* Adjust the value as needed, use rem for dynamic scaling */
+}
+

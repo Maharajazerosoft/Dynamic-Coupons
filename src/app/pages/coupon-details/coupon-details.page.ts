@@ -95,8 +95,10 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
     {
       text: 'Ok',
       handler: async (e: any) => {
-        await this.handleEmailSubmission(e.email);
-        return false;
+       const result = await this.handleEmailSubmission(e.email);
+       console.log('[ALERT RESULT]', result);
+  return result;
+
       },
     },
   ];
@@ -672,6 +674,17 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
     console.log('🗺️ Map cleaned up');
   }
 
+  // Custom toast method - overrides common service
+  async showToast(message: string, type: 'success' | 'error' = 'success') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 3000,  // Change this for duration (3000 = 3 seconds)
+      position: 'top',
+      cssClass: type === 'error' ? 'error-toast-class' : 'success-toast-class',
+    });
+    await toast.present();
+  }
+
   /* view redeem button click alert */
   async presentAlertPrompt() {
     const alert = await this.alertController.create({
@@ -696,8 +709,9 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
         {
           text: 'OK',
           handler: async (data) => {
-            await this.handleEmailSubmission(data.email);
-            return false;
+            const result = await this.handleEmailSubmission(data.email);
+            console.log('[ALERT RESULT]', result);
+            return result;
           },
         },
       ],
@@ -708,12 +722,12 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
 
   async handleEmailSubmission(email: string) {
     if (!email || email.trim() === '') {
-      this._commonService.presentToast('Please enter your email');
+      this.showToast('Please enter your email', 'error');
       return false;
     }
 
     if (!this._commonService.validateEmail(email)) {
-      this._commonService.presentToast('Please enter a valid email');
+      this.showToast('Please enter a valid email', 'error');
       return false;
     }
 
@@ -739,13 +753,11 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
         // Add to email history
         await this.addToEmailHistory(email);
       } else {
-        this._commonService.presentToast(
-          Response.error || 'Failed to update email'
-        );
+        this.showToast(Response.error || 'Failed to update email', 'error');
       }
     } catch (error) {
       await this.loadingController.dismiss();
-      this._commonService.presentToast('Connection error');
+      this.showToast('Connection error', 'error');
     }
 
     return true;
@@ -787,7 +799,7 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (!this._commonService.validateEmail(email)) {
-      this._commonService.presentToast('Please enter a valid email');
+      this.showToast('Please enter a valid email', 'error');
       return;
     }
 
@@ -813,7 +825,7 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
       // Get coupon HTML
       await this.getCoupSaved();
     } catch (error) {
-      this._commonService.presentToast('Error occurred');
+      this.showToast('Error occurred', 'error');
     }
   }
 
@@ -829,8 +841,12 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
       const { value: existingIds } = await Preferences.get({
         key: 'dc_CoupListId',
       });
+      const { value: existingImageFlags } = await Preferences.get({
+        key: 'dc_CoupListImageFlags',
+      });
 
-      const htmlStr = this.printhtml();
+      const htmlStr = this.printhtml(this.imageAttach);
+      const imageFlag = this.imageAttach ? '1' : '0';
 
       if (existingIds) {
         const idList = existingIds.split('|');
@@ -841,33 +857,38 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
           const newHtmlList = existingList
             ? `${existingList}||${htmlStr}`
             : htmlStr;
+          const newImageFlags = existingImageFlags 
+            ? `${existingImageFlags}|${imageFlag}` 
+            : imageFlag;
 
           await Preferences.set({ key: 'dc_CoupListId', value: newIdList });
           await Preferences.set({ key: 'dc_CoupList', value: newHtmlList });
+          await Preferences.set({ key: 'dc_CoupListImageFlags', value: newImageFlags });
 
-          this._commonService.presentToast('Added to print list');
+          this.showToast('Added to print list', 'success');
         } else {
-          this._commonService.presentToast('Coupon already in print list');
+          this.showToast('Coupon already in print list', 'error');
         }
       } else {
         // First time saving
         await Preferences.set({ key: 'dc_CoupListId', value: this.cid });
         await Preferences.set({ key: 'dc_CoupList', value: htmlStr });
+        await Preferences.set({ key: 'dc_CoupListImageFlags', value: imageFlag });
 
-        this._commonService.presentToast('Added to print list');
+        this.showToast('Added to print list', 'success');
       }
     } catch (error) {
-      this._commonService.presentToast('Error occurred');
+      this.showToast('Error occurred', 'error');
       console.error('Error saving to print list:', error);
     }
   }
 
-  printhtml(): string {
+  printhtml(includeImage: boolean = this.imageAttach): string {
     let url = '';
     let image = '';
 
     // Handle image
-    if (this.imageAttach) {
+    if (includeImage) {
       if (
         this.details.web_coupon_image &&
         this.details.web_coupon_image !== 'Not Available'
@@ -927,7 +948,7 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
       const { value: existingList } = await Preferences.get({
         key: 'dc_CoupList',
       });
-      const htmlStr = this.printhtml();
+      const htmlStr = this.printhtml(this.imageAttach);
 
       this.overAllHtmlStr = existingList ? existingList + htmlStr : htmlStr;
 
@@ -983,25 +1004,22 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
       await loading.dismiss();
 
       if (Response.status === '200') {
-        this._commonService.presentToast(
-          Response.error || 'Email sent successfully'
-        );
+        this.showToast(Response.error || 'Email sent successfully', 'success');
 
         // Clear stored coupons
         await Preferences.remove({ key: 'dc_CoupList' });
         await Preferences.remove({ key: 'dc_CoupListId' });
+        await Preferences.remove({ key: 'dc_CoupListImageFlags' });
 
         // Reset view
         this.viewredeem = false;
         await this.initcontent();
       } else {
-        this._commonService.presentToast(
-          Response.error || 'Failed to send email'
-        );
+        this.showToast(Response.error || 'Failed to send email', 'error');
       }
     } catch (error) {
       await this.loadingController.dismiss();
-      this._commonService.presentToast('Connection error');
+      this.showToast('Connection error', 'error');
     }
   }
 
@@ -1055,8 +1073,8 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
   async presentToast(message: string) {
     const toast = await this.toastController.create({
       message: message,
-      duration: 2000,
-      position: 'bottom',
+      duration: 3000,
+      position: 'top',
       cssClass: 'my-toast-class',
     });
     await toast.present();
@@ -1090,8 +1108,8 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
       sessionStorage.removeItem(reloadKey);
     }
   }
+  
   goBackArrow() {
     this.navController.back();
   }
-  
 }

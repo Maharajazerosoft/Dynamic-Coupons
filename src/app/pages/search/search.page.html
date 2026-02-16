@@ -44,7 +44,8 @@
           <ion-searchbar
             [(ngModel)]="searchValue"
             (ionInput)="getItems($event)"
-            placeholder="Combine Keywords, biz, city, Zip, state, ctry."
+            placeholder="Combine Keywords, Biz, City, State, Zip, Ctry."
+            class="search-input" 
             (ionCancel)="onCancel()"
             (ionClear)="onCancel()"
             (ionFocus)="hideFakeCaret = true"

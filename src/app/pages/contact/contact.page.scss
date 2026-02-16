@@ -162,7 +162,7 @@ app-contact {
 
 ion-button {
   --background: #ff7000;
-  background: #ff7000;
+  // background: #ff7000;
   --background-activated: #ff7000 !important;
   --background-focused: #ff7000 !important;
   --background-hover: #ff7000 !important;
@@ -171,4 +171,11 @@ ion-button {
 
 .sc-ion-input-ios-h {
   min-height: 28px !important;
+}
+ion-button.contact-back-btn{
+  background-color: transparent;
+  --background: transparent;
+   background: transparent;
+  --background-activated: transparent !important;
+  --background-focused: transparent !important;
 }

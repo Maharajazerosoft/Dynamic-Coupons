@@ -334,9 +334,9 @@ export class CouponPage
   }
 
   handleCouponClick(coupon: any) {
-    if (coupon.image_type === 'img_link') {
-      this.inappclick(coupon.web_coupon_url, coupon.web_id);
-    } else if (coupon.image_type === 'img_upload') {
+    // if (coupon.image_type === 'img_link') {
+    //   this.inappclick(coupon.web_coupon_url, coupon.web_id);
+    // } else if (coupon.image_type === 'img_upload') {
       this.nextPage(
         coupon.web_id,
         coupon.web_coupons_merchant_type,
@@ -344,7 +344,7 @@ export class CouponPage
         coupon.web_coupon_url
       );
     }
-  }
+  //}
 
   handleImageError(event: any, coupon: any) {
     event.target.src = this.defaultImages[0];

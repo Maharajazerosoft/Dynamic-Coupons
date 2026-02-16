@@ -57,7 +57,7 @@
           *ngIf="grocery.image_type === 'img_link' || grocery.image_type === ''"
         >
           <ion-card
-            (click)="inappclick(grocery.web_coupon_url, grocery.web_id)"
+            (click)="handleCouponClick(grocery)"
             class="card-fullwidth">
             <ion-card-header>
               <ion-card-title
@@ -192,8 +192,8 @@
         [(ngModel)]="val"
         (ionInput)="getItems($event)"
         enterkeyhint="done"
-        placeholder="Combine Keywords, biz, city, Zip, state, ctry."
-        class="search-input"
+        placeholder="Combine Keywords, Biz, City, State, Zip, Ctry."
+        class="search-input" style="font-size: 13px;"
       ></ion-searchbar>
 
       <ion-button

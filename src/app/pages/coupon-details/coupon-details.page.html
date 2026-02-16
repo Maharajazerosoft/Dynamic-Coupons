@@ -1,3 +1,4 @@
+
 <ion-header style="background-color: #08b8da">
   <ion-toolbar color="primary" class="mytoolbar">
     <ion-buttons slot="start">
@@ -37,7 +38,7 @@
         style="margin-top: 5% !important; margin-bottom: 5% !important"
         class="couponPg"
         [hidden]="viewredeem"
-        (click)="nextPage(details.web_id, details.web_coupons_merchant_type, details.web_coupon_circulation, details.web_coupon_url)"
+        (click)="nextPage(details.web_id, details.web_coupons_merchant_type, details.web_coupon_circulation, details.web_coupon_url)" *ngIf="!viewredeem"
       >
         <ion-card-header>
           <ion-card-title class="title"
@@ -92,7 +93,7 @@
     </div>
     <div class="login-button">
       <button
-        style="width: 65%; font-size: 1.5rem"
+        style="width: 95%; font-size: 1.5rem"
         *ngIf="details.web_coupon_circulation !== '' && details.count_share < details.web_coupon_circulation && 
                (details.web_coupons_merchant_type === '1' || details.web_coupons_merchant_type === '2')"
         ion-button
@@ -111,10 +112,11 @@
         Circulation has Ended
       </button>
       <button
-        style="margin-top: 5% !important"
+        
         ion-button
         [hidden]="!viewredeem"
         (click)="viewredeem = !viewredeem"
+        class="dc-back-offer"
       >
         Back to Offer
       </button>
@@ -148,11 +150,11 @@
       <option value="Edge@gmail.com"></option>
       <option value="Opera@gmail.com"></option>
     </datalist>
-    <!-- <div [hidden]="viewmodal">
+     <div [hidden]="viewmodal">
       <ion-card
         style="margin-top: 5% !important; margin-bottom: 5% !important"
         class="couponPg redeempg"
-        [hidden]="!viewredeem"
+       *ngIf="viewredeem"
       >
         <ion-card-header>
           <ion-card-title
@@ -164,7 +166,7 @@
           </div>
           <p
             style="
-              font-size: 20px !important;
+              
               font-family: 'Lobster';
               color: black;
             "
@@ -173,7 +175,7 @@
           </p>
           <p
             style="
-              font-size: 20px !important;
+
               font-family: 'Lobster';
               color: black;
             "
@@ -183,16 +185,31 @@
         </ion-card-header>
         <ion-card-content>
           <div [innerHTML]="details.web_redeem_option_info"></div>
-          <ion-item>
+          <!-- <ion-item>
             <ion-label slot="start">Print Coupon with Image</ion-label>
             <ion-checkbox
               color="primary"
               [(ngModel)]="imageAttach"
             ></ion-checkbox>
+          </ion-item> -->
+
+          <ion-item class="dc-check-wrapper" lines="none">
+            <ion-checkbox
+              slot="start"
+              class="dc-checkmark"
+              color="primary"
+              [(ngModel)]="imageAttach"
+            >
+            </ion-checkbox>
+
+            <ion-label class="dc-check-wrapper-label">
+              Print Coupon with Image
+            </ion-label>
           </ion-item>
+
           <div class="login-button">
             <button
-              style="font-size: 10px !important"
+              class="dc-coupon-btm"
               ion-button
               block
               (click)="printAlertPrompt()"
@@ -207,7 +224,7 @@
           </div>
         </ion-card-content>
       </ion-card>
-    </div> -->
+    </div>
   </div>
   <div [hidden]="!viewredeem">
     <p style="font-size: 16px !important; color: white; text-align: center">

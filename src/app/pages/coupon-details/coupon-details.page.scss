@@ -67,7 +67,7 @@ ion-content {
 
   .border {
     border: 2px solid #ffffff !important;
-    margin: 26px 25px 30px 25px;
+    margin: 5px 25px 30px 25px;
     background-color: transparent;
 
     &.border-visible {
@@ -100,21 +100,21 @@ ion-card.couponPg {
       font-size: 22px !important;
       font-weight: bold;
       white-space: break-spaces !important;
-      margin-bottom: 8px;
+      //margin-bottom: 8px;
       font-size: 24px;
-      order: 1;
+      //order: 1;
       text-align: center;
     }
 
     .center {
-      order: 2; /* Image comes after title */
+      //order: 2; /* Image comes after title */
       margin-top: 10px;
     }
   }
 
   ion-card-content {
     background: white !important;
-    padding: 16px !important;
+    padding: 0 16px 16px 16px !important;
 
     h3,
     h4,
@@ -131,7 +131,7 @@ ion-card.couponPg {
 
     h4 {
       font-size: 16px !important;
-      margin-top: 8px !important;
+      //margin-top: 8px !important;
       font-family: "Lobster" !important;
     }
 
@@ -182,6 +182,8 @@ ion-card.couponPg {
         font-size: 20px !important;
         font-family: "Lobster" !important;
         color: black !important;
+        margin: 5px 0;
+        text-align: center;
       }
     }
 
@@ -205,7 +207,7 @@ ion-card.couponPg {
 
 h3,
 h4 {
-  padding-top: 3% !important;
+  padding-top: 0 !important;
   color: #000000 !important;
   text-align: center;
 }
@@ -223,9 +225,10 @@ h4 {
     color: white !important;
     border-radius: 4px;
     padding: 12px 24px;
-    font-size: 1.5rem !important;
+    font-size: 14px !important;
     border: none;
     cursor: pointer;
+    width: 95%;
 
     &:hover {
       opacity: 0.9;
@@ -284,7 +287,54 @@ ion-checkbox {
 
 // Toast styling
 .my-toast-class {
-  bottom: 60px;
-  --background: #08b8da;
-  --color: white;
+  --background: #08b8da !important;
+  --color: white !important;
+  --box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
+  --border-radius: 8px !important;
+  top: 80px !important;  // Position below header
+  z-index: 99999 !important;  // Above alert overlays
+  opacity: 1 !important;
+  font-weight: 500 !important;
+}
+
+.error-toast-class {
+  --background: #f44336 !important;  // Red background for errors
+  --color: white !important;
+  --box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
+  top: 80px !important;
+  z-index: 99999 !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}
+ion-checkbox {
+  --background: white;
+  --background-checked: #08b8da;
+  --border-color: #08b8da;
+  --border-color-checked: #08b8da;
+  --checkmark-color: #000000; /* ✔ black checkmark */
+}
+.success-toast-class {
+  --background: #08b8da !important;
+  --color: white !important;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  --border-radius: 8px !important;
+  font-weight: 500 !important;
+  
+  &::part(container) {
+    top: 90px !important;
+    z-index: 99999 !important;
+  }
+}
+
+.error-toast-class {
+  --background: #f44336 !important;
+  --color: white !important;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  --border-radius: 8px !important;
+  font-weight: 600 !important;
+  
+  &::part(container) {
+    top: 90px !important;
+    z-index: 99999 !important;
+  }
 }
