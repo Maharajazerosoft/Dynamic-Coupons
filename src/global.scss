@@ -501,9 +501,18 @@ ion-searchbar {
 ion-searchbar {
   .searchbar-input-container input::placeholder {
     font-size: 13px !important; /* Adjust the size as needed */
+    color: #000 !important;
+  }
+}
+ion-searchbar.home-search {
+  .searchbar-input-container input::placeholder {
+    font-size: 14px !important; /* Adjust the size as needed */
+    color: black;
   }
 }
 ion-searchbar {
   --input-font-size: 14px; /* Adjust the value as needed, use rem for dynamic scaling */
+  color: #000 !important;
+  --color:#000 !important;
 }
 
