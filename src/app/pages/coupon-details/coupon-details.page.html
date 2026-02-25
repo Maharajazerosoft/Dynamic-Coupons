@@ -31,11 +31,13 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="false">
+  <div class="border-n">
+
   <div class="border">
     <div [hidden]="viewmodal">
       <ion-card
-        style="margin-top: 5% !important; margin-bottom: 5% !important"
+        style="margin-top: 0% !important; margin-bottom: 0% !important"
         class="couponPg"
         [hidden]="viewredeem"
         (click)="nextPage(details.web_id, details.web_coupons_merchant_type, details.web_coupon_circulation, details.web_coupon_url)" *ngIf="!viewredeem"
@@ -91,7 +93,18 @@
         </ion-card-content>
       </ion-card>
     </div>
-    <div class="login-button">
+    <div class="login-button" *ngIf="
+    (details.web_coupon_circulation !== '' &&
+     details.count_share < details.web_coupon_circulation &&
+     (details.web_coupons_merchant_type === '1' || details.web_coupons_merchant_type === '2'))
+    ||
+    (details.web_coupon_circulation !== '' &&
+     details.count_share >= details.web_coupon_circulation &&
+     (details.web_coupons_merchant_type === '1' || details.web_coupons_merchant_type === '2'))
+    ||
+    viewredeem
+  "
+>
       <button
         style="width: 95%; font-size: 1.5rem"
         *ngIf="details.web_coupon_circulation !== '' && details.count_share < details.web_coupon_circulation && 
@@ -125,7 +138,7 @@
       <div
         [hidden]="viewredeem"
         #map
-        style="height: 400px; margin: 5% 0% 10% 0%"
+        style="height: 400px; margin: 5% 0% 0% 0%"
       ></div>
     </div>
     <datalist id="emailHistory">
@@ -152,7 +165,7 @@
     </datalist>
      <div [hidden]="viewmodal">
       <ion-card
-        style="margin-top: 5% !important; margin-bottom: 5% !important"
+        style="margin-top: 0% !important; margin-bottom: 0% !important"
         class="couponPg redeempg"
        *ngIf="viewredeem"
       >
@@ -225,7 +238,7 @@
         </ion-card-content>
       </ion-card>
     </div>
-  </div>
+  </div> </div>
   <div [hidden]="!viewredeem">
     <p style="font-size: 16px !important; color: white; text-align: center">
       Use coupon before the expiration date.

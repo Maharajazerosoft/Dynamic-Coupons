@@ -3,7 +3,7 @@ ion-header {
 
   ion-toolbar {
     --border-width: 0;
-    --min-height: 80px;
+    //--min-height: 80px;
     --color: white;
 
     .header-content {
@@ -65,16 +65,16 @@ ion-content {
   --padding-bottom: 180px !important;
   height: calc(100vh - 100px);
 
-  .border {
-    border: 2px solid #ffffff !important;
-    margin: 5px 25px 30px 25px;
-    background-color: transparent;
+  // .border {
+  //   border: 2px solid #ffffff !important;
+  //   margin: 5px 25px 30px 25px;
+  //   background-color: transparent;
 
-    &.border-visible {
-      border: 3px solid #ffffff !important;
-      box-shadow: 0 0 0 1px #08b8da;
-    }
-  }
+  //   &.border-visible {
+  //     border: 3px solid #ffffff !important;
+  //     box-shadow: 0 0 0 1px #08b8da;
+  //   }
+  // }
 }
 
 ion-card.couponPg {
@@ -337,4 +337,27 @@ ion-checkbox {
     top: 90px !important;
     z-index: 99999 !important;
   }
+}
+::ng-deep .inner-css ul,
+::ng-deep .inner-css ul li {
+  text-align: left !important;
+}
+.border-n {
+  margin: 10px 5px;
+  border: 1px solid #ffffff;
+  padding: 10px 0px;
+  display: flex;
+  flex-direction: column;
+  height: max-content; // adjust based on header + footer height
+  overflow: hidden; // border stays fixed
+
+    margin: 10px 5px;
+  border: 1px solid #ffffff;
+  padding: 10px 0px;
+}
+
+.scrollable-inner {
+  overflow-y: auto;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
 }

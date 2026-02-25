@@ -169,3 +169,33 @@
   font-family: "Tahoma", sans-serif !important;
 }
 
+h2.page-title, h3.page-title {
+  font-size: 27px !important;
+  font-family: "Lobster" !important;
+  color: white !important;
+  text-align: center;
+  font-weight: 500;
+  margin: 10px 15px;
+}
+.border-n {
+  margin: 10px 5px;
+  border: 1px solid #ffffff;
+  padding: 10px 0px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 265px); // adjust based on header + footer height
+
+  
+    //height: calc(100vh - 220px);
+  overflow: hidden; // border stays fixed
+
+    margin: 10px 5px;
+  border: 1px solid #ffffff;
+  padding: 10px 0px;
+}
+
+.scrollable-inner {
+  overflow-y: auto;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+}

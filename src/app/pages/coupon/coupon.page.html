@@ -33,9 +33,10 @@
     </ion-title>
   </ion-toolbar>
 </ion-header>
+<div class="border-n">
 
 <ion-content
-  [fullscreen]="true"
+  [fullscreen]="false"
   class="ion-padding"
   [ngClass]="(type =='local')?'local_offers':'national_offers'"
 >
@@ -217,7 +218,7 @@
     </ion-text>
   </div>
 </ion-content>
-
+</div>
 <ion-footer>
   <ion-toolbar class="search-toolbar">
     <div class="search-container">

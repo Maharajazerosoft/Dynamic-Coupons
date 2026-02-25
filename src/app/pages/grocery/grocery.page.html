@@ -45,8 +45,9 @@
     <ion-title size="large" class="page-title" *ngIf="cat == 'podcasts'">Blogs & Podcasts</ion-title>
   </ion-toolbar>
 </ion-header>
+<div class="border-n">
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="false">
   <!-- Main Content Grid -->
   <div class="border">
     <ion-grid *ngIf="renderGrid">
@@ -183,7 +184,7 @@
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>
-
+</div>
 <ion-footer>
   <ion-toolbar class="search-toolbar">
     <div class="search-container">

@@ -24,9 +24,9 @@ ion-card table * {
 }
 
 .border {
-  margin: 10px 5px;
-  border: 1px solid #ffffff;
-  padding: 10px;
+  // margin: 10px 5px;
+  // border: 1px solid #ffffff;
+  padding: 0 10px;
 }
 
 .header {
@@ -283,3 +283,22 @@ ion-grid.ion-no-padding{
   padding: unset;
 }
 
+.border-n {
+  margin: 10px 5px;
+  border: 1px solid #ffffff;
+  padding: 10px 0px;
+  display: flex;
+  flex-direction: column;
+  height: 100%; // adjust based on header + footer height
+  overflow: hidden; // border stays fixed
+
+    margin: 10px 5px;
+  border: 1px solid #ffffff;
+  padding: 10px 0px;
+}
+
+.scrollable-inner {
+  overflow-y: auto;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+}

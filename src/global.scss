@@ -327,10 +327,11 @@ ion-header ion-toolbar:first-of-type {
   left: 0;
   right: 0;
   height: var(--admob-space);
-  z-index: 1;
   background: #ffffff;
+  z-index: 1;
   pointer-events: none;
 }
+
 
 ion-footer {
   position: fixed;
@@ -514,5 +515,9 @@ ion-searchbar {
   --input-font-size: 14px; /* Adjust the value as needed, use rem for dynamic scaling */
   color: #000 !important;
   --color:#000 !important;
+}
+
+ion-router-outlet{
+  background: #08b8da;
 }
 

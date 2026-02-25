@@ -21,12 +21,13 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+<div class="border-n">
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="false">
   <!-- Search Results -->
   <div *ngIf="!showButton && searchValue" class="search-results-container">
     <!-- Exact Results Section -->
-    <h2 class="allresult">The following search results include all keywords</h2>
+    <h2  *ngIf="exactResult && exactResult.length > 0" class="page-title">The following search results include all keywords</h2>
     <div *ngIf="exactResult && exactResult.length > 0">
       <ion-grid>
         <ion-row *ngFor="let clocal of exactResult">
@@ -170,10 +171,10 @@
       *ngIf="(!exactResult || exactResult.length === 0) && searchValue"
       class="chat-begin"
     >
-      <h3>No exact search results found.<br />See related results below.</h3>
+      <h3 class="page-title">No exact search results found.<br />See related results below.</h3>
     </div>
 
-    <h2 class="allresult">
+    <h2 class="page-title"  *ngIf="relatedResult && relatedResult.length > 0">
       The following search results include individual keywords
     </h2>
     <!-- Related Results Section -->
@@ -316,7 +317,7 @@
     </div>
   </div>
 </ion-content>
-
+</div>
 <ion-footer>
   <ion-toolbar class="search-toolbar">
     <div class="search-container">
