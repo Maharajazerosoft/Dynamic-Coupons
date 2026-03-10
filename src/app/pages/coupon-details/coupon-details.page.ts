@@ -22,6 +22,8 @@ import { Preferences } from '@capacitor/preferences';
 import { Browser } from '@capacitor/browser';
 import { Share } from '@capacitor/share';
 import { isPlatformBrowser } from '@angular/common';
+import { Keyboard } from '@capacitor/keyboard';
+import { AdMobService } from '../../../providers/admob/admob';
 
 // Type for performance navigation
 interface PerformanceNavigationTiming extends PerformanceEntry {
@@ -73,6 +75,8 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
   name: string | undefined;
   isGoogleMapsLoaded = false;
   isMapInitialized = false;
+  private keyboardShowListener: any;
+private keyboardHideListener: any;
 
   public alertInputs: AlertInput[] = [
     {
@@ -114,12 +118,17 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
     private loadingController: LoadingController,
     private navController: NavController,
     private sanitizer: DomSanitizer,
-    private platform: Platform
+    private platform: Platform,
+    private admobService: AdMobService
+    
   ) {
     this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml('');
   }
 
   async ngOnInit() {
+
+    this.setupKeyboardListeners();
+
     console.log('🔄 Initializing CouponDetailsPage...');
 
     // Only run in browser environment
@@ -149,6 +158,14 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.cleanupMap();
+
+    if (this.keyboardShowListener) {
+      this.keyboardShowListener.remove();
+    }
+    if (this.keyboardHideListener) {
+      this.keyboardHideListener.remove();
+    }
+  
   }
 
   async initLoad() {
@@ -1111,5 +1128,30 @@ export class CouponDetailsPage implements OnInit, AfterViewInit, OnDestroy {
   
   goBackArrow() {
     this.navController.back();
+  }
+
+  private setupKeyboardListeners() {
+    // Keyboard opened
+    this.keyboardShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      async () => {
+        console.log('Keyboard opened');
+        await this.admobService.removeBannerAd();
+        document.documentElement.style.setProperty('--admob-space', '0px');
+        document.documentElement.style.setProperty('--border-n-height','calc(100vh - 151px');
+      }
+    );
+  
+    // Keyboard closed
+    this.keyboardHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      async () => {
+        console.log('Keyboard closed');
+        await this.admobService.showBannerAd();
+        document.documentElement.style.setProperty('--admob-space', '99px');
+        document.documentElement.style.setProperty('--border-n-height','calc(100vh - 250px');
+        
+      }
+    );
   }
 }

@@ -71,6 +71,8 @@ hideFakeCaret: boolean = false;
   
       // Remove white space
       document.documentElement.style.setProperty('--admob-space', '0px');
+
+      document.documentElement.style.setProperty('--border-n-height','calc(100vh - 86px');
     });
   
     this.keyboardHideListener = Keyboard.addListener('keyboardDidHide', async () => {
@@ -81,6 +83,7 @@ hideFakeCaret: boolean = false;
   
       // Restore white space
       document.documentElement.style.setProperty('--admob-space', '99px');
+      document.documentElement.style.setProperty('--border-n-height','calc(100vh - 185px');
     });
   }
   

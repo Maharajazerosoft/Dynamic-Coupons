@@ -62,7 +62,7 @@ ion-header {
 // Content styling
 ion-content {
   --background: #08b8da !important;
-  --padding-bottom: 180px !important;
+  //--padding-bottom: 180px !important;
   height: calc(100vh - 100px);
 
   // .border {
@@ -348,7 +348,9 @@ ion-checkbox {
   padding: 10px 0px;
   display: flex;
   flex-direction: column;
-  height: max-content; // adjust based on header + footer height
+  //height: calc(100vh - 250px);
+  height: var(--border-n-height, calc(100vh - 250px));
+  // adjust based on header + footer height
   overflow: hidden; // border stays fixed
 
     margin: 10px 5px;

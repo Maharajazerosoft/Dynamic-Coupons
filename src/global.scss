@@ -521,3 +521,12 @@ ion-router-outlet{
   background: #08b8da;
 }
 
+/* Target ion-content's inner scroll element */
+ion-content::part(scroll) {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
+}
+
+ion-content::part(scroll)::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari, Edge */
+}

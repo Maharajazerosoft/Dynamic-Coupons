@@ -105,6 +105,7 @@ export class GroceryPage extends AdMobBannerManager implements OnInit, OnDestroy
   
         // Remove white space
         document.documentElement.style.setProperty('--admob-space', '0px');
+        document.documentElement.style.setProperty('--border-n-height','calc(100vh - 229px');
       }
     );
   
@@ -118,6 +119,7 @@ export class GroceryPage extends AdMobBannerManager implements OnInit, OnDestroy
   
         // Restore white space
         document.documentElement.style.setProperty('--admob-space', '99px');
+        document.documentElement.style.setProperty('--border-n-height','calc(100vh - 328px');
       }
     );
   }

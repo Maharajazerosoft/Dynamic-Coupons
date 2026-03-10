@@ -142,7 +142,7 @@ ion-spinner {
 
 ion-content {
   --background: #08b8da !important;
-  --padding-bottom: 180px !important;
+  //--padding-bottom: 180px !important;
   height: calc(100vh - 160px);
 }
 
@@ -289,7 +289,9 @@ ion-grid.ion-no-padding{
   padding: 10px 0px;
   display: flex;
   flex-direction: column;
-  height: 100%; // adjust based on header + footer height
+  height: var(--border-n-height, calc(100vh - 328px));
+
+  // adjust based on header + footer height
   overflow: hidden; // border stays fixed
 
     margin: 10px 5px;

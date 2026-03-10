@@ -159,7 +159,7 @@
 
   ion-content {
     --background: #08b8da !important;
-    --padding-bottom: 180px !important;
+    //--padding-bottom: 180px !important;
     height: calc(100vh - 100px);
   }
 }
@@ -169,10 +169,19 @@
   font-family: "Tahoma", sans-serif !important;
 }
 
-h2.page-title, h3.page-title {
+h2.page-title {
   font-size: 27px !important;
   font-family: "Lobster" !important;
   color: white !important;
+  text-align: center;
+  font-weight: 500;
+  margin: 10px 15px;
+}
+
+h3.page-title {
+  font-size: 27px !important;
+  font-family: "Lobster" !important;
+  color: #000 !important;
   text-align: center;
   font-weight: 500;
   margin: 10px 15px;
@@ -183,7 +192,8 @@ h2.page-title, h3.page-title {
   padding: 10px 0px;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 265px); // adjust based on header + footer height
+  height: var(--border-n-height, calc(100vh - 282px));
+// adjust based on header + footer height
 
   
     //height: calc(100vh - 220px);

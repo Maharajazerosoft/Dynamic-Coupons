@@ -109,6 +109,7 @@ export class SearchResultPage extends AdMobBannerManager implements OnInit {
   
         // Remove white space
         document.documentElement.style.setProperty('--admob-space', '0px');
+        document.documentElement.style.setProperty('--border-n-height','calc(100vh - 183px');
       }
     );
   
@@ -122,6 +123,7 @@ export class SearchResultPage extends AdMobBannerManager implements OnInit {
   
         // Restore white space
         document.documentElement.style.setProperty('--admob-space', '99px');
+        document.documentElement.style.setProperty('--border-n-height','calc(100vh - 282px');
       }
     );
   }

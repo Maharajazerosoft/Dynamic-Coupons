@@ -30,9 +30,9 @@
     </ion-title>
   </ion-toolbar>
 </ion-header>
-
+<div class="border-n">
 <ion-content [fullscreen]="false">
-  <div class="border-n">
+ 
 
   <div class="border">
     <div [hidden]="viewmodal">
@@ -238,13 +238,17 @@
         </ion-card-content>
       </ion-card>
     </div>
-  </div> </div>
-  <div [hidden]="!viewredeem">
-    <p style="font-size: 16px !important; color: white; text-align: center">
-      Use coupon before the expiration date.
-    </p>
-    <p style="font-size: 16px !important; color: white; text-align: center">
-      QR code scan is at merchant’s discretion.
-    </p>
-  </div>
+  </div> 
+
 </ion-content>
+
+</div>
+
+<div [hidden]="!viewredeem">
+  <p style="font-size: 16px !important; color: white; text-align: center">
+    Use coupon before the expiration date.
+  </p>
+  <p style="font-size: 16px !important; color: white; text-align: center">
+    QR code scan is at merchant’s discretion.
+  </p>
+</div>

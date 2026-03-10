@@ -68,12 +68,35 @@
     word-break: break-word;
   }
 
-  .border {
-    margin-top: 10px;
-    min-height: inherit;
+  .border-n {
+
     border: 1px solid #ffffff;
     padding: 0px 10px;
+
+
+    margin: 10px 5px;
+ 
+    display: flex;
+    flex-direction: column;
+    //height: calc(100vh - 185px);
+    height: var(--border-n-height, calc(100vh - 185px));
+    // adjust based on header + footer height
+    overflow: hidden; // border stays fixed
+  
+
   }
+
+  .border-n {
+    /* ...your existing styles... */
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* IE/Edge */
+  }
+  
+  .border-n::-webkit-scrollbar {
+    display: none;                /* Chrome, Safari, Edge */
+  }
+
+  
 
   .content {
     background-color: #08b8da !important;
