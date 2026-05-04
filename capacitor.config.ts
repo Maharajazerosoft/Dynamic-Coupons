@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "com.dynamic.dynamiccoupons",
+  appId: "com.dynamiccouponsapp",
   appName: "DynamicCoupons",
   webDir: "www",
   plugins: {

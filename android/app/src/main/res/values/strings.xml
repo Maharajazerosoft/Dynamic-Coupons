@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Dynamic Coupons</string>
     <string name="title_activity_main">Dynamic Coupons</string>
-    <string name="package_name">com.dynamic.dynamiccoupons</string>
-    <string name="custom_url_scheme">com.dynamic.dynamiccoupons</string>
-    <string name="admob_app_id">ca-app-pub-8416006941552663~8369755045</string>
+    <string name="package_name">com.dynamiccouponsapp</string>
+    <string name="custom_url_scheme">com.dynamiccouponsapp</string>
+    <string name="admob_app_id">ca-app-pub-8416006941552663~5488757442</string>
 </resources>

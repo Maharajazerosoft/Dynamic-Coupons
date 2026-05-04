@@ -22,15 +22,12 @@ export class AdMobService {
     try {
       console.log('Initializing AdMob...');
       
-      const isTesting = window.location.hostname === 'localhost' || 
-                       window.location.hostname === '127.0.0.1';
-      
       await AdMob.initialize({
-        initializeForTesting: isTesting,
+        initializeForTesting: false,
       });
       
       this.initialized = true;
-      console.log('AdMob initialized, testing mode:', isTesting);
+      console.log('AdMob initialized');
     } catch (error) {
       console.error('AdMob init error:', error);
     }
@@ -45,16 +42,12 @@ export class AdMobService {
     try {
       await this.initialize();
       
-      const adId = this.isTestEnvironment() 
-        ? 'ca-app-pub-3940256099942544/6300978111'
-        : 'YOUR_REAL_BANNER_AD_ID';
-      
       const options: BannerAdOptions = {
-        adId: adId,
+        adId: 'ca-app-pub-8416006941552663/1243472245',
         adSize: BannerAdSize.ADAPTIVE_BANNER,
         position: BannerAdPosition.BOTTOM_CENTER,
         margin: 0,
-        isTesting: this.isTestEnvironment(),
+        isTesting: false,
       };
       
       console.log('Showing banner ad...');
@@ -100,23 +93,13 @@ export class AdMobService {
     }
   }
 
-  private isTestEnvironment(): boolean {
-    return window.location.hostname === 'localhost' || 
-           window.location.hostname === '127.0.0.1' ||
-           window.location.hostname.includes('ionic');
-  }
-
   async showInterstitialAd(): Promise<void> {
     try {
       await this.initialize();
       
-      const adId = this.isTestEnvironment()
-        ? 'ca-app-pub-3940256099942544/1033173712'
-        : 'YOUR_REAL_INTERSTITIAL_AD_ID';
-      
       await AdMob.prepareInterstitial({
-        adId: adId,
-        isTesting: this.isTestEnvironment(),
+        adId: 'ca-app-pub-8416006941552663/8855165117',
+        isTesting: false,
       });
       
       await AdMob.showInterstitial();

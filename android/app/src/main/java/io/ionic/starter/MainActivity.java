@@ -1,4 +1,4 @@
-package com.dynamic.dynamiccoupons;
+package com.dynamiccouponsapp;
 
 import com.getcapacitor.BridgeActivity;
 
