@@ -530,3 +530,23 @@ ion-content::part(scroll) {
 ion-content::part(scroll)::-webkit-scrollbar {
   display: none;                /* Chrome, Safari, Edge */
 }
+
+/* Local offers category info (tap ℹ️ on coupon page) */
+ion-alert.category-tooltip-alert {
+  .alert-head {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .alert-message {
+    font-size: 13px;
+    line-height: 1.45;
+    text-align: left;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+
+  button.alert-button-inner {
+    text-transform: none;
+  }
+}

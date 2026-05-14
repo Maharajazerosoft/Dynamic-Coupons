@@ -37,33 +37,92 @@ ion-card table * {
 .category-table {
   border-collapse: collapse;
   width: 100%;
+  table-layout: auto;
 
   td {
     border: 1px solid #999;
     vertical-align: middle;
     font-size: 11pt;
-    height: 40px;
-    padding: 5px 8px;
+    height: auto;
+    min-height: 0;
+    padding: 8px 6px;
+    line-height: 1.35;
 
     &.arrow {
       text-align: center;
-      width: 20px;
+      width: 1%;
       color: black;
       font-weight: bold;
+      white-space: nowrap;
+      max-width: 28px;
+      vertical-align: middle;
+      padding-inline: 2px;
     }
 
-    &.text {
-      color: #0645ad !important;
-      font-weight: 400 !important;
-      font-size: 9pt !important;
-      cursor: pointer;
+    &.text-cell {
+      vertical-align: middle;
+      padding-inline: 4px;
+      text-align: left;
 
-      &:hover {
-        text-decoration: underline;
-        color: #ff7000 !important;
+      .text {
+        display: inline;
+        text-align: left;
+        hyphens: auto;
+        word-break: normal;
+        overflow-wrap: break-word;
+        color: #0645ad !important;
+        font-weight: 400 !important;
+        font-size: 9pt !important;
+        cursor: pointer;
+        line-height: 1.4;
+
+        &:hover {
+          text-decoration: underline;
+          color: #ff7000 !important;
+        }
+      }
+
+      .category-info-btn {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 0 0 4px;
+        --padding-start: 0;
+        --padding-end: 0;
+        height: auto;
+        min-height: unset;
+        width: auto;
+
+        &::part(native) {
+          padding: 2px;
+          margin: 0;
+        }
+
+        ion-icon {
+          font-size: 17px;
+          color: #4a6273;
+          pointer-events: none;
+          vertical-align: middle;
+        }
       }
     }
   }
+}
+
+/* Local offers: category block scrolls when titles are long */
+ion-card.local-category-card {
+  flex: 0 0 auto;
+  margin-bottom: 8px;
+}
+
+ion-card.local-category-card ion-card-content.local-category-card__content {
+  display: block;
+  padding: 10px !important;
+  max-height: min(52vh, 420px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  text-align: left;
 }
 
 // Main content styles
@@ -142,8 +201,8 @@ ion-spinner {
 
 ion-content {
   --background: #08b8da !important;
-  //--padding-bottom: 180px !important;
-  height: calc(100vh - 160px);
+  --padding-bottom: 180px !important;
+  // height: calc(100vh - 160px);
 }
 
 ion-col,
@@ -153,9 +212,19 @@ ion-searchbar {
 
 .local_offers {
   ion-card {
-    border: 2px solid #ffffff;
-    border-radius: 0px;
-    margin: 0 0 10px 0;
+    font-family: "Tahoma", sans-serif;
+    background: #fff;
+    padding: 8px;
+    text-align: center;
+    border-radius: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    pointer-events: all;
+    position: relative;
+
+    &.local-category-card {
+      text-align: left;
+    }
   }
 
   .coupon-business {
@@ -211,16 +280,23 @@ ion-searchbar {
     color: #17a05e;
   }
 
-  ion-content {
-    top: 8% !important;
-  }
+  // ion-content {
+  //   top: 8% !important;
+  // }
 }
 
 .national_offers {
   ion-card {
-    border: 2px solid #ffffff;
-    border-radius: 0px;
-    margin: 0 0 10px 0;
+    font-family: "Tahoma", sans-serif;
+   //width: 100%;
+    background: #fff;
+    padding: 8px;
+    text-align: center;
+    border-radius: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    pointer-events: all;
+    position: relative;
   }
 
   .coupon-business {
@@ -297,6 +373,11 @@ ion-grid.ion-no-padding{
     margin: 10px 5px;
   border: 1px solid #ffffff;
   padding: 10px 0px;
+
+  ion-content {
+    flex: 1;
+    min-height: 0;
+  }
 }
 
 .scrollable-inner {

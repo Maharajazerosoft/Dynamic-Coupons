@@ -12,6 +12,7 @@ import {
   LoadingController,
   ToastController,
   NavController,
+  AlertController,
 } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Browser } from '@capacitor/browser';
@@ -23,6 +24,12 @@ import { AdMobBannerManager } from '../../../providers/admob/admob-banner-manage
 import { AdMobService } from '../../../providers/admob/admob';
 
 import { Keyboard } from '@capacitor/keyboard';
+
+export interface CouponCategoryLink {
+  slug: string;
+  label: string;
+  tooltip: string;
+}
 
 @Component({
   selector: 'app-coupon-modal',
@@ -73,6 +80,142 @@ export class CouponPage
   hasMoreData: boolean = true;
   searchValue1: string = '';
 
+  /** Local offers category shortcuts (paired rows in template). Order matches product spec 1–22. */
+  readonly couponCategoryLinks: CouponCategoryLink[] = [
+    {
+      slug: 'national-brands',
+      label: 'National Brands & Online Deals',
+      tooltip:
+        'U.S. national retailers, affiliate offers, manufacturer deals, online shopping promotions, shipping perks.',
+    },
+    {
+      slug: 'local-businesses',
+      label: 'Local Businesses & Services',
+      tooltip:
+        'Restaurants, salons, shops, professional services, lawyers, legal services, consultants, brick-and-mortar businesses.',
+    },
+    {
+      slug: 'trending-creator',
+      label: 'Trending, Viral & Creator Deals',
+      tooltip:
+        'Viral deals, flash sales, limited-time drops, social trends, influencer promotions, blog codes, podcast codes, creator discount links, hot promotions.',
+    },
+    {
+      slug: 'community-events',
+      label: 'Community Events & Local Listings',
+      tooltip:
+        'Garage sales, yard sales, meetups, fundraisers, non-profits, community events, casual local listings.',
+    },
+    {
+      slug: 'grocery',
+      label: 'Grocery, Weekly Flyers, Deals',
+      tooltip:
+        'Food trucks, farmers markets, fresh produce, store flyers, stalls.',
+    },
+    {
+      slug: 'birthday',
+      label: 'Birthday Offers & Freebies',
+      tooltip:
+        'Birthday rewards, free items, loyalty birthday perks, special occasion deals.',
+    },
+    {
+      slug: 'home',
+      label: 'Home, Household & Living',
+      tooltip:
+        'Furniture, appliances, décor, cleaning supplies, home essentials, hobby supplies, DIY, crafts, games, collectibles, personal interests.',
+    },
+    {
+      slug: 'beauty',
+      label: 'Beauty, Health & Fitness',
+      tooltip:
+        'Skincare, wellness, gyms, supplements, personal care, fitness services.',
+    },
+    {
+      slug: 'books',
+      label: 'Education & Learning Programs',
+      tooltip:
+        'K–12 education, college admissions, online courses, certifications, tutoring, libraries, learning tools.',
+    },
+    {
+      slug: 'student',
+      label: 'Student Resources & Perks',
+      tooltip:
+        'Student deals, campus perks, education pricing, academic offers.',
+    },
+    {
+      slug: 'business',
+      label: 'Minority, Ethnic Businesses',
+      tooltip:
+        'Cultural stores, community vendors, identity-based discovery, local cultural commerce.',
+    },
+    {
+      slug: 'discounts',
+      label: 'Senior Resources & Perks',
+      tooltip:
+        'Senior savings, age-based discounts, retirement perks, senior programs.',
+    },
+    {
+      slug: 'military',
+      label: 'Military & Veteran Discounts',
+      tooltip:
+        'Service member deals, veteran benefits, military-exclusive offers.',
+    },
+    {
+      slug: 'babies',
+      label: 'Parenting, Babies, Children & Toys',
+      tooltip:
+        'Baby products, kids items, parenting tools, toys, family essentials.',
+    },
+    {
+      slug: 'holidays',
+      label: 'Holidays, Contests & Sweepstakes',
+      tooltip:
+        'Seasonal events, giveaways, sweepstakes, holiday promotions, contests.',
+    },
+    {
+      slug: 'real-estate',
+      label: 'Real Estate, Homes & Rentals',
+      tooltip:
+        'Housing listings, rentals, buying homes, property services, real estate market.',
+    },
+    {
+      slug: 'supplies',
+      label: 'Pets & Animal Care',
+      tooltip:
+        'Pet supplies, vet services, grooming, animal wellness, pet products.',
+    },
+    {
+      slug: 'finance',
+      label: 'Finance, Insurance & Automotive',
+      tooltip:
+        'Banking, credit, insurance, car deals, maintenance, financial services, vehicles.',
+    },
+    {
+      slug: 'productivity',
+      label: 'Jobs, Careers & Technology',
+      tooltip:
+        'Job listings, hiring, tech careers, freelancing, resumes, career tools, employment platforms.',
+    },
+    {
+      slug: 'digital-services',
+      label: 'Digital Services & Subscriptions',
+      tooltip:
+        'SaaS tools, streaming subscriptions, software deals, AI tools, productivity apps, website services, digital memberships, online platforms, cloud tools.',
+    },
+    {
+      slug: 'travel',
+      label: 'Travel, Experiences & Tickets',
+      tooltip:
+        'Flights, airline tickets, hotels, transport, sports tickets, concert tickets, theater shows, cultural events, tours, attractions, travel packages, global experiences outside the U.S.',
+    },
+    {
+      slug: 'parenting',
+      label: 'Global Brands & Deals (All Countries except U.S.)',
+      tooltip:
+        'International retailers, foreign brands, cross-border e-commerce, global shopping promotions.',
+    },
+  ];
+
   protected override pageName: string = 'CouponPage';
 
   constructor(
@@ -84,6 +227,7 @@ export class CouponPage
     private toastController: ToastController,
     private navController: NavController,
     private cdr: ChangeDetectorRef,
+    private alertController: AlertController,
     protected override admobService: AdMobService
   ) {
     super(admobService);
@@ -421,6 +565,26 @@ export class CouponPage
   navigateToCategory(category: string) {
     console.log('Navigating to category:', category);
     this.router.navigate(['/grocery', category]);
+  }
+
+  async showCategoryTooltip(event: Event, link: CouponCategoryLink) {
+    event.stopPropagation();
+    const alert = await this.alertController.create({
+      cssClass: 'category-tooltip-alert',
+      header: link.label,
+      message: link.tooltip,
+      buttons: [{ text: 'OK', role: 'cancel' }],
+    });
+    await alert.present();
+  }
+
+  get categoryRows(): CouponCategoryLink[][] {
+    const rows: CouponCategoryLink[][] = [];
+    const list = this.couponCategoryLinks;
+    for (let i = 0; i < list.length; i += 2) {
+      rows.push([list[i], list[i + 1]]);
+    }
+    return rows;
   }
 
   trackByCouponId(index: number, item: any): string {

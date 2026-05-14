@@ -41,8 +41,8 @@
   [ngClass]="(type =='local')?'local_offers':'national_offers'"
 >
   <div class="border">
-    <ion-card *ngIf="type === 'local'">
-      <ion-card-content>
+    <ion-card *ngIf="type === 'local'" class="local-category-card">
+      <ion-card-content class="local-category-card__content">
         <table class="category-table">
           <tr>
             <td style="color: #ff7000; font-weight: 600" colspan="4">
@@ -50,104 +50,48 @@
             </td>
           </tr>
 
-          <tr>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('grocery')">
-              Grocery Weekly Flyers
-            </td>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('babies')">
-              Babies, Children, Toys
-            </td>
-          </tr>
-
-          <tr>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('home')">
-              Household & Parenting
-            </td>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('birthday')">
-              Birthday Offers
-            </td>
-          </tr>
-
-          <tr>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('beauty')">
-              Beauty, Health, Fitness
-            </td>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('shipping')">
-              Free Shipping / Returns
-            </td>
-          </tr>
-
-          <tr>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('books')">
-              Books & Prints
-            </td>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('supplies')">
-              Pet Supplies
-            </td>
-          </tr>
-
-          <tr>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('business')">
-              Minority, Women, Ethnic
-            </td>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('finance')">
-              Money, Finance, Cars
-            </td>
-          </tr>
-
-          <tr>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('student')">
-              Student Discounts
-            </td>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('productivity')">
-              Business, Tech & Careers
-            </td>
-          </tr>
-
-          <tr>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('discounts')">
-              Senior Discounts
-            </td>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('military')">
-              Veterans & Military
-            </td>
-          </tr>
-
-          <tr>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('holidays')">
-              Fun, Games, Sweepstakes
-            </td>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('travel')">
-              Travel / Holidays
-            </td>
-          </tr>
-
-          <tr>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('parenting')">
-              All Countries
-            </td>
-            <td class="arrow">›</td>
-            <td class="text" (click)="navigateToCategory('podcasts')">
-              Blogs & Podcasts
-            </td>
-          </tr>
+          <ng-container *ngFor="let row of categoryRows">
+            <tr>
+              <td class="arrow">›</td>
+              <td class="text-cell">
+                <span
+                  class="text"
+                  (click)="navigateToCategory(row[0].slug)"
+                  >{{ row[0].label }}</span
+                ><ion-button
+                  fill="clear"
+                  size="small"
+                  class="category-info-btn"
+                  aria-label="About this category"
+                  (click)="showCategoryTooltip($event, row[0])"
+                >
+                  <ion-icon
+                    slot="icon-only"
+                    name="information-circle-outline"
+                  ></ion-icon>
+                </ion-button>
+              </td>
+              <td class="arrow">›</td>
+              <td class="text-cell">
+                <span
+                  class="text"
+                  (click)="navigateToCategory(row[1].slug)"
+                  >{{ row[1].label }}</span
+                ><ion-button
+                  fill="clear"
+                  size="small"
+                  class="category-info-btn"
+                  aria-label="About this category"
+                  (click)="showCategoryTooltip($event, row[1])"
+                >
+                  <ion-icon
+                    slot="icon-only"
+                    name="information-circle-outline"
+                  ></ion-icon>
+                </ion-button>
+              </td>
+            </tr>
+          </ng-container>
 
           <tr>
             <td colspan="4" style="color: #ff7000; font-weight: 600">
