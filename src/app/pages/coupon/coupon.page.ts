@@ -562,8 +562,43 @@ export class CouponPage
     await toast.present();
   }
 
+  // navigateToCategory(category: string) {
+  //   console.log('Navigating to category:', category);
+  //   // Same destinations as search browse buttons for these two entries only.
+  //   if (category === 'local-businesses') {
+  //     this.router.navigate(['/coupon', 'local']);
+  //     return;
+  //   }
+  //   if (category === 'national-brands') {
+  //     this.router.navigate(['/coupon', 'national']);
+  //     return;
+  //   }
+  //   this.router.navigate(['/grocery', category]);
+  // }
+
   navigateToCategory(category: string) {
     console.log('Navigating to category:', category);
+    if (category === 'local-businesses') {
+      if (this.type === 'local') {
+        this.page = 1;
+        if (this.infiniteScroll) {
+          this.infiniteScroll.disabled = false;
+        }
+        void this.initcontent().then(() =>
+          requestAnimationFrame(() => {
+            void this.ionContent?.scrollToTop(0);
+            this.cdr.detectChanges();
+          })
+        );
+      } else {
+        this.router.navigate(['/coupon', 'local']);
+      }
+      return;
+    }
+    if (category === 'national-brands') {
+      this.router.navigate(['/coupon', 'national']);
+      return;
+    }
     this.router.navigate(['/grocery', category]);
   }
 
