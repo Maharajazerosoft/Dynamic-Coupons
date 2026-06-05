@@ -111,7 +111,7 @@ ion-card table * {
 /* Local offers: category block scrolls when titles are long */
 ion-card.local-category-card {
   flex: 0 0 auto;
-  margin-bottom: 8px;
+  margin: 0 0 8px 0;
 }
 
 ion-card.local-category-card ion-card-content.local-category-card__content {
@@ -130,6 +130,7 @@ ion-card {
   background: #ffffff;
   border-radius: 0px;
   font-family: "Tahoma", sans-serif !important;
+  margin: 0 0 8px 0;
 }
 
 ion-card-title {
@@ -217,8 +218,7 @@ ion-searchbar {
     padding: 8px;
     text-align: center;
     border-radius: 0;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
+    margin: 0 0 8px 0;
     pointer-events: all;
     position: relative;
 
@@ -293,8 +293,7 @@ ion-searchbar {
     padding: 8px;
     text-align: center;
     border-radius: 0;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
+    margin: 0 0 8px 0;
     pointer-events: all;
     position: relative;
   }
